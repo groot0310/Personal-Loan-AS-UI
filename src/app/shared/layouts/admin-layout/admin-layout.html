@@ -1,0 +1,48 @@
+<div class="min-h-screen flex bg-slate-100">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-slate-900 text-slate-100 flex flex-col">
+        <div class="px-6 py-5 border-b border-slate-700">
+            <h2 class="text-xl font-bold">Admin Panel</h2>
+            <p class="text-xs text-slate-400 mt-1">Final Authority</p>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <a routerLink="/admin/dashboard" routerLinkActive="bg-slate-800"
+                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+                Dashboard
+            </a>
+
+            <a routerLink="/admin/applications" routerLinkActive="bg-slate-800"
+                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+                Applications
+            </a>
+
+            <a routerLink="/admin/disbursements" routerLinkActive="bg-slate-800"
+                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+                Disbursements
+            </a>
+
+            <a routerLink="/admin/system-rules" routerLinkActive="bg-slate-800"
+                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+                System Rules
+            </a>
+
+            <a routerLink="/admin/audit-logs" routerLinkActive="bg-slate-800"
+                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+                Audit Logs
+            </a>
+
+            <a routerLink="/" routerLinkActive="bg-slate-800"
+                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
+                Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="flex-1 p-8 overflow-y-auto">
+        <router-outlet></router-outlet>
+    </main>
+
+</div>

@@ -1,0 +1,154 @@
+<!-- HERO -->
+<section class="relative min-h-screen flex items-center justify-center
+                bg-gradient-to-br from-neutral-900 via-slate-900 to-stone-900
+                text-slate-100 overflow-hidden">
+
+    <!-- ambient shapes -->
+    <div class="absolute -top-40 -left-40 w-[600px] h-[600px]
+                bg-stone-700/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-[500px] h-[500px]
+                bg-slate-700/20 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 max-w-5xl px-8 text-center">
+
+        <h1 class="text-5xl md:text-6xl font-semibold tracking-tight leading-tight">
+            Personal loans,<br />
+            <span class="text-stone-300">designed for real life.</span>
+        </h1>
+
+        <p class="mt-6 text-lg text-slate-400 max-w-3xl mx-auto">
+            CrediFlow helps you access personal loans with clarity, dignity,
+            and control — no noise, no confusion, just a transparent process
+            built around you.
+        </p>
+
+        <div class="mt-10 flex justify-center gap-4">
+            <a routerLink="/register" class="px-8 py-3 rounded-xl
+                      bg-stone-100 text-stone-900
+                      font-medium tracking-wide
+                      hover:bg-white transition">
+                Apply for a Loan
+            </a>
+
+            <a routerLink="/login" class="px-8 py-3 rounded-xl
+                      border border-white/20
+                      text-slate-100
+                      hover:bg-white/10 transition">
+                Sign In
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="bg-slate-100 py-16">
+    <div class="max-w-6xl mx-auto px-8 grid md:grid-cols-3 gap-10 text-center">
+
+        <div>
+            <p class="text-3xl font-semibold text-slate-800">₹10Cr+</p>
+            <p class="text-sm text-slate-500 mt-1">Loans processed</p>
+        </div>
+
+        <div>
+            <p class="text-3xl font-semibold text-slate-800">5,000+</p>
+            <p class="text-sm text-slate-500 mt-1">Happy borrowers</p>
+        </div>
+
+        <div>
+            <p class="text-3xl font-semibold text-slate-800">100%</p>
+            <p class="text-sm text-slate-500 mt-1">Transparent process</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- WHY CREDIFLOW -->
+<section class="py-24 bg-white">
+    <div class="max-w-6xl mx-auto px-8">
+
+        <h2 class="text-3xl font-semibold text-slate-800 text-center mb-16">
+            Why choose CrediFlow?
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-10">
+
+            <div class="p-8 rounded-2xl border border-slate-200
+                        hover:shadow-lg transition">
+                <h3 class="text-lg font-medium text-slate-800 mb-3">
+                    Built for clarity
+                </h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    No hidden terms. No confusing jargon.
+                    Every step of your loan journey is visible and understandable.
+                </p>
+            </div>
+
+            <div class="p-8 rounded-2xl border border-slate-200
+                        hover:shadow-lg transition">
+                <h3 class="text-lg font-medium text-slate-800 mb-3">
+                    Fast, but responsible
+                </h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Smart checks and structured reviews ensure speed
+                    without compromising trust or safety.
+                </p>
+            </div>
+
+            <div class="p-8 rounded-2xl border border-slate-200
+                        hover:shadow-lg transition">
+                <h3 class="text-lg font-medium text-slate-800 mb-3">
+                    Designed for people
+                </h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Whether you’re consolidating debt or planning ahead,
+                    the system adapts to real human needs.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-24 bg-gradient-to-br from-slate-900 to-neutral-900 text-slate-100">
+    <div class="max-w-4xl mx-auto px-8 text-center">
+
+        <h2 class="text-4xl font-semibold mb-6">
+            Finance should feel calm.
+        </h2>
+
+        <p class="text-slate-400 mb-10">
+            Apply for a personal loan that respects your time,
+            your privacy, and your goals.
+        </p>
+
+        <a routerLink="/register" class="inline-block px-10 py-4 rounded-xl
+                  bg-stone-100 text-stone-900
+                  font-medium tracking-wide
+                  hover:bg-white transition">
+            Start your application
+        </a>
+    </div>
+</section>
+
+
+<!-- TEMPORARY NAVIGATION (DEV ONLY) -->
+<div class="bg-black mt-10 text-sm text-white/80">
+
+    <div class="flex flex-wrap justify-center gap-3">
+        <a routerLink="/user/dashboard"
+            class="px-4 py-2 bg-white/10 backdrop-blur rounded-lg hover:bg-white/20 transition">
+            User Dashboard
+        </a>
+
+        <a routerLink="/loan-officer/dashboard"
+            class="px-4 py-2 bg-white/10 backdrop-blur rounded-lg hover:bg-white/20 transition">
+            Loan Officer Dashboard
+        </a>
+
+        <a routerLink="/admin/dashboard"
+            class="px-4 py-2 bg-white/10 backdrop-blur rounded-lg hover:bg-white/20 transition">
+            Admin Dashboard
+        </a>
+    </div>
+</div>

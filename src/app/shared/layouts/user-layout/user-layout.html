@@ -1,0 +1,45 @@
+<div class="flex min-h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg">
+        <div class="p-6 text-xl font-bold text-blue-600">
+            Personal Loan
+        </div>
+
+        <nav class="px-4 space-y-2">
+            <a routerLink="/user/dashboard" routerLinkActive="bg-blue-100 text-blue-700"
+                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
+                Dashboard
+            </a>
+
+            <a routerLink="/user/apply-loan" routerLinkActive="bg-blue-100 text-blue-700"
+                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
+                Apply Loan
+            </a>
+
+            <a routerLink="/user/my-loans" routerLinkActive="bg-blue-100 text-blue-700"
+                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
+                My Loans
+            </a>
+
+            <a routerLink="/user/emi-schedule" routerLinkActive="bg-blue-100 text-blue-700"
+                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
+                EMI Schedule
+            </a>
+
+            <a routerLink="/user/profile" routerLinkActive="bg-blue-100 text-blue-700"
+                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
+                Profile
+            </a>
+
+            <a routerLink="/" routerLinkActive="bg-blue-100 text-blue-700"
+                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
+                Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 p-6">
+        <router-outlet></router-outlet>
+    </main>
+</div>

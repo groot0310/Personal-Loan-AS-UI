@@ -1,0 +1,40 @@
+<section class="p-8 space-y-8">
+
+    <h1 class="text-2xl font-bold">Loan Officer Dashboard</h1>
+
+    <!-- KPI CARDS -->
+    <div class="grid md:grid-cols-4 gap-6">
+        <div *ngFor="let s of stats" class="bg-white p-6 rounded-xl shadow">
+            <p class="text-sm text-gray-500">{{ s.label }}</p>
+            <p class="text-3xl font-bold mt-2">{{ s.value }}</p>
+        </div>
+    </div>
+
+    <!-- PENDING TASKS -->
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-lg font-semibold mb-4">My Pending Work</h2>
+
+        <table class="w-full text-sm">
+            <tr class="border-b text-gray-500">
+                <th class="py-2">Application</th>
+                <th>Applicant</th>
+                <th>Stage</th>
+                <th>Pending (days)</th>
+                <th></th>
+            </tr>
+
+            <tr *ngFor="let t of pendingTasks" class="border-b">
+                <td class="py-2">{{ t.id }}</td>
+                <td>{{ t.applicant }}</td>
+                <td>{{ t.stage }}</td>
+                <td>{{ t.daysPending }}</td>
+                <td>
+                    <a [routerLink]="['/loan-officer/application', t.id]" class="text-indigo-600 hover:underline">
+                        Review
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</section>

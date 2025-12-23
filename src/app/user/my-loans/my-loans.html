@@ -1,0 +1,27 @@
+<h2 class="text-2xl font-bold mb-6">My Loans</h2>
+
+<table class="w-full bg-white rounded-xl shadow overflow-hidden">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="p-3 text-left">Loan ID</th>
+            <th class="p-3 text-left">Amount</th>
+            <th class="p-3 text-left">Status</th>
+            <th class="p-3 text-left">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let loan of loans" class="border-t">
+            <td class="p-3">{{ loan.loanId }}</td>
+            <td class="p-3">₹{{ loan.amount }}</td>
+            <td class="p-3 font-medium">
+                {{ loan.status }}
+            </td>
+            <td class="p-3">
+                <a [routerLink]="['/user/my-loans', loan.loanId]" class="text-blue-600 hover:underline font-medium">
+                    View Details
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

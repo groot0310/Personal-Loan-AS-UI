@@ -1,0 +1,57 @@
+<section class="p-8">
+
+    <h1 class="text-2xl font-bold mb-6">Loan Applications</h1>
+
+    <!-- FILTER BAR -->
+    <div class="flex gap-4 mb-6">
+        <select class="border rounded px-3 py-2 text-sm" [(ngModel)]="statusFilter">
+            <option value="ALL">All Status</option>
+            <option value="PENDING_ADMIN">Pending Admin</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+        </select>
+    </div>
+
+    <!-- APPLICATION TABLE -->
+    <table class="w-full bg-white rounded-xl shadow overflow-hidden">
+        <thead class="bg-gray-100 text-left text-sm">
+            <tr>
+                <th class="p-3">Application ID</th>
+                <th>Applicant</th>
+                <th>Amount</th>
+                <th>Loan Officer</th>
+                <th>Status</th>
+                <th>Applied On</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let app of filteredApplications" class="border-t text-sm">
+                <td class="p-3 font-medium">{{ app.id }}</td>
+                <td>{{ app.applicant }}</td>
+                <td>₹{{ app.amount | number }}</td>
+                <td>{{ app.officer }}</td>
+
+                <td>
+                    <span class="px-2 py-1 rounded text-xs font-medium" [ngClass]="{
+              'bg-yellow-100 text-yellow-700': app.status === 'PENDING_ADMIN',
+              'bg-green-100 text-green-700': app.status === 'APPROVED',
+              'bg-red-100 text-red-700': app.status === 'REJECTED'
+            }">
+                        {{ app.status }}
+                    </span>
+                </td>
+
+                <td>{{ app.appliedOn }}</td>
+
+                <td>
+                    <a [routerLink]="['/admin/applications', app.id]" class="text-indigo-600 hover:underline text-sm">
+                        Review
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</section>

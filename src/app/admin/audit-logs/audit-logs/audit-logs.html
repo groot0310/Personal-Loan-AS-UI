@@ -1,0 +1,25 @@
+<section class="p-8">
+
+    <h1 class="text-2xl font-bold mb-6">Audit Logs</h1>
+
+    <table class="w-full bg-white rounded-xl shadow text-sm">
+        <thead class="bg-gray-100 text-left">
+            <tr>
+                <th class="p-3">User</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let log of logs" class="border-t">
+                <td class="p-3">{{ log.user }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.target }}</td>
+                <td>{{ log.date }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</section>

@@ -1,0 +1,39 @@
+<section class="p-8 bg-slate-100 min-h-screen max-w-xl mx-auto">
+
+    <h1 class="text-2xl font-bold mb-6">Edit Profile</h1>
+
+    <div class="bg-white p-6 rounded-xl shadow space-y-4">
+
+        <label class="block">
+            Full Name
+            <input type="text" class="input w-full mt-1" value="Dil" />
+        </label>
+
+        <label class="block">
+            Email
+            <input type="email" class="input w-full mt-1" value="dil@email.com" />
+        </label>
+
+        <label class="block">
+            Phone
+            <input type="text" class="input w-full mt-1" value="+91 9XXXXXXXXX" />
+        </label>
+
+        <label class="block">
+            Address
+            <textarea class="input w-full mt-1">Pune, Maharashtra</textarea>
+        </label>
+
+        <div class="flex justify-end gap-3 pt-4">
+            <a routerLink="/user/profile" class="px-4 py-2 rounded border border-slate-300">
+                Cancel
+            </a>
+
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded">
+                Save Changes
+            </button>
+        </div>
+
+    </div>
+
+</section>

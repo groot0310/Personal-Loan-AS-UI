@@ -1,0 +1,47 @@
+<section class="p-8">
+
+    <h1 class="text-2xl font-bold mb-6">Disbursement Authorization</h1>
+
+    <table class="w-full bg-white rounded-xl shadow">
+        <thead class="bg-gray-100 text-left text-sm">
+            <tr>
+                <th class="p-3">Application</th>
+                <th>Applicant</th>
+                <th>Amount</th>
+                <th>Bank</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let d of disbursements" class="border-t text-sm">
+                <td class="p-3">{{ d.id }}</td>
+                <td>{{ d.applicant }}</td>
+                <td>₹{{ d.amount }}</td>
+                <td>{{ d.bank }}</td>
+                <td>
+                    <button class="bg-green-600 text-white px-3 py-1 rounded" (click)="openConfirm(d.id)">
+                        Authorize
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- CONFIRM MODAL -->
+    <div *ngIf="selectedId" class="fixed inset-0 bg-black/40 flex items-center justify-center">
+
+        <div class="bg-white p-6 rounded-xl w-96">
+            <h3 class="font-semibold mb-4">Confirm Disbursement</h3>
+            <p class="mb-6">Authorize disbursement for {{ selectedId }}?</p>
+
+            <div class="flex justify-end gap-3">
+                <button class="px-4 py-2" (click)="cancel()">Cancel</button>
+                <button class="bg-green-600 text-white px-4 py-2 rounded" (click)="confirm()">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+</section>

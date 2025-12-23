@@ -1,0 +1,78 @@
+<section class="p-8 space-y-10">
+
+    <!-- PAGE TITLE -->
+    <h1 class="text-3xl font-bold text-slate-800">
+        Admin Dashboard
+    </h1>
+
+    <!-- KPI CARDS -->
+    <div class="grid md:grid-cols-4 gap-6">
+        <div *ngFor="let stat of stats" class="bg-white rounded-xl p-6 shadow hover:shadow-md transition cursor-pointer"
+            [routerLink]="stat.link || null">
+
+            <p class="text-sm text-slate-500">
+                {{ stat.label }}
+            </p>
+
+            <p class="text-3xl font-bold mt-2" [ngClass]="stat.color">
+                {{ stat.value }}
+            </p>
+
+            <p class="text-xs text-slate-400 mt-1">
+                {{ stat.sub }}
+            </p>
+        </div>
+    </div>
+
+    <!-- PENDING APPROVALS -->
+    <div class="bg-white rounded-xl p-6 shadow">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold">
+                Pending Admin Approvals
+            </h2>
+
+            <a routerLink="/admin/applications" class="text-sm text-indigo-600 hover:underline">
+                View All
+            </a>
+        </div>
+
+        <table class="w-full text-sm">
+            <tr class="text-left text-slate-500 border-b">
+                <th class="py-2">Application ID</th>
+                <th>Amount</th>
+                <th>Loan Officer</th>
+                <th></th>
+            </tr>
+
+            <tr *ngFor="let app of pendingApprovals" class="border-b">
+                <td class="py-2">{{ app.id }}</td>
+                <td>{{ app.amount }}</td>
+                <td>{{ app.officer }}</td>
+                <td>
+                    <a [routerLink]="['/admin/applications', app.id]" class="text-indigo-600 text-sm hover:underline">
+                        Review
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="bg-white rounded-xl p-6 shadow">
+        <h2 class="text-lg font-semibold mb-4">
+            Recent Activity
+        </h2>
+
+        <ul class="space-y-3">
+            <li *ngFor="let act of activities" class="flex justify-between text-sm">
+                <span class="text-slate-700">
+                    {{ act.text }}
+                </span>
+                <span class="text-slate-400">
+                    {{ act.time }}
+                </span>
+            </li>
+        </ul>
+    </div>
+
+</section>
