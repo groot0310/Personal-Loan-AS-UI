@@ -76,12 +76,24 @@
                 </div>
 
                 <!-- SUBMIT BUTTON -->
-                <button type="submit" class="w-full mt-2 py-3 rounded-lg
-                               bg-stone-900 text-stone-100
-                               font-medium tracking-wide hover:bg-black transition">
-                    Enter Dashboard
+                <button type="submit" [disabled]="loginForm.invalid || loading" class="w-full mt-2 py-3 rounded-lg
+         bg-stone-900 text-stone-100
+         font-medium tracking-wide transition
+         disabled:bg-gray-400
+         disabled:text-gray-700
+         disabled:cursor-not-allowed
+         disabled:hover:bg-gray-400">
+                    {{ loading ? 'Signing In...' : 'Enter Dashboard' }}
                 </button>
+
+
+
+                <p *ngIf="errorMessage" class="text-red-600 text-sm text-center mt-2">
+                    {{ errorMessage }}
+                </p>
             </form>
+
+
 
             <!-- FOOTER LINKS -->
             <p class="text-xs text-stone-500 mt-6 text-center">
