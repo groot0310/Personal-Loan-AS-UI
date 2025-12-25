@@ -41,11 +41,17 @@ export class Login {
     this.authService.login(email, password).subscribe({
       next: (data) => {
         console.log('user successful:', data);
+        console.log('user successful:', data.userProfile.role);
    
         this.loading = false;
-        // this.router.navigate(['/user/dashboard']); // protected route
+        if (data.userProfile.role === 'USER') {
+          this.router.navigate(['/user/dashboard']); // protected route
+        } else if (data.userProfile.role === 'ADMIN') {
+          this.router.navigate(['/admin/dashboard']);
+        } else if (data.userProfile.role === 'LOAN_OFFICER') {
+          this.router.navigate(['/loan-officer/dashboard']);
+        }
 
-        this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
         this.loading = false;

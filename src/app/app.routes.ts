@@ -17,7 +17,7 @@ import { ApplicationDetails } from './loan-officer/application-details/applicati
 import { History } from './loan-officer/history/history';
 
 // Admin
-import {  AdminDashboard } from './admin/dashboard/admin-dashboard';
+import { AdminDashboard } from './admin/dashboard/admin-dashboard';
 
 import { MyLoans } from './user/my-loans/my-loans';
 import { EmiSchedule } from './user/emi-schedule/emi-schedule';
@@ -42,14 +42,16 @@ import { Documents } from './user/apply-loan/steps/documents/documents';
 import { ReviewSubmit } from './user/apply-loan/steps/review-submit/review-submit';
 import { ApplyLoanLayout } from './shared/layouts/apply-loan-layout/apply-loan-layout';
 import { AUTH_ROUTES } from './auth/auth.routes';
+import { LoanStepperComponent } from './shared/components/loan-stepper2/loan-stepper2';
+import { NotEligible } from './user/eligible/not-eligible/not-eligible';
 
 export const routes: Routes = [
   // HOME
   { path: '', component: Home },
-  
+
   // AUTH
   ...AUTH_ROUTES,
- 
+
 
   // USER
   {
@@ -60,6 +62,8 @@ export const routes: Routes = [
     children: [
       // Dashboard
       { path: 'dashboard', component: UserDashboard },
+
+      { path: 'loan-stepper2', component: LoanStepperComponent },
 
       // Apply Loan (multi-step)
       {
@@ -73,6 +77,11 @@ export const routes: Routes = [
           { path: 'documents', component: Documents },
           { path: 'review', component: ReviewSubmit },
         ],
+      },
+
+      {
+        path: 'not-eligible',
+        component: NotEligible
       },
 
       // Other user pages

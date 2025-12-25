@@ -10,7 +10,9 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string) {
-  return this.http.post<{ token: string }>(`${this.API}/login`, { email, password }).pipe(
+  return this.http.post<{
+    userProfile: any; token: string 
+}>(`${this.API}/login`, { email, password }).pipe(
     timeout(5000), // ⏱️ FAIL FAST (5 sec)
     tap(res => localStorage.setItem('token', res.token)),
     catchError(err => throwError(() => err))

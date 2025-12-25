@@ -1,0 +1,245 @@
+<div class="stepper-wrapper">
+
+
+    <mat-horizontal-stepper linear #stepper>
+
+        <!-- STEP 1: BASIC -->
+        <mat-step [stepControl]="basicForm">
+            <form [formGroup]="basicForm">
+                <h3>Basic Details</h3>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Loan Type</mat-label>
+                    <input matInput formControlName="loanType">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Requested Amount</mat-label>
+                    <input matInput type="number" formControlName="requestedAmount">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Tenure (Months)</mat-label>
+                    <input matInput type="number" formControlName="tenureMonths">
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" matStepperNext [disabled]="basicForm.invalid">
+                    Next
+                </button>
+            </form>
+        </mat-step>
+
+        <!-- STEP 2: PERSONAL -->
+        <mat-step [stepControl]="personalForm">
+            <form [formGroup]="personalForm">
+                <h3>Personal Details</h3>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Full Name</mat-label>
+                    <input matInput formControlName="fullName">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Mobile</mat-label>
+                    <input matInput formControlName="mobileNumber">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Date of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Gender</mat-label>
+                    <mat-select formControlName="gender">
+                        <mat-option value="Male">Male</mat-option>
+                        <mat-option value="Female">Female</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="address">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>City</mat-label>
+                    <input matInput formControlName="city">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>State</mat-label>
+                    <input matInput formControlName="state">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Pincode</mat-label>
+                    <input matInput formControlName="pincode">
+                </mat-form-field>
+
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-raised-button color="primary" matStepperNext [disabled]="personalForm.invalid">
+                    Next
+                </button>
+
+            </form>
+        </mat-step>
+
+        <!-- STEP 3: EMPLOYMENT -->
+        <mat-step [stepControl]="employmentForm">
+            <form [formGroup]="employmentForm">
+                <h3>Employment Details</h3>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Employment Type</mat-label>
+                    <mat-select formControlName="employmentType">
+                        <mat-option value="SALARIED">Salaried</mat-option>
+                        <mat-option value="SELF_EMPLOYED">Self Employed</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Monthly Income</mat-label>
+                    <input matInput formControlName="monthlyIncome">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Company Name</mat-label>
+                    <input matInput formControlName="companyName">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>PAN Number</mat-label>
+                    <input matInput formControlName="panNumber">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Aadhaar Number</mat-label>
+                    <input matInput formControlName="aadhaarNumber">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Bank Account Number</mat-label>
+                    <input matInput formControlName="bankAccount">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>IFSC Code</mat-label>
+                    <input matInput formControlName="ifscCode">
+                </mat-form-field>
+
+                <button mat-button matStepperPrevious>Back</button>
+                <!-- <button mat-raised-button color="primary" matStepperNext [disabled]="employmentForm.invalid">
+                    Next
+                </button> -->
+
+                <button mat-raised-button color="primary" (click)="checkEligibility(stepper)"
+                    [disabled]="employmentForm.invalid">
+                    Check Eligibility
+                </button>
+
+            </form>
+        </mat-step>
+
+        <!-- STEP 4: DOCUMENT UPLOAD -->
+        <mat-step>
+            <h3>Upload Documents</h3>
+
+            <input type="file" multiple (change)="onFileUpload($event)" />
+
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" matStepperNext >
+                Next
+            </button>
+
+        </mat-step>
+
+
+
+        <!-- STEP 5: REVIEW -->
+        <mat-step>
+            <h3>Review & Submit</h3>
+
+            <!-- BASIC DETAILS -->
+            <mat-card class="review-card">
+                <mat-card-title>Basic Details</mat-card-title>
+                <mat-card-content>
+                    <div class="review-grid">
+                        <div><strong>Loan Type:</strong> {{ basicForm.value.loanType }}</div>
+                        <div><strong>Amount:</strong> {{ basicForm.value.requestedAmount }}</div>
+                        <div><strong>Tenure:</strong> {{ basicForm.value.tenureMonths }} Months</div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- PERSONAL DETAILS -->
+            <mat-card class="review-card">
+                <mat-card-title>Personal Details</mat-card-title>
+                <mat-card-content>
+                    <div class="review-grid">
+                        <div><strong>Name:</strong> {{ personalForm.value.fullName }}</div>
+                        <div><strong>Email:</strong> {{ personalForm.value.email }}</div>
+                        <div><strong>Mobile:</strong> {{ personalForm.value.mobileNumber }}</div>
+                        <div><strong>DOB:</strong> {{ personalForm.value.dateOfBirth | date }}</div>
+                        <div><strong>Gender:</strong> {{ personalForm.value.gender }}</div>
+                        <div><strong>Address:</strong> {{ personalForm.value.address }}</div>
+                        <div><strong>City:</strong> {{ personalForm.value.city }}</div>
+                        <div><strong>State:</strong> {{ personalForm.value.state }}</div>
+                        <div><strong>Pincode:</strong> {{ personalForm.value.pincode }}</div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- EMPLOYMENT DETAILS -->
+            <mat-card class="review-card">
+                <mat-card-title>Employment Details</mat-card-title>
+                <mat-card-content>
+                    <div class="review-grid">
+                        <div><strong>Employment:</strong> {{ employmentForm.value.employmentType }}</div>
+                        <div><strong>Income:</strong> {{ employmentForm.value.monthlyIncome }}</div>
+                        <div><strong>Company:</strong> {{ employmentForm.value.companyName }}</div>
+                        <div><strong>PAN:</strong> {{ employmentForm.value.panNumber }}</div>
+                        <div><strong>Aadhaar:</strong> {{ employmentForm.value.aadhaarNumber }}</div>
+                        <div><strong>Bank A/C:</strong> {{ employmentForm.value.bankAccount }}</div>
+                        <div><strong>IFSC:</strong> {{ employmentForm.value.ifscCode }}</div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- DOCUMENTS -->
+            <mat-card class="review-card">
+                <mat-card-title>Uploaded Documents</mat-card-title>
+                <mat-card-content>
+                    <ul>
+                        <li *ngFor="let file of documents">
+                            {{ file.name }}
+                        </li>
+                    </ul>
+                </mat-card-content>
+            </mat-card>
+
+            <div class="review-actions">
+                <button mat-button matStepperPrevious>Edit</button>
+                <button mat-raised-button color="accent" (click)="submit()">
+                    Submit Application
+                </button>
+            </div>
+        </mat-step>
+
+
+        <!-- <button mat-button matStepperPrevious>Back</button>
+            <button mat-raised-button color="accent" (click)="submit()">
+                Submit Application
+            </button>
+        </mat-step> -->
+
+    </mat-horizontal-stepper>
+
+</div>
