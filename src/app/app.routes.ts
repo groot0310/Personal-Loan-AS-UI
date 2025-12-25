@@ -7,7 +7,7 @@ import { Register } from './auth/register/register';
 
 // User
 import { UserLayout } from './shared/layouts/user-layout/user-layout';
-import { UserDashboard } from './user/dashboard/dashboard';
+import { UserDashboard } from './user/dashboard/user-dashboard';
 
 // Loan Officer
 import { LoanOfficerLayout } from './shared/layouts/loan-officer-layout/loan-officer-layout';
@@ -17,7 +17,7 @@ import { ApplicationDetails } from './loan-officer/application-details/applicati
 import { History } from './loan-officer/history/history';
 
 // Admin
-import { Dashboard as AdminDashboard } from './admin/dashboard/dashboard';
+import {  AdminDashboard } from './admin/dashboard/admin-dashboard';
 
 import { MyLoans } from './user/my-loans/my-loans';
 import { EmiSchedule } from './user/emi-schedule/emi-schedule';
@@ -41,14 +41,15 @@ import { EmploymentDetails } from './user/apply-loan/steps/employment-details/em
 import { Documents } from './user/apply-loan/steps/documents/documents';
 import { ReviewSubmit } from './user/apply-loan/steps/review-submit/review-submit';
 import { ApplyLoanLayout } from './shared/layouts/apply-loan-layout/apply-loan-layout';
+import { AUTH_ROUTES } from './auth/auth.routes';
 
 export const routes: Routes = [
   // HOME
   { path: '', component: Home },
-
+  
   // AUTH
-  { path: 'login', component: Login },
-  { path: 'register', component: Register },
+  ...AUTH_ROUTES,
+ 
 
   // USER
   {

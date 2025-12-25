@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../authservice/auth-service';
 
 @Component({
   selector: 'app-register',
@@ -11,8 +12,10 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class Register {
   registerForm: FormGroup;
+  loading = false;
+  errorMsg = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.registerForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -20,16 +23,23 @@ export class Register {
       dateOfBirth: ['', Validators.required],
       address: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
     });
   }
 
   submit() {
-    if (this.registerForm.invalid) return;
+  if (this.registerForm.invalid) return;
 
-    console.log('REGISTER DATA', this.registerForm.value);
+  console.log('Submitting register form');
 
-    // later - backend call
-    this.router.navigate(['/login']);
-  }
+  this.authService.register(this.registerForm.value).subscribe({
+    next: (res) => {
+      console.log('Register success:', res);
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      console.error('Register failed:', err);
+    }
+  });
+}
+
 }

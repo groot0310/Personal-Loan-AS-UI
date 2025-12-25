@@ -10,7 +10,7 @@ import { ApplicationTimeline } from '../../shared/components/application-timelin
   standalone: true,
   selector: 'app-user-dashboard',
   imports: [CommonModule, RouterModule, ApplicationTimeline],
-  templateUrl: './dashboard.html',
+  templateUrl: './user-dashboard.html',
 })
 export class UserDashboard {
   currentStatus: ApplicationInitStatus = 'DOCUMENT_VERIFICATION_PENDING';
