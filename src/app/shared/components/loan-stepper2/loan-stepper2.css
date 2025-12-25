@@ -1,0 +1,29 @@
+.stepper-wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.review-card {
+  margin-bottom: 16px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LoanOfficerListComponent } from "../../loan-officer/loan-officer-list/loan-officer-list";
 
 @Component({
   standalone: true,
   selector: 'app-admin-dashboard',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, LoanOfficerListComponent],
   templateUrl: './admin-dashboard.html',
 })
 export class AdminDashboard {

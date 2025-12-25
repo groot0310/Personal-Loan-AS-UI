@@ -14,16 +14,32 @@ export class BasicDetails {
   private state = inject(ApplyLoanStateService);
   private router = inject(Router);
 
+  // form = this.fb.group({
+  //   loanAmount: [null, Validators.required],
+  //   tenure: [null, Validators.required],
+  //   creditScore: [null, Validators.required],
+  // });
+
+  
   form = this.fb.group({
-    loanAmount: [null, Validators.required],
-    tenure: [null, Validators.required],
-    creditScore: [null, Validators.required],
+    loanType: ['', Validators.required],
+    requestedAmount: ['', Validators.required],
+    tenureMonths: ['', Validators.required],
   });
 
+  // next() {
+  //   if (this.form.valid && (this.form.value.creditScore ?? 0) >= 650) {
+  //     this.state.set('basic', this.form.value);
+  //     this.router.navigate(['../personal']);
+  //   }
+  // }
+
   next() {
-    if (this.form.valid && (this.form.value.creditScore ?? 0) >= 650) {
+    if (this.form.valid) {
+      console.log('Basic details form valid:', this.form.value);
       this.state.set('basic', this.form.value);
       this.router.navigate(['../personal']);
     }
+    console.log('Basic @@@@ bhar:', this.form.value);
   }
 }
