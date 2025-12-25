@@ -6,9 +6,9 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   selector: 'app-admin-dashboard',
   imports: [CommonModule, RouterLink],
-  templateUrl: './dashboard.html',
+  templateUrl: './admin-dashboard.html',
 })
-export class Dashboard {
+export class AdminDashboard {
   stats = [
     {
       label: 'Total Users',

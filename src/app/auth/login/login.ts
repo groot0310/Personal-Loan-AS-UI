@@ -39,9 +39,13 @@ export class Login {
     const { email, password } = this.loginForm.value;
 
     this.authService.login(email, password).subscribe({
-      next: () => {
+      next: (data) => {
+        console.log('user successful:', data);
+   
         this.loading = false;
-        this.router.navigate(['/user/dashboard']); // protected route
+        // this.router.navigate(['/user/dashboard']); // protected route
+
+        this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
         this.loading = false;
