@@ -86,12 +86,14 @@ checkEligibility(stepper: any) {
 
   this.eligibilityService.checkEligibility(payload).subscribe({
     next: (res) => {
+      console.log('Eligibility Response:', res);
       if (res.finalEligibility === true) {
         // ✅ Move to Upload Documents
         stepper.next();
       } else {
         // ❌ Not eligible
-        this.router.navigate(['/not-eligible']);
+        console.log('User is not eligible for the loan.');
+        this.router.navigate(['user/not-eligible']);
       }
     },
     error: () => {
