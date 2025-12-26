@@ -1,16 +1,19 @@
 <div class="not-eligible-container">
   <mat-card>
-    <mat-card-title>You are not eligible ❌</mat-card-title>
+    <div class="status-icon" style="font-size: 50px; margin-bottom: 10px;">❌</div>
+    
+    <mat-card-title>Not Eligible</mat-card-title>
+    
     <mat-card-content>
       <p>
         Based on the provided information, you do not meet the eligibility
-        criteria for this loan.
+        criteria for this loan at this time.
       </p>
     </mat-card-content>
 
     <mat-card-actions>
       <button mat-raised-button color="primary" routerLink="/dashboard">
-        Go to Dashboard
+        Return to Dashboard
       </button>
     </mat-card-actions>
   </mat-card>
