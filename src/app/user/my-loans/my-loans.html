@@ -1,27 +1,62 @@
-<h2 class="text-2xl font-bold mb-6">My Loans</h2>
+<section class="px-8 py-6 max-w-7xl mx-auto">
 
-<table class="w-full bg-white rounded-xl shadow overflow-hidden">
-    <thead class="bg-gray-100">
-        <tr>
-            <th class="p-3 text-left">Loan ID</th>
-            <th class="p-3 text-left">Amount</th>
-            <th class="p-3 text-left">Status</th>
-            <th class="p-3 text-left">Action</th>
-        </tr>
-    </thead>
+    <!-- Heading Card -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">My Loans</h2>
+        <p class="text-gray-500 mt-1">Track and manage all your loan applications</p>
+    </div>
 
-    <tbody>
-        <tr *ngFor="let loan of loans" class="border-t">
-            <td class="p-3">{{ loan.loanId }}</td>
-            <td class="p-3">₹{{ loan.amount }}</td>
-            <td class="p-3 font-medium">
-                {{ loan.status }}
-            </td>
-            <td class="p-3">
-                <a [routerLink]="['/user/my-loans', loan.loanId]" class="text-blue-600 hover:underline font-medium">
-                    View Details
-                </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Table Card -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                    <th class="p-4 text-left font-semibold">Loan ID</th>
+                    <th class="p-4 text-left font-semibold">Amount</th>
+                    <th class="p-4 text-left font-semibold">Status</th>
+                    <th class="p-4 text-left font-semibold">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr
+                    *ngFor="let loan of loans"
+                    class="border-t hover:bg-gray-50 transition"
+                >
+                    <td class="p-4 font-medium text-gray-800">
+                        {{ loan.loanId }}
+                    </td>
+
+                    <td class="p-4 text-gray-700">
+                        ₹{{ loan.amount }}
+                    </td>
+
+                    <td class="p-4">
+                        <span
+                            class="px-3 py-1 rounded-full text-xs font-semibold"
+                            [ngClass]="{
+                                'bg-yellow-100 text-yellow-700': loan.status === 'PENDING',
+                                'bg-green-100 text-green-700': loan.status === 'APPROVED',
+                                'bg-red-100 text-red-700': loan.status === 'REJECTED'
+                            }"
+                        >
+                            {{ loan.status }}
+                        </span>
+                    </td>
+
+                    <td class="p-4">
+                        <a
+                            [routerLink]="['/user/my-loans', loan.loanId]"
+                            class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
+                        >
+                            View Details →
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</section>

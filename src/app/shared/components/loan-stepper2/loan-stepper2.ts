@@ -23,19 +23,22 @@ import { Router } from '@angular/router';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatCardModule
+    MatCardModule,
   ],
-  templateUrl: './loan-stepper2.html'
+  templateUrl: './loan-stepper2.html',
 })
 export class LoanStepperComponent {
-
   basicForm!: FormGroup;
   personalForm!: FormGroup;
   employmentForm!: FormGroup;
 
   documents: File[] = [];
 
-  constructor(private fb: FormBuilder,private eligibilityService: EligibilityService,private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private eligibilityService: EligibilityService,
+    private router: Router
+  ) {
     this.initializeForms();
   }
 
@@ -44,7 +47,7 @@ export class LoanStepperComponent {
     this.basicForm = this.fb.group({
       loanType: ['PERSONAL', Validators.required],
       requestedAmount: [10000, Validators.required],
-      tenureMonths: [12, Validators.required]
+      tenureMonths: [12, Validators.required],
     });
 
     // STEP 2 – PERSONAL
@@ -57,7 +60,7 @@ export class LoanStepperComponent {
       address: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      pincode: ['', Validators.required]
+      pincode: ['', Validators.required],
     });
 
     // STEP 3 – EMPLOYMENT
@@ -68,7 +71,7 @@ export class LoanStepperComponent {
       panNumber: ['', Validators.required],
       aadhaarNumber: ['', Validators.required],
       bankAccount: ['', Validators.required],
-      ifscCode: ['', Validators.required]
+      ifscCode: ['', Validators.required],
     });
   }
 
@@ -76,40 +79,37 @@ export class LoanStepperComponent {
     this.documents = Array.from(event.target.files);
   }
 
-checkEligibility(stepper: any) {
+  checkEligibility(stepper: any) {
+    const payload = {
+      ...this.basicForm.value,
+      ...this.personalForm.value,
+      ...this.employmentForm.value,
+    };
 
-  const payload = {
-    ...this.basicForm.value,
-    ...this.personalForm.value,
-    ...this.employmentForm.value
-  };
-
-  this.eligibilityService.checkEligibility(payload).subscribe({
-    next: (res) => {
-      console.log('Eligibility Response:', res);
-      if (res.finalEligibility === true) {
-        // ✅ Move to Upload Documents
-        stepper.next();
-      } else {
-        // ❌ Not eligible
-        console.log('User is not eligible for the loan.');
-        this.router.navigate(['user/not-eligible']);
-      }
-    },
-    error: () => {
-      alert('Eligibility check failed');
-    }
-  });
-}
-
-
+    this.eligibilityService.checkEligibility(payload).subscribe({
+      next: (res) => {
+        console.log('Eligibility Response:', res);
+        if (res.finalEligibility === true) {
+          // ✅ Move to Upload Documents
+          stepper.next();
+        } else {
+          // ❌ Not eligible
+          console.log('User is not eligible for the loan.');
+          this.router.navigate(['user/not-eligible']);
+        }
+      },
+      error: () => {
+        alert('Eligibility check failed');
+      },
+    });
+  }
 
   submit() {
     const payload = {
       ...this.basicForm.value,
       ...this.personalForm.value,
       ...this.employmentForm.value,
-      documents: this.documents
+      documents: this.documents,
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);
