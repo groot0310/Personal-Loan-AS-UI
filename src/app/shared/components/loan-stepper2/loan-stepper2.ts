@@ -10,6 +10,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-loan-stepper',
@@ -24,6 +27,8 @@ import { Router } from '@angular/router';
     MatDatepickerModule,
     MatNativeDateModule,
     MatCardModule,
+    MatIconModule,
+    MatSnackBarModule,
   ],
   templateUrl: './loan-stepper2.html',
 })
@@ -33,11 +38,13 @@ export class LoanStepperComponent {
   employmentForm!: FormGroup;
 
   documents: File[] = [];
+  issubmitted = false;
 
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.initializeForms();
   }
@@ -113,6 +120,15 @@ export class LoanStepperComponent {
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);
-    alert('Loan Application Submitted Successfully');
+
+    // show success popup and redirect to dashboard
+    this.issubmitted = true;
+    const ref = this.snackBar.open('Your loan application has been successfully submitted.', 'OK', {
+      duration: 2500,
+    });
+
+    ref.afterDismissed().subscribe(() => {
+      this.router.navigate(['/user/dashboard']);
+    });
   }
 }
