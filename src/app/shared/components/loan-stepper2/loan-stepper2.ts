@@ -10,6 +10,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
 import { Router } from '@angular/router';
+import { DocumentType } from '../../types/document-type';
 
 @Component({
   selector: 'app-loan-stepper',
@@ -26,11 +27,25 @@ import { Router } from '@angular/router';
     MatCardModule,
   ],
   templateUrl: './loan-stepper2.html',
+  styleUrls: ['./loan-stepper2.css']
 })
 export class LoanStepperComponent {
   basicForm!: FormGroup;
   personalForm!: FormGroup;
   employmentForm!: FormGroup;
+
+uploadedDocs: Record<DocumentType, boolean> = {
+  AADHAAR: false,
+  PAN: false,
+  EMPLOYMENT_SLIP: false,
+  ADDRESS_PROOF: false
+};
+applicationId: number = 0;
+
+uploadedFiles: Partial<Record<DocumentType, any>> = {};
+
+
+
 
   documents: File[] = [];
 
@@ -75,41 +90,88 @@ export class LoanStepperComponent {
     });
   }
 
+
+checkEligibility(stepper: any) {
+
+  const payload = {
+    ...this.basicForm.value,
+    ...this.personalForm.value,
+    ...this.employmentForm.value
+  };
+
+  this.eligibilityService.checkEligibility(payload).subscribe({
+    next: (res) => {
+      console.log('Eligibility Response:', res);
+        this.applicationId = res.applicationId;
+      // if (res.finalEligibility === true) {
+        if (res.loanType === "PERSONAL") {
+        // ✅ Move to Upload Documents
+        stepper.next();
+      } else {
+        // ❌ Not eligible
+        console.log('User is not eligible for the loan.');
+        this.router.navigate(['user/not-eligible']);
+      }
+    },
+    error: () => {
+      alert('Eligibility check failed');
+    }
+  });
+}
+
+
   onFileUpload(event: any) {
     this.documents = Array.from(event.target.files);
   }
 
-  checkEligibility(stepper: any) {
-    const payload = {
-      ...this.basicForm.value,
-      ...this.personalForm.value,
-      ...this.employmentForm.value,
-    };
+  uploadDocument(event: Event, docType: DocumentType): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) return;
 
-    this.eligibilityService.checkEligibility(payload).subscribe({
-      next: (res) => {
-        console.log('Eligibility Response:', res);
-        if (res.finalEligibility === true) {
-          // ✅ Move to Upload Documents
-          stepper.next();
-        } else {
-          // ❌ Not eligible
-          console.log('User is not eligible for the loan.');
-          this.router.navigate(['user/not-eligible']);
-        }
-      },
-      error: () => {
-        alert('Eligibility check failed');
-      },
-    });
-  }
+  const file: File = input.files[0];
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('documentType', docType);
+  formData.append('loanApplicationId', this.applicationId.toString());
+
+  this.eligibilityService.uploadDocument(formData).subscribe({
+    next: (res) => {
+      console.log(`${docType} uploaded successfully`, res);
+
+      this.uploadedDocs[docType] = true;
+      this.uploadedFiles[docType] = res;
+
+      // reset input so same file can be re-uploaded if needed
+      input.value = '';
+    },
+    error: () => {
+      this.uploadedDocs[docType] = false;
+      alert(`Failed to upload ${docType}`);
+    }
+  });
+}
+
+
+allDocumentsUploaded(): boolean {
+  return (
+    this.uploadedDocs['AADHAAR'] &&
+    this.uploadedDocs['PAN'] &&
+    this.uploadedDocs['EMPLOYMENT_SLIP'] &&
+    this.uploadedDocs['ADDRESS_PROOF']
+  );
+}
+
+
+
 
   submit() {
     const payload = {
       ...this.basicForm.value,
       ...this.personalForm.value,
       ...this.employmentForm.value,
-      documents: this.documents,
+      // documents: this.documents
+       documents: this.uploadedFiles
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);

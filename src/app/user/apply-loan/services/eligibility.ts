@@ -13,4 +13,12 @@ export class EligibilityService {
       payload
     );
   }
+
+  uploadDocument(formData: FormData) {
+  return this.http.post(
+    'http://localhost:8080/api/documents/uploadSingleDocumnet',
+    formData
+  );
+}
+
 }
