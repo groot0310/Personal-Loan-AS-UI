@@ -1,47 +1,65 @@
-<div class="min-h-screen flex bg-slate-100">
+<div class="min-h-screen bg-slate-100">
 
-    <!-- SIDEBAR -->
-    <aside class="w-64 bg-slate-900 text-slate-100 flex flex-col">
-        <div class="px-6 py-5 border-b border-slate-700">
-            <h2 class="text-xl font-bold">Admin Panel</h2>
-            <p class="text-xs text-slate-400 mt-1">Final Authority</p>
+    <!-- ================= TOP NAV CARD ================= -->
+    <div class="px-8 pt-8">
+        <div class="max-w-[1800px] mx-auto bg-white rounded-3xl shadow-xl border border-slate-200">
+
+            <!-- BRAND -->
+            <div class="px-10 py-6 border-b border-slate-200 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-indigo-600 tracking-tight">
+                        CrediFlow
+                    </h1>
+                    <p class="text-sm text-slate-500">
+                        Admin Panel
+                    </p>
+                </div>
+
+                <div class="px-10 py-4 border-t  flex justify-end">
+                    <a routerLink="/" class="px-6 py-2 rounded-xl text-sm font-medium text-red-600
+                          hover:bg-red-50 transition">
+                        Logout
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- NAV LINKS -->
+            <nav class="px-10 py-6">
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-7">
+
+                    <a routerLink="/admin/dashboard" routerLinkActive="nav-active" class="nav-card">
+                        Dashboard
+                    </a>
+
+                    <a routerLink="/admin/applications" routerLinkActive="nav-active" class="nav-card">
+                        Application
+                    </a>
+
+                    <a routerLink="/admin/disbursements" routerLinkActive="nav-active" class="nav-card">
+                        Disbursements
+                    </a>
+
+                    <a routerLink="/admin/system-rules" routerLinkActive="nav-active" class="nav-card">
+                        System Rule
+                    </a>
+
+                    <a routerLink="/admin/audit-logs" routerLinkActive="nav-active" class="nav-card">
+                        Audit Logs
+                    </a>
+
+                    <a routerLink="/admin/loan-officers" routerLinkActive="nav-active" class="nav-card">
+                        Loan Offiers
+                    </a>
+
+                </div>
+            </nav>
+
         </div>
+    </div>
 
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <a routerLink="/admin/dashboard" routerLinkActive="bg-slate-800"
-                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
-                Dashboard
-            </a>
-
-            <a routerLink="/admin/applications" routerLinkActive="bg-slate-800"
-                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
-                Applications
-            </a>
-
-            <a routerLink="/admin/disbursements" routerLinkActive="bg-slate-800"
-                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
-                Disbursements
-            </a>
-
-            <a routerLink="/admin/system-rules" routerLinkActive="bg-slate-800"
-                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
-                System Rules
-            </a>
-
-            <a routerLink="/admin/audit-logs" routerLinkActive="bg-slate-800"
-                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
-                Audit Logs
-            </a>
-
-            <a routerLink="/" routerLinkActive="bg-slate-800"
-                class="block px-4 py-2 rounded-lg hover:bg-slate-800 transition">
-                Logout
-            </a>
-        </nav>
-    </aside>
-
-    <!-- CONTENT -->
-    <main class="flex-1 p-8 overflow-y-auto">
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="max-w-[1400px] mx-auto px-8 py-10">
         <router-outlet></router-outlet>
     </main>
 

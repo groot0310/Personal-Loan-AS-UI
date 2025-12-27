@@ -1,45 +1,62 @@
-<div class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg">
-        <div class="p-6 text-xl font-bold text-blue-600">
-            Personal Loan
+<div class="min-h-screen bg-slate-100">
+
+    <!-- ================= TOP NAV CARD ================= -->
+    <div class="px-8 pt-8">
+        <div class="max-w-[1800px] mx-auto bg-white rounded-3xl shadow-xl border border-slate-200">
+
+            <!-- BRAND -->
+            <div class="px-10 py-6 border-b border-slate-200 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-indigo-600 tracking-tight">
+                        CrediFlow
+                    </h1>
+                    <p class="text-sm text-slate-500">
+                        Personal Loan Portal
+                    </p>
+                </div>
+
+                <div class="px-10 py-4 border-t  flex justify-end">
+                    <a routerLink="/" class="px-6 py-2 rounded-xl text-sm font-medium text-red-600
+                          hover:bg-red-50 transition">
+                        Logout
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- NAV LINKS -->
+            <nav class="px-10 py-6">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+
+                    <a routerLink="/user/dashboard" routerLinkActive="nav-active" class="nav-card">
+                        Dashboard
+                    </a>
+
+                    <a routerLink="/user/loan-stepper2" routerLinkActive="nav-active" class="nav-card">
+                        Apply Loan
+                    </a>
+
+                    <a routerLink="/user/my-loans" routerLinkActive="nav-active" class="nav-card">
+                        My Loans
+                    </a>
+
+                    <a routerLink="/user/emi-schedule" routerLinkActive="nav-active" class="nav-card">
+                        EMI Schedule
+                    </a>
+
+                    <a routerLink="/user/profile" routerLinkActive="nav-active" class="nav-card">
+                        Profile
+                    </a>
+
+                </div>
+            </nav>
+
         </div>
+    </div>
 
-        <nav class="px-4 space-y-2">
-            <a routerLink="/user/dashboard" routerLinkActive="bg-blue-100 text-blue-700"
-                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
-                Dashboard
-            </a>
-
-            <a routerLink="/user/loan-stepper2" routerLinkActive="bg-blue-100 text-blue-700"
-                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
-                Apply Loan
-            </a>
-
-            <a routerLink="/user/my-loans" routerLinkActive="bg-blue-100 text-blue-700"
-                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
-                My Loans
-            </a>
-
-            <a routerLink="/user/emi-schedule" routerLinkActive="bg-blue-100 text-blue-700"
-                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
-                EMI Schedule
-            </a>
-
-            <a routerLink="/user/profile" routerLinkActive="bg-blue-100 text-blue-700"
-                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
-                Profile
-            </a>
-
-            <a routerLink="/" routerLinkActive="bg-blue-100 text-blue-700"
-                class="block px-4 py-2 rounded-lg hover:bg-gray-100">
-                Logout
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Main content -->
-    <main class="flex-1 p-6">
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="max-w-[1400px] mx-auto px-8 py-10">
         <router-outlet></router-outlet>
     </main>
+
 </div>

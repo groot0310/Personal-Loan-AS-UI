@@ -1,0 +1,27 @@
+.nav-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    border-radius: 16px;
+    font-weight: 500;
+    color: #334155; /* slate-700 */
+    background: #f8fafc; /* slate-50 */
+    border: 1px solid #e2e8f0; /* slate-200 */
+    transition: all 0.25s ease;
+}
+
+.nav-card:hover {
+    background: #eef2ff; /* indigo-50 */
+    border-color: #c7d2fe; /* indigo-200 */
+    color: #4338ca; /* indigo-700 */
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -10px rgba(79, 70, 229, 0.35);
+}
+
+.nav-active {
+    background: linear-gradient(to right, #4f46e5, #4338ca);
+    color: white !important;
+    border-color: transparent;
+    box-shadow: 0 15px 35px -15px rgba(79, 70, 229, 0.6);
+}

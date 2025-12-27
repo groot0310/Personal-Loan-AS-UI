@@ -44,6 +44,8 @@ import { ApplyLoanLayout } from './shared/layouts/apply-loan-layout/apply-loan-l
 import { AUTH_ROUTES } from './auth/auth.routes';
 import { LoanStepperComponent } from './shared/components/loan-stepper2/loan-stepper2';
 import { NotEligible } from './user/eligible/not-eligible/not-eligible';
+import { LoanOfficers } from './admin/loan-officers/loan-officers';
+import { EditLoanOfficer } from './admin/edit-loan-officer/edit-loan-officer';
 
 export const routes: Routes = [
   // HOME
@@ -51,7 +53,6 @@ export const routes: Routes = [
 
   // AUTH
   ...AUTH_ROUTES,
-
 
   // USER
   {
@@ -81,7 +82,7 @@ export const routes: Routes = [
 
       {
         path: 'not-eligible',
-        component: NotEligible
+        component: NotEligible,
       },
 
       // Other user pages
@@ -127,6 +128,8 @@ export const routes: Routes = [
       { path: 'disbursements', component: AdminDisbursementList },
       { path: 'system-rules', component: SystemRules },
       { path: 'audit-logs', component: AuditLogs },
+      { path: 'loan-officers', component: LoanOfficers },
+      { path: 'edit-loan-officers', component: EditLoanOfficer },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

@@ -26,6 +26,9 @@
               }
             ],
             "styles": [
+              "src/material-theme.scss",
+              "src/styles.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ]
           },

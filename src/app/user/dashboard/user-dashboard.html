@@ -1,42 +1,137 @@
-<section class="p-8 bg-slate-100 min-h-screen">
+<section class="min-h-screen bg-slate-100 p-8 space-y-10">
 
-    <!-- WELCOME -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-slate-800">
-            Welcome back 👋
-        </h1>
-        <p class="text-slate-500 mt-1">
-            Here’s the current status of your personal loan application
+    <!-- HEADER -->
+    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-semibold text-slate-800">
+                Welcome back
+            </h1>
+            <p class="text-slate-500 mt-1">
+                Track and manage your personal loan journey
+            </p>
+        </div>
+
+        <div class="px-10 py-4 border-t  flex justify-end">
+                    <a routerLink="/" class="px-6 py-2 rounded-xl text-sm font-medium text-red-600
+                          hover:bg-red-50 transition">
+                        Logout
+                    </a>
+                </div>
+
+        <!-- <button routerLink="/user/home" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition">
+            Logout
+        </button> -->
+    </header>
+
+    <!-- QUICK ACTIONS -->
+    <div class="grid md:grid-cols-4 gap-6">
+
+    <a routerLink="/user/loan-stepper2"
+        class="group bg-white border border-slate-200 rounded-2xl p-6
+               transition-all duration-300 ease-out
+               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+
+        <p class="text-xs uppercase tracking-wide text-slate-500">
+            New Application
         </p>
-    </div>
 
-    <button routerLink="/user/loan-stepper2" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium
-                           hover:bg-indigo-700 transition shadow">Apply loan btn</button>
+        <h3
+            class="mt-2 text-lg font-medium text-slate-800
+                   transition-colors group-hover:text-indigo-600">
+            Apply for Loan
+        </h3>
 
-    <!-- MAIN STATUS CARD -->
-    <div class="bg-white rounded-2xl shadow border border-slate-200 p-6 mb-8">
+        <p class="mt-1 text-sm text-slate-500">
+            Start a fresh loan request
+        </p>
+    </a>
+
+
+    <a routerLink="/user/my-loans"
+        class="group bg-white border border-slate-200 rounded-2xl p-6
+               transition-all duration-300 ease-out
+               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+
+        <p class="text-xs uppercase tracking-wide text-slate-500">
+            Overview
+        </p>
+
+        <h3
+            class="mt-2 text-lg font-medium text-slate-800
+                   transition-colors group-hover:text-indigo-600">
+            My Loans
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+            View active & past loans
+        </p>
+    </a>
+
+
+    <a routerLink="/user/emi-schedule"
+        class="group bg-white border border-slate-200 rounded-2xl p-6
+               transition-all duration-300 ease-out
+               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+
+        <p class="text-xs uppercase tracking-wide text-slate-500">
+            Payments
+        </p>
+
+        <h3
+            class="mt-2 text-lg font-medium text-slate-800
+                   transition-colors group-hover:text-indigo-600">
+            EMI Schedule
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Monthly breakdown
+        </p>
+    </a>
+
+
+    <a routerLink="/user/profile"
+        class="group bg-white border border-slate-200 rounded-2xl p-6
+               transition-all duration-300 ease-out
+               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+
+        <p class="text-xs uppercase tracking-wide text-slate-500">
+            Account
+        </p>
+
+        <h3
+            class="mt-2 text-lg font-medium text-slate-800
+                   transition-colors group-hover:text-indigo-600">
+            Profile
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Personal & KYC info
+        </p>
+    </a>
+
+</div>
+
+
+    <!-- CURRENT STATUS -->
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
 
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
-            <!-- LEFT -->
             <div>
-                <p class="text-sm uppercase tracking-wide text-slate-500 mb-1">
+                <p class="text-xs uppercase tracking-widest text-slate-500 mb-2">
                     Current Loan Status
                 </p>
-
                 <h2 class="text-2xl font-semibold text-slate-800">
                     {{ currentStatusLabel }}
                 </h2>
-
-                <p class="text-slate-500 mt-2 max-w-lg">
+                <p class="mt-2 text-slate-500 max-w-xl">
                     {{ statusDescription }}
                 </p>
             </div>
 
-            <!-- PRIMARY ACTION -->
-            <div *ngIf="primaryActionLabel" class="flex-shrink-0">
-                <button [routerLink]="primaryActionRoute" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium
-                           hover:bg-indigo-700 transition shadow">
+            <div *ngIf="primaryActionLabel">
+                <button [routerLink]="primaryActionRoute" class="px-6 py-3 rounded-xl bg-slate-900 text-slate-100
+                           font-medium hover:bg-black transition">
                     {{ primaryActionLabel }}
                 </button>
             </div>
@@ -45,10 +140,10 @@
 
     </div>
 
-    <!-- TIMELINE PREVIEW -->
-    <div class="bg-white rounded-2xl shadow border border-slate-200 p-6 mb-8">
+    <!-- APPLICATION TIMELINE -->
+    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
 
-        <h3 class="text-sm font-semibold text-slate-700 mb-5 uppercase tracking-wide">
+        <h3 class="text-xs font-semibold uppercase tracking-widest text-slate-600 mb-6">
             Application Progress
         </h3>
 
@@ -57,29 +152,26 @@
 
     </div>
 
-    <!-- INFO CARDS -->
+    <!-- LOAN SUMMARY -->
     <div class="grid md:grid-cols-3 gap-6">
 
-        <!-- LOAN AMOUNT -->
-        <div class="bg-white rounded-xl shadow border border-slate-200 p-5">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
             <p class="text-sm text-slate-500">Loan Amount</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">
+            <p class="mt-2 text-2xl font-semibold text-slate-800">
                 ₹5,00,000
             </p>
         </div>
 
-        <!-- TENURE -->
-        <div class="bg-white rounded-xl shadow border border-slate-200 p-5">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
             <p class="text-sm text-slate-500">Tenure</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">
+            <p class="mt-2 text-2xl font-semibold text-slate-800">
                 36 Months
             </p>
         </div>
 
-        <!-- EMI -->
-        <div class="bg-white rounded-xl shadow border border-slate-200 p-5">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
             <p class="text-sm text-slate-500">Estimated EMI</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">
+            <p class="mt-2 text-2xl font-semibold text-slate-800">
                 ₹16,200
             </p>
         </div>

@@ -1,41 +1,70 @@
-<h2 class="text-2xl font-bold mb-6">EMI Schedule</h2>
+<section class="px-8 py-6 max-w-7xl mx-auto">
 
-<table class="w-full bg-white rounded-xl shadow overflow-hidden">
-    <thead class="bg-gray-100">
-        <tr>
-            <th class="p-3 text-left">Month</th>
-            <th class="p-3 text-left">Amount</th>
-            <th class="p-3 text-left">Status</th>
-            <th class="p-3 text-left">Action</th>
-        </tr>
-    </thead>
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">
+                EMI Schedule
+            </h2>
+            <p class="text-sm text-gray-500">
+                Monthly repayment breakdown
+            </p>
+        </div>
+    </div>
 
-    <tbody>
-        <tr *ngFor="let emi of emis" class="border-t">
-            <td class="p-3">{{ emi.month }}</td>
+    <!-- EMI Table Card -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-            <td class="p-3">₹{{ emi.amount }}</td>
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                    <th class="p-4 text-left font-semibold">Month</th>
+                    <th class="p-4 text-left font-semibold">EMI Amount</th>
+                    <th class="p-4 text-left font-semibold">Status</th>
+                    <th class="p-4 text-left font-semibold">Action</th>
+                </tr>
+            </thead>
 
-            <td class="p-3">
-                <span class="px-2 py-1 rounded text-sm" [ngClass]="{
-            'bg-green-100 text-green-700': emi.status === 'PAID',
-            'bg-yellow-100 text-yellow-700': emi.status === 'DUE',
-            'bg-gray-200 text-gray-600': emi.status === 'UPCOMING'
-          }">
-                    {{ emi.status }}
-                </span>
-            </td>
+            <tbody>
+                <tr *ngFor="let emi of emis" class="border-t hover:bg-gray-50 transition">
 
-            <td class="p-3">
-                <button *ngIf="emi.status === 'DUE'" (click)="payEmi(emi)"
-                    class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700">
-                    Pay EMI
-                </button>
+                    <!-- Month -->
+                    <td class="p-4 font-medium text-gray-800">
+                        {{ emi.month }}
+                    </td>
 
-                <span *ngIf="emi.status !== 'DUE'" class="text-gray-400">
-                    —
-                </span>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                    <!-- Amount -->
+                    <td class="p-4 text-gray-700">
+                        ₹{{ emi.amount }}
+                    </td>
+
+                    <!-- Status -->
+                    <td class="p-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="{
+                                'bg-green-100 text-green-700': emi.status === 'PAID',
+                                'bg-yellow-100 text-yellow-700': emi.status === 'DUE',
+                                'bg-gray-200 text-gray-600': emi.status === 'UPCOMING'
+                            }">
+                            {{ emi.status }}
+                        </span>
+                    </td>
+
+                    <!-- Action -->
+                    <td class="p-4">
+                        <button *ngIf="emi.status === 'DUE'" (click)="payEmi(emi)" class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold
+                                   hover:bg-green-700 transition">
+                            Pay EMI
+                        </button>
+
+                        <span *ngIf="emi.status !== 'DUE'" class="text-gray-400">
+                            —
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
