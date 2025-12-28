@@ -11,6 +11,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
 import { Router } from '@angular/router';
 import { DocumentType } from '../../types/document-type';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-loan-stepper',
@@ -25,6 +27,7 @@ import { DocumentType } from '../../types/document-type';
     MatDatepickerModule,
     MatNativeDateModule,
     MatCardModule,
+    MatSnackBarModule
   ],
   templateUrl: './loan-stepper2.html',
   styleUrls: ['./loan-stepper2.css']
@@ -37,8 +40,8 @@ export class LoanStepperComponent {
 uploadedDocs: Record<DocumentType, boolean> = {
   AADHAAR: false,
   PAN: false,
-  EMPLOYMENT_SLIP: false,
-  ADDRESS_PROOF: false
+  SALARY_SLIP: false,
+  BANK_STATEMENT: false
 };
 applicationId: number = 0;
 
@@ -52,7 +55,8 @@ uploadedFiles: Partial<Record<DocumentType, any>> = {};
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar // <-- Add this
   ) {
     this.initializeForms();
   }
@@ -103,8 +107,8 @@ checkEligibility(stepper: any) {
     next: (res) => {
       console.log('Eligibility Response:', res);
         this.applicationId = res.applicationId;
-      // if (res.finalEligibility === true) {
-        if (res.loanType === "PERSONAL") {
+      if (res.finalEligibility === true) {
+        // if (res.loanType === "PERSONAL") {
         // ✅ Move to Upload Documents
         stepper.next();
       } else {
@@ -157,8 +161,8 @@ allDocumentsUploaded(): boolean {
   return (
     this.uploadedDocs['AADHAAR'] &&
     this.uploadedDocs['PAN'] &&
-    this.uploadedDocs['EMPLOYMENT_SLIP'] &&
-    this.uploadedDocs['ADDRESS_PROOF']
+    this.uploadedDocs['SALARY_SLIP'] &&
+    this.uploadedDocs['BANK_STATEMENT']
   );
 }
 
@@ -170,11 +174,17 @@ allDocumentsUploaded(): boolean {
       ...this.basicForm.value,
       ...this.personalForm.value,
       ...this.employmentForm.value,
-      // documents: this.documents
-       documents: this.uploadedFiles
+      documents: this.uploadedFiles
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);
-    alert('Loan Application Submitted Successfully');
+      const snackBarRef = this.snackBar.open('Loan Application Submitted Successfully', 'Close', {
+      duration: 5000, // 5 seconds
+      verticalPosition: 'top'
+    });
+
+     snackBarRef.afterDismissed().subscribe(() => {
+    this.router.navigate(['user/dashboard']);
+  });
   }
 }
