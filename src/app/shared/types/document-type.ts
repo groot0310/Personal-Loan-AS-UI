@@ -1,5 +1,5 @@
 export type DocumentType =
   | 'AADHAAR'
   | 'PAN'
-  | 'EMPLOYMENT_SLIP'
-  | 'ADDRESS_PROOF';
+  | 'SALARY_SLIP'
+  | 'BANK_STATEMENT';
