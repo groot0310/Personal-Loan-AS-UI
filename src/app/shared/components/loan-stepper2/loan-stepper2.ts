@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { DocumentType } from '../../types/document-type';
 
 @Component({
   selector: 'app-loan-stepper',
@@ -31,11 +32,22 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule,
   ],
   templateUrl: './loan-stepper2.html',
+  styleUrls: ['./loan-stepper2.css'],
 })
 export class LoanStepperComponent {
   basicForm!: FormGroup;
   personalForm!: FormGroup;
   employmentForm!: FormGroup;
+
+  uploadedDocs: Record<DocumentType, boolean> = {
+    AADHAAR: false,
+    PAN: false,
+    SALARY_SLIP: false,
+    BANK_STATEMENT: false,
+  };
+  applicationId: number = 0;
+
+  uploadedFiles: Partial<Record<DocumentType, any>> = {};
 
   documents: File[] = [];
   issubmitted = false;
@@ -82,10 +94,6 @@ export class LoanStepperComponent {
     });
   }
 
-  onFileUpload(event: any) {
-    this.documents = Array.from(event.target.files);
-  }
-
   checkEligibility(stepper: any) {
     const payload = {
       ...this.basicForm.value,
@@ -96,7 +104,9 @@ export class LoanStepperComponent {
     this.eligibilityService.checkEligibility(payload).subscribe({
       next: (res) => {
         console.log('Eligibility Response:', res);
+        this.applicationId = res.applicationId;
         if (res.finalEligibility === true) {
+          // if (res.loanType === "PERSONAL") {
           // ✅ Move to Upload Documents
           stepper.next();
         } else {
@@ -111,24 +121,63 @@ export class LoanStepperComponent {
     });
   }
 
+  onFileUpload(event: any) {
+    this.documents = Array.from(event.target.files);
+  }
+
+  uploadDocument(event: Event, docType: DocumentType): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file: File = input.files[0];
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('documentType', docType);
+    formData.append('loanApplicationId', this.applicationId.toString());
+
+    this.eligibilityService.uploadDocument(formData).subscribe({
+      next: (res) => {
+        console.log(`${docType} uploaded successfully`, res);
+
+        this.uploadedDocs[docType] = true;
+        this.uploadedFiles[docType] = res;
+
+        // reset input so same file can be re-uploaded if needed
+        input.value = '';
+      },
+      error: () => {
+        this.uploadedDocs[docType] = false;
+        alert(`Failed to upload ${docType}`);
+      },
+    });
+  }
+
+  allDocumentsUploaded(): boolean {
+    return (
+      this.uploadedDocs['AADHAAR'] &&
+      this.uploadedDocs['PAN'] &&
+      this.uploadedDocs['SALARY_SLIP'] &&
+      this.uploadedDocs['BANK_STATEMENT']
+    );
+  }
+
   submit() {
     const payload = {
       ...this.basicForm.value,
       ...this.personalForm.value,
       ...this.employmentForm.value,
-      documents: this.documents,
+      documents: this.uploadedFiles,
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);
-
-    // show success popup and redirect to dashboard
-    this.issubmitted = true;
-    const ref = this.snackBar.open('Your loan application has been successfully submitted.', 'OK', {
-      duration: 2500,
+    const snackBarRef = this.snackBar.open('Loan Application Submitted Successfully', 'Close', {
+      duration: 5000, // 5 seconds
+      verticalPosition: 'top',
     });
 
-    ref.afterDismissed().subscribe(() => {
-      this.router.navigate(['/user/dashboard']);
+    snackBarRef.afterDismissed().subscribe(() => {
+      this.router.navigate(['user/dashboard']);
     });
   }
 }

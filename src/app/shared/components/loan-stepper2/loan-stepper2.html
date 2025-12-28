@@ -249,7 +249,7 @@
                 </mat-step>
 
                 <!-- ================= STEP 4 ================= -->
-                <mat-step>
+                <!-- <mat-step>
                     <h3 class="text-xl font-semibold text-slate-800 mb-6">
                         Upload Documents
                     </h3>
@@ -270,7 +270,43 @@
                             Continue
                         </button>
                     </div>
-                </mat-step>
+                </mat-step> -->
+
+                <mat-step>
+                            <h3>Upload Documents</h3>
+
+                            <div class="doc-upload">
+
+                                <!-- Aadhaar -->
+                                <label>Aadhaar Card</label>
+                                <input type="file" (change)="uploadDocument($event, 'AADHAAR')" />
+                                <p *ngIf="uploadedDocs.AADHAAR">✅ Uploaded</p>
+
+                                <!-- PAN -->
+                                <label>PAN Card</label>
+                                <input type="file" (change)="uploadDocument($event, 'PAN')" />
+                                <p *ngIf="uploadedDocs.PAN">✅ Uploaded</p>
+
+                                <!-- Employment Slip -->
+                                <label>Employment Slip</label>
+                                <input type="file" (change)="uploadDocument($event, 'SALARY_SLIP')" />
+                                <p *ngIf="uploadedDocs.SALARY_SLIP">✅ Uploaded</p>
+
+                                <!-- Address Proof -->
+                                <label>Address Proof</label>
+                                <input type="file" (change)="uploadDocument($event, 'BANK_STATEMENT')" />
+                                <p *ngIf="uploadedDocs.BANK_STATEMENT">✅ Uploaded</p>
+
+                            </div>
+
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-raised-button color="primary" matStepperNext
+                               
+                                >
+                                Next
+                            </button>
+                        </mat-step>
+
 
                 <!-- ================= STEP 5 ================= -->
                 <mat-step>
