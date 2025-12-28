@@ -10,6 +10,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DocumentType } from '../../types/document-type';
 
 @Component({
@@ -25,34 +28,35 @@ import { DocumentType } from '../../types/document-type';
     MatDatepickerModule,
     MatNativeDateModule,
     MatCardModule,
+    MatIconModule,
+    MatSnackBarModule,
   ],
   templateUrl: './loan-stepper2.html',
-  styleUrls: ['./loan-stepper2.css']
+  styleUrls: ['./loan-stepper2.css'],
 })
 export class LoanStepperComponent {
   basicForm!: FormGroup;
   personalForm!: FormGroup;
   employmentForm!: FormGroup;
 
-uploadedDocs: Record<DocumentType, boolean> = {
-  AADHAAR: false,
-  PAN: false,
-  EMPLOYMENT_SLIP: false,
-  ADDRESS_PROOF: false
-};
-applicationId: number = 0;
+  uploadedDocs: Record<DocumentType, boolean> = {
+    AADHAAR: false,
+    PAN: false,
+    SALARY_SLIP: false,
+    BANK_STATEMENT: false,
+  };
+  applicationId: number = 0;
 
-uploadedFiles: Partial<Record<DocumentType, any>> = {};
-
-
-
+  uploadedFiles: Partial<Record<DocumentType, any>> = {};
 
   documents: File[] = [];
+  issubmitted = false;
 
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.initializeForms();
   }
@@ -90,91 +94,90 @@ uploadedFiles: Partial<Record<DocumentType, any>> = {};
     });
   }
 
+  checkEligibility(stepper: any) {
+    const payload = {
+      ...this.basicForm.value,
+      ...this.personalForm.value,
+      ...this.employmentForm.value,
+    };
 
-checkEligibility(stepper: any) {
-
-  const payload = {
-    ...this.basicForm.value,
-    ...this.personalForm.value,
-    ...this.employmentForm.value
-  };
-
-  this.eligibilityService.checkEligibility(payload).subscribe({
-    next: (res) => {
-      console.log('Eligibility Response:', res);
+    this.eligibilityService.checkEligibility(payload).subscribe({
+      next: (res) => {
+        console.log('Eligibility Response:', res);
         this.applicationId = res.applicationId;
-      // if (res.finalEligibility === true) {
-        if (res.loanType === "PERSONAL") {
-        // ✅ Move to Upload Documents
-        stepper.next();
-      } else {
-        // ❌ Not eligible
-        console.log('User is not eligible for the loan.');
-        this.router.navigate(['user/not-eligible']);
-      }
-    },
-    error: () => {
-      alert('Eligibility check failed');
-    }
-  });
-}
-
+        if (res.finalEligibility === true) {
+          // if (res.loanType === "PERSONAL") {
+          // ✅ Move to Upload Documents
+          stepper.next();
+        } else {
+          // ❌ Not eligible
+          console.log('User is not eligible for the loan.');
+          this.router.navigate(['user/not-eligible']);
+        }
+      },
+      error: () => {
+        alert('Eligibility check failed');
+      },
+    });
+  }
 
   onFileUpload(event: any) {
     this.documents = Array.from(event.target.files);
   }
 
   uploadDocument(event: Event, docType: DocumentType): void {
-  const input = event.target as HTMLInputElement;
-  if (!input.files || input.files.length === 0) return;
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
 
-  const file: File = input.files[0];
+    const file: File = input.files[0];
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('documentType', docType);
-  formData.append('loanApplicationId', this.applicationId.toString());
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('documentType', docType);
+    formData.append('loanApplicationId', this.applicationId.toString());
 
-  this.eligibilityService.uploadDocument(formData).subscribe({
-    next: (res) => {
-      console.log(`${docType} uploaded successfully`, res);
+    this.eligibilityService.uploadDocument(formData).subscribe({
+      next: (res) => {
+        console.log(`${docType} uploaded successfully`, res);
 
-      this.uploadedDocs[docType] = true;
-      this.uploadedFiles[docType] = res;
+        this.uploadedDocs[docType] = true;
+        this.uploadedFiles[docType] = res;
 
-      // reset input so same file can be re-uploaded if needed
-      input.value = '';
-    },
-    error: () => {
-      this.uploadedDocs[docType] = false;
-      alert(`Failed to upload ${docType}`);
-    }
-  });
-}
+        // reset input so same file can be re-uploaded if needed
+        input.value = '';
+      },
+      error: () => {
+        this.uploadedDocs[docType] = false;
+        alert(`Failed to upload ${docType}`);
+      },
+    });
+  }
 
-
-allDocumentsUploaded(): boolean {
-  return (
-    this.uploadedDocs['AADHAAR'] &&
-    this.uploadedDocs['PAN'] &&
-    this.uploadedDocs['EMPLOYMENT_SLIP'] &&
-    this.uploadedDocs['ADDRESS_PROOF']
-  );
-}
-
-
-
+  allDocumentsUploaded(): boolean {
+    return (
+      this.uploadedDocs['AADHAAR'] &&
+      this.uploadedDocs['PAN'] &&
+      this.uploadedDocs['SALARY_SLIP'] &&
+      this.uploadedDocs['BANK_STATEMENT']
+    );
+  }
 
   submit() {
     const payload = {
       ...this.basicForm.value,
       ...this.personalForm.value,
       ...this.employmentForm.value,
-      // documents: this.documents
-       documents: this.uploadedFiles
+      documents: this.uploadedFiles,
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);
-    alert('Loan Application Submitted Successfully');
+    const snackBarRef = this.snackBar.open('Loan Application Submitted Successfully', 'Close', {
+      duration: 5000, // 5 seconds
+      verticalPosition: 'top',
+    });
+
+    snackBarRef.afterDismissed().subscribe(() => {
+      this.router.navigate(['user/dashboard']);
+    });
   }
 }

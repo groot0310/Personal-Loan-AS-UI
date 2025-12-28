@@ -289,19 +289,20 @@
 
                                 <!-- Employment Slip -->
                                 <label>Employment Slip</label>
-                                <input type="file" (change)="uploadDocument($event, 'EMPLOYMENT_SLIP')" />
-                                <p *ngIf="uploadedDocs.EMPLOYMENT_SLIP">✅ Uploaded</p>
+                                <input type="file" (change)="uploadDocument($event, 'SALARY_SLIP')" />
+                                <p *ngIf="uploadedDocs.SALARY_SLIP">✅ Uploaded</p>
 
                                 <!-- Address Proof -->
                                 <label>Address Proof</label>
-                                <input type="file" (change)="uploadDocument($event, 'ADDRESS_PROOF')" />
-                                <p *ngIf="uploadedDocs.ADDRESS_PROOF">✅ Uploaded</p>
+                                <input type="file" (change)="uploadDocument($event, 'BANK_STATEMENT')" />
+                                <p *ngIf="uploadedDocs.BANK_STATEMENT">✅ Uploaded</p>
 
                             </div>
 
                             <button mat-button matStepperPrevious>Back</button>
                             <button mat-raised-button color="primary" matStepperNext
-                                [disabled]="!allDocumentsUploaded()">
+                               
+                                >
                                 Next
                             </button>
                         </mat-step>
@@ -342,6 +343,7 @@
                             Submit Application
                         </button>
                     </div>
+
                 </mat-step>
 
             </mat-horizontal-stepper>

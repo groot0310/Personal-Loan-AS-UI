@@ -29,13 +29,6 @@ export class AuthService {
     return this.http.post(`${this.API}/register`, data);
   }
 
-  //   register(data: any) {
-  //   return this.http.post(
-  //     'http://localhost:8080/api/auth/register',
-  //     data
-  //   );
-  // }
-
   logout() {
     // localStorage.removeItem('token');
     localStorage.removeItem('email');
