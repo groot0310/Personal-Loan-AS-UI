@@ -1,17 +1,13 @@
 <div class="min-h-screen bg-slate-100 py-10 px-4">
-
     <div class="max-w-6xl mx-auto">
-
         <!-- ================= HERO HEADER CARD ================= -->
         <div class="mb-10">
             <div class="relative overflow-hidden rounded-3xl bg-white shadow-xl border border-slate-200">
-
                 <!-- Gradient Accent -->
                 <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-indigo-600 to-slate-800">
                 </div>
 
                 <div class="p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
                     <div>
                         <h2 class="text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">
                             Personal Loan Application
@@ -25,20 +21,16 @@
                         <span class="w-2 h-2 bg-green-500 rounded-full"></span>
                         Secure & RBI Compliant
                     </div>
-
                 </div>
             </div>
         </div>
 
         <!-- ================= STEPPER CARD ================= -->
         <mat-card class="rounded-3xl shadow-xl p-6 md:p-8 bg-white border border-slate-200">
-
             <mat-horizontal-stepper linear #stepper>
-
                 <!-- ================= STEP 1 ================= -->
                 <mat-step [stepControl]="basicForm">
                     <form [formGroup]="basicForm">
-
                         <!-- STEP HEADER -->
                         <div class="flex items-start gap-4 mb-8">
                             <div
@@ -46,9 +38,7 @@
                                 1
                             </div>
                             <div>
-                                <h3 class="text-xl font-semibold text-slate-800">
-                                    Basic Loan Details
-                                </h3>
+                                <h3 class="text-xl font-semibold text-slate-800">Basic Loan Details</h3>
                                 <p class="text-sm text-slate-500 mt-1">
                                     Tell us about the loan you are applying for
                                 </p>
@@ -57,24 +47,22 @@
 
                         <div class="rounded-2xl bg-slate-50 p-6 border border-slate-200">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
                                 <mat-form-field appearance="outline" class="w-full">
                                     <mat-label>Loan Type</mat-label>
-                                    <input matInput formControlName="loanType">
+                                    <input matInput formControlName="loanType" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline" class="w-full">
                                     <mat-label>Requested Amount</mat-label>
                                     <span matPrefix>&nbsp;&nbsp;₹&nbsp;</span>
-                                    <input matInput type="number" formControlName="requestedAmount">
+                                    <input matInput type="number" formControlName="requestedAmount" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline" class="w-full">
                                     <mat-label>Tenure</mat-label>
-                                    <input matInput type="number" formControlName="tenureMonths">
+                                    <input matInput type="number" formControlName="tenureMonths" />
                                     <span matSuffix>Months&nbsp;&nbsp;&nbsp;</span>
                                 </mat-form-field>
-
                             </div>
                         </div>
 
@@ -84,50 +72,43 @@
                                 Continue
                             </button>
                         </div>
-
                     </form>
                 </mat-step>
 
                 <!-- ================= STEP 2 ================= -->
                 <mat-step [stepControl]="personalForm">
                     <form [formGroup]="personalForm">
-
                         <div class="flex items-start gap-4 mb-8">
                             <div
                                 class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold">
                                 2
                             </div>
                             <div>
-                                <h3 class="text-xl font-semibold text-slate-800">
-                                    Personal Details
-                                </h3>
-                                <p class="text-sm text-slate-500 mt-1">
-                                    Your identity and contact information
-                                </p>
+                                <h3 class="text-xl font-semibold text-slate-800">Personal Details</h3>
+                                <p class="text-sm text-slate-500 mt-1">Your identity and contact information</p>
                             </div>
                         </div>
 
                         <div class="rounded-2xl bg-slate-50 p-6 border border-slate-200">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                                 <mat-form-field appearance="outline">
                                     <mat-label>Full Name</mat-label>
-                                    <input matInput formControlName="fullName">
+                                    <input matInput formControlName="fullName" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Email</mat-label>
-                                    <input matInput formControlName="email">
+                                    <input matInput formControlName="email" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Mobile</mat-label>
-                                    <input matInput formControlName="mobileNumber">
+                                    <input matInput formControlName="mobileNumber" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Date of Birth</mat-label>
-                                    <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+                                    <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
@@ -142,24 +123,23 @@
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>City</mat-label>
-                                    <input matInput formControlName="city">
+                                    <input matInput formControlName="city" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline" class="md:col-span-2">
                                     <mat-label>Address</mat-label>
-                                    <input matInput formControlName="address">
+                                    <input matInput formControlName="address" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>State</mat-label>
-                                    <input matInput formControlName="state">
+                                    <input matInput formControlName="state" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Pincode</mat-label>
-                                    <input matInput formControlName="pincode">
+                                    <input matInput formControlName="pincode" />
                                 </mat-form-field>
-
                             </div>
                         </div>
 
@@ -169,32 +149,25 @@
                                 Continue
                             </button>
                         </div>
-
                     </form>
                 </mat-step>
 
                 <!-- ================= STEP 3 ================= -->
                 <mat-step [stepControl]="employmentForm">
                     <form [formGroup]="employmentForm">
-
                         <div class="flex items-start gap-4 mb-8">
                             <div
                                 class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold">
                                 3
                             </div>
                             <div>
-                                <h3 class="text-xl font-semibold text-slate-800">
-                                    Employment & Financial Details
-                                </h3>
-                                <p class="text-sm text-slate-500 mt-1">
-                                    Income and banking information
-                                </p>
+                                <h3 class="text-xl font-semibold text-slate-800">Employment & Financial Details</h3>
+                                <p class="text-sm text-slate-500 mt-1">Income and banking information</p>
                             </div>
                         </div>
 
                         <div class="rounded-2xl bg-slate-50 p-6 border border-slate-200">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                                 <mat-form-field appearance="outline">
                                     <mat-label>Employment Type</mat-label>
                                     <mat-select formControlName="employmentType">
@@ -206,34 +179,33 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Monthly Income</mat-label>
                                     <span matPrefix>₹&nbsp;</span>
-                                    <input matInput formControlName="monthlyIncome">
+                                    <input matInput formControlName="monthlyIncome" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Company Name</mat-label>
-                                    <input matInput formControlName="companyName">
+                                    <input matInput formControlName="companyName" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>PAN Number</mat-label>
-                                    <input matInput formControlName="panNumber">
+                                    <input matInput formControlName="panNumber" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Aadhaar Number</mat-label>
-                                    <input matInput formControlName="aadhaarNumber">
+                                    <input matInput formControlName="aadhaarNumber" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Bank Account Number</mat-label>
-                                    <input matInput formControlName="bankAccount">
+                                    <input matInput formControlName="bankAccount" />
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>IFSC Code</mat-label>
-                                    <input matInput formControlName="ifscCode">
+                                    <input matInput formControlName="ifscCode" />
                                 </mat-form-field>
-
                             </div>
                         </div>
 
@@ -244,7 +216,6 @@
                                 Check Eligibility
                             </button>
                         </div>
-
                     </form>
                 </mat-step>
 
@@ -273,49 +244,108 @@
                 </mat-step> -->
 
                 <mat-step>
-                            <h3>Upload Documents</h3>
 
-                            <div class="doc-upload">
+                    <!-- TITLE -->
+                    <h3 class="text-2xl font-semibold text-slate-800 mb-6">
+                        Upload Required Documents
+                    </h3>
 
-                                <!-- Aadhaar -->
-                                <label>Aadhaar Card</label>
-                                <input type="file" (change)="uploadDocument($event, 'AADHAAR')" />
-                                <p *ngIf="uploadedDocs.AADHAAR">✅ Uploaded</p>
+                    <p class="text-slate-500 mb-8">
+                        Please upload clear and valid documents to proceed with your loan application.
+                    </p>
 
-                                <!-- PAN -->
-                                <label>PAN Card</label>
-                                <input type="file" (change)="uploadDocument($event, 'PAN')" />
-                                <p *ngIf="uploadedDocs.PAN">✅ Uploaded</p>
+                    <!-- DOCUMENT GRID -->
+                    <div class="grid md:grid-cols-2 gap-6">
 
-                                <!-- Employment Slip -->
-                                <label>Employment Slip</label>
-                                <input type="file" (change)="uploadDocument($event, 'SALARY_SLIP')" />
-                                <p *ngIf="uploadedDocs.SALARY_SLIP">✅ Uploaded</p>
+                        <!-- Aadhaar -->
+                        <div class="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-medium text-slate-800">Aadhaar Card</span>
 
-                                <!-- Address Proof -->
-                                <label>Address Proof</label>
-                                <input type="file" (change)="uploadDocument($event, 'BANK_STATEMENT')" />
-                                <p *ngIf="uploadedDocs.BANK_STATEMENT">✅ Uploaded</p>
-
+                                <span *ngIf="uploadedDocs.AADHAAR" class="text-emerald-600 text-sm font-medium">
+                                    ✔ Uploaded
+                                </span>
                             </div>
 
-                            <button mat-button matStepperPrevious>Back</button>
-                            <button mat-raised-button color="primary" matStepperNext
-                               
-                                >
-                                Next
-                            </button>
-                        </mat-step>
+                            <input type="file" class="block w-full text-sm text-slate-600
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-lg file:border-0
+               file:bg-indigo-50 file:text-indigo-700
+               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'AADHAAR')" />
+                        </div>
+
+                        <!-- PAN -->
+                        <div class="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-medium text-slate-800">PAN Card</span>
+
+                                <span *ngIf="uploadedDocs.PAN" class="text-emerald-600 text-sm font-medium">
+                                    ✔ Uploaded
+                                </span>
+                            </div>
+
+                            <input type="file" class="block w-full text-sm text-slate-600
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-lg file:border-0
+               file:bg-indigo-50 file:text-indigo-700
+               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'PAN')" />
+                        </div>
+
+                        <!-- Employment Slip -->
+                        <div class="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-medium text-slate-800">Salary Slip</span>
+
+                                <span *ngIf="uploadedDocs.SALARY_SLIP" class="text-emerald-600 text-sm font-medium">
+                                    ✔ Uploaded
+                                </span>
+                            </div>
+
+                            <input type="file" class="block w-full text-sm text-slate-600
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-lg file:border-0
+               file:bg-indigo-50 file:text-indigo-700
+               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'SALARY_SLIP')" />
+                        </div>
+
+                        <!-- Address Proof -->
+                        <div class="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="font-medium text-slate-800">Bank Statement</span>
+
+                                <span *ngIf="uploadedDocs.BANK_STATEMENT" class="text-emerald-600 text-sm font-medium">
+                                    ✔ Uploaded
+                                </span>
+                            </div>
+
+                            <input type="file" class="block w-full text-sm text-slate-600
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-lg file:border-0
+               file:bg-indigo-50 file:text-indigo-700
+               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'BANK_STATEMENT')" />
+                        </div>
+
+                    </div>
+
+                    <!-- ACTIONS -->
+                    <div class="flex justify-between mt-10">
+                        <button mat-stroked-button color="primary" matStepperPrevious>
+                            Back
+                        </button>
+
+                        <button mat-raised-button color="primary" matStepperNext [disabled]="!allDocumentsUploaded()">
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
 
 
                 <!-- ================= STEP 5 ================= -->
                 <mat-step>
-                    <h3 class="text-xl font-semibold text-slate-800 mb-6">
-                        Review & Submit
-                    </h3>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-6">Review & Submit</h3>
 
                     <div class="space-y-6">
-
                         <mat-card class="rounded-2xl">
                             <mat-card-title>Loan Summary</mat-card-title>
                             <mat-card-content class="grid md:grid-cols-3 gap-4">
@@ -334,20 +364,14 @@
                                 <div><strong>City:</strong> {{ personalForm.value.city }}</div>
                             </mat-card-content>
                         </mat-card>
-
                     </div>
 
                     <div class="flex justify-between mt-10">
                         <button mat-button matStepperPrevious>Edit</button>
-                        <button mat-raised-button color="accent" (click)="submit()">
-                            Submit Application
-                        </button>
+                        <button mat-raised-button color="accent" (click)="submit()">Submit Application</button>
                     </div>
-
                 </mat-step>
-
             </mat-horizontal-stepper>
-
         </mat-card>
     </div>
 </div>
