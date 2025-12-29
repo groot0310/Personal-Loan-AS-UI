@@ -44,7 +44,7 @@
             </span>
 
             <!-- ACTIONS -->
-            <div class="flex gap-2 pt-2">
+            <div class="flex-col gap-2 pt-2">
 
               <button class="text-sm text-indigo-600"
                 [disabled]="doc.status === 'REJECTED' || doc.status === 'NOT_UPLOADED'" (click)="viewDocument(doc)">
@@ -71,25 +71,35 @@
               Reason: {{ doc.remarks }}
             </p>
 
+
           </div>
+
+          <button class="mt-6 text-lg text-indigo-600 font-medium">
+            View Document →
+          </button>
         </div>
       </div>
-
-      <!-- REJECT / RETURN MODAL -->
-      <div *ngIf="showReasonBox" class="fixed inset-0 bg-black/40 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-xl w-[400px] space-y-4">
-          <h3 class="text-lg font-semibold">Enter Reason</h3>
-
-          <textarea class="w-full border rounded-lg p-2" [(ngModel)]="reasonText" rows="3"></textarea>
-
-          <div class="flex justify-end gap-3">
-            <button class="text-gray-500" (click)="showReasonBox = false">Cancel</button>
-            <button class="text-indigo-600" (click)="submitReason()">Submit</button>
-          </div>
-        </div>
-      </div>
-
     </div>
+
+    <!-- REJECT / RETURN MODAL -->
+    <ng-template #reasonDialog>
+      <div class="p-6 rounded-xl w-[400px] space-y-4">
+        <h3 class="text-lg font-semibold">
+          {{ actionType === 'REJECT' ? 'Reject Document' : 'Return Document' }}
+        </h3>
+
+        <textarea class="w-full border rounded-lg p-2" [(ngModel)]="reasonText" rows="3" placeholder="Enter reason">
+    </textarea>
+
+        <div class="flex justify-end gap-3">
+          <button mat-button (click)="dialogRef.close()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="submitReason()">
+            Submit
+          </button>
+        </div>
+      </div>
+    </ng-template>
+
   </ng-container>
 
   <ng-template #loading>
@@ -97,4 +107,28 @@
       Loading application…
     </div>
   </ng-template>
+
 </div>
+
+<ng-template #verifyConfirmDialog let-data>
+  <div class="p-8">
+    <h2 class="text-2xl font-semibold mb-4">
+      Confirm Document Verification
+    </h2>
+
+    <p class="text-slate-600 text-lg">
+      Are you sure you want to verify
+      <span class="font-semibold">{{ data.name }}</span>?
+    </p>
+
+    <div class="flex justify-end gap-4 mt-8">
+      <button mat-button (click)="dialogRef.close(false)">
+        Cancel
+      </button>
+
+      <button mat-raised-button color="primary" (click)="dialogRef.close(true)">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>

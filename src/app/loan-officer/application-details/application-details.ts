@@ -4,13 +4,19 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { BehaviorSubject, catchError, of, tap } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 import { mapStatusToStage } from '../../core/utils/application-status-mapper';
 import { ApplicationInitStatus } from '../../core/models/application-init-status.model';
 import { UIApplicationStage } from '../../core/models/ui-application-stage.model';
+import { BehaviorSubject, catchError, combineLatest, of, switchMap, tap } from 'rxjs';
+import { TemplateRef, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+
 
 import { NgFor, NgIf, NgClass } from '@angular/common';
+import { DecisionModal } from '../../shared/modals/decision-modal/decision-modal';
 
 /* ================= MODELS ================= */
 
@@ -39,14 +45,26 @@ interface UIDocument {
   remarks?: string;
 }
 
+
+
 @Component({
   standalone: true,
   selector: 'app-application-details',
-  imports: [CommonModule, FormsModule, MatCardModule, NgIf, NgFor, NgClass],
+  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule],
   templateUrl: './application-details.html',
   styleUrls: ['../../../styles.css'],
 })
 export class ApplicationDetails implements OnInit {
+
+  @ViewChild('verifyConfirmDialog') verifyConfirmDialog!: TemplateRef<any>;
+  dialogRef!: MatDialogRef<any>;
+
+  @ViewChild('reasonDialog') reasonDialog!: TemplateRef<any>;
+  dialogReasonRef!: MatDialogRef<any>;
+
+
+
+  /* ================= ROUTE ================= */
   applicationId!: string;
 
   loading$ = new BehaviorSubject<boolean>(true);
@@ -64,7 +82,7 @@ export class ApplicationDetails implements OnInit {
   selectedDoc?: UIDocument;
   actionType: 'REJECT' | 'RETURN' | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.applicationId = this.route.snapshot.paramMap.get('id')!;
@@ -133,21 +151,39 @@ export class ApplicationDetails implements OnInit {
   verifyDocument(doc: UIDocument) {
     if (!doc.documentId) return;
 
-    this.http
-      .post('http://localhost:8080/api/documents/approve', {
-        documentId: doc.documentId,
-        remarks: 'Verified',
-      })
-      .subscribe(() => (doc.status = 'VERIFIED'));
+    // OPEN CONFIRM DIALOG
+    this.dialogRef = this.dialog.open(this.verifyConfirmDialog, {
+      width: '420px',
+      data: { name: doc.documentType.replace('_', ' ') },
+      disableClose: true,
+    });
+
+    this.dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      // USER CONFIRMED → API CALL
+      this.http
+        .put('http://localhost:8080/api/documents/approve', {
+          documentId: doc.documentId,
+          remarks: 'Verified',
+        })
+        .subscribe(() => {
+          doc.status = 'VERIFIED';
+        });
+    });
   }
 
-  /* ================= REJECT / RETURN ================= */
 
+  /* ================= REJECT / RETURN ================= */
   openReasonBox(doc: UIDocument, action: 'REJECT' | 'RETURN') {
     this.selectedDoc = doc;
     this.actionType = action;
     this.reasonText = '';
-    this.showReasonBox = true;
+
+    this.dialogRef = this.dialog.open(this.reasonDialog, {
+      width: '420px',
+      disableClose: true,
+    });
   }
 
   submitReason() {
@@ -158,19 +194,30 @@ export class ApplicationDetails implements OnInit {
         ? 'http://localhost:8080/api/documents/reject'
         : 'http://localhost:8080/api/documents/return';
 
-    this.http
-      .post(url, {
-        documentId: this.selectedDoc.documentId,
-        remarks: this.reasonText,
-      })
-      .subscribe(() => {
-        this.selectedDoc!.status =
-          this.actionType === 'REJECT' ? 'REJECTED' : 'RETURNED_FOR_CORRECTION';
+    this.http.put(url, {
+      documentId: this.selectedDoc.documentId,
+      remarks: this.reasonText,
+    }).subscribe(() => {
 
-        this.selectedDoc!.remarks = this.reasonText;
-        this.showReasonBox = false;
-      });
+      this.selectedDoc!.status =
+        this.actionType === 'REJECT'
+          ? 'REJECTED'
+          : 'RETURNED_FOR_CORRECTION';
+
+      this.selectedDoc!.remarks = this.reasonText;
+
+      // ✅ CLOSE DIALOG
+      this.dialogRef.close();
+
+      // RESET STATE
+      this.reasonText = '';
+      this.selectedDoc = undefined;
+      this.actionType = null;
+    });
   }
+
+
+
 
   isStageCompleted(stage: UIApplicationStage): boolean {
     const order: UIApplicationStage[] = [
@@ -183,4 +230,15 @@ export class ApplicationDetails implements OnInit {
     ];
     return order.indexOf(stage) <= order.indexOf(this.currentStage);
   }
+
+  /* ================= BUTTON LOGIC ================= */
+  get canApprove(): boolean {
+    return this.currentStatus === 'DOCUMENT_VERIFICATION_PENDING';
+  }
+
+  get canReject(): boolean {
+    return this.currentStatus === 'DOCUMENT_VERIFICATION_PENDING';
+  }
+
+
 }
