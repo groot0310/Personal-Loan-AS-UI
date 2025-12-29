@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Applications } from '../../../loan-officer/applications/applications';
 
@@ -9,31 +8,28 @@ import { Applications } from '../../../loan-officer/applications/applications';
   selector: 'app-admin-application-list',
   imports: [CommonModule, RouterLink, FormsModule,Applications],
   templateUrl: './application-list.html',
+  imports: [CommonModule, FormsModule, Applications],
 })
-export class ApplicationList {
-  statusFilter: 'ALL' | 'PENDING_ADMIN' | 'APPROVED' | 'REJECTED' = 'ALL';
+export class ApplicationList implements OnInit {
+  applications: any[] = [];
+  statusFilter = 'ALL';
 
-  applications = [
-    {
-      id: 'PL-2031',
-      applicant: 'Rahul Sharma',
-      amount: 500000,
-      officer: 'Officer A',
-      status: 'PENDING_ADMIN',
-      appliedOn: '2025-01-12',
-    },
-    {
-      id: 'PL-2032',
-      applicant: 'Neha Verma',
-      amount: 300000,
-      officer: 'Officer B',
-      status: 'APPROVED',
-      appliedOn: '2025-01-11',
-    },
-  ];
+  constructor(private http: HttpClient) {}
 
-  get filteredApplications() {
-    if (this.statusFilter === 'ALL') return this.applications;
-    return this.applications.filter((a) => a.status === this.statusFilter);
+  ngOnInit(): void {
+    this.fetchApplications();
+  }
+
+  fetchApplications(): void {
+    this.http.get<any[]>('http://localhost:8080/api/admin/loan-applications').subscribe({
+      next: (res) => (this.applications = res),
+      error: (err) => console.error(err),
+    });
+  }
+
+  get filteredApplications(): any[] {
+    return this.statusFilter === 'ALL'
+      ? this.applications
+      : this.applications.filter((app) => app.applicationStatus === this.statusFilter);
   }
 }
