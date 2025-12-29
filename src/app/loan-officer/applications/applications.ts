@@ -17,7 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   standalone: true,
-  selector: 'app-loan-officer-applications',
+  selector: 'app-applications',
   imports: [CommonModule, RouterModule, MatPaginatorModule, MatProgressSpinnerModule],
   templateUrl: './applications.html',
 })
