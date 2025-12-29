@@ -220,32 +220,32 @@
                 </mat-step>
 
                 <!-- ================= STEP 4 ================= -->
-                <!-- <mat-step>
-                    <h3 class="text-xl font-semibold text-slate-800 mb-6">
-                        Upload Documents
-                    </h3>
+                <h3 class="text-xl font-semibold text-slate-800 mb-6">
+                    Upload Documents
+                </h3>
 
-                    <div class="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-                        <p class="text-slate-600 font-medium">
-                            Drag & drop your documents here
-                        </p>
-                        <p class="text-sm text-slate-500 mt-1">
-                            PDF / JPG / PNG • Max 5MB
-                        </p>
-                        <input type="file" multiple class="mt-4" (change)="onFileUpload($event)">
-                    </div>
+                <div class="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+                    <p class="text-slate-600 font-medium">
+                        Drag & drop your documents here
+                    </p>
+                    <p class="text-sm text-slate-500 mt-1">
+                        PDF / JPG / PNG • Max 5MB
+                    </p>
+                    <input type="file" multiple class="mt-4" (change)="onFileUpload($event)">
+                </div>
 
-                    <div class="flex justify-between mt-10">
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-raised-button color="primary" matStepperNext>
-                            Continue
-                        </button>
-                    </div>
-                </mat-step> -->
+                <div class="flex justify-between mt-10">
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-raised-button color="primary" matStepperNext>
+                        Continue
+                    </button>
+                </div>
 
+
+                <!-- ================= STEP 5 ================= -->
                 <mat-step>
+                    <ng-template matStepLabel>Documents</ng-template>
 
-                    <!-- TITLE -->
                     <h3 class="text-2xl font-semibold text-slate-800 mb-6">
                         Upload Required Documents
                     </h3>
@@ -254,7 +254,6 @@
                         Please upload clear and valid documents to proceed with your loan application.
                     </p>
 
-                    <!-- DOCUMENT GRID -->
                     <div class="grid md:grid-cols-2 gap-6">
 
                         <!-- Aadhaar -->
@@ -267,11 +266,7 @@
                                 </span>
                             </div>
 
-                            <input type="file" class="block w-full text-sm text-slate-600
-               file:mr-4 file:py-2 file:px-4
-               file:rounded-lg file:border-0
-               file:bg-indigo-50 file:text-indigo-700
-               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'AADHAAR')" />
+                            <input type="file" (change)="uploadDocument($event, 'AADHAAR')" />
                         </div>
 
                         <!-- PAN -->
@@ -284,14 +279,10 @@
                                 </span>
                             </div>
 
-                            <input type="file" class="block w-full text-sm text-slate-600
-               file:mr-4 file:py-2 file:px-4
-               file:rounded-lg file:border-0
-               file:bg-indigo-50 file:text-indigo-700
-               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'PAN')" />
+                            <input type="file" (change)="uploadDocument($event, 'PAN')" />
                         </div>
 
-                        <!-- Employment Slip -->
+                        <!-- Salary Slip -->
                         <div class="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm">
                             <div class="flex items-center justify-between mb-3">
                                 <span class="font-medium text-slate-800">Salary Slip</span>
@@ -301,14 +292,10 @@
                                 </span>
                             </div>
 
-                            <input type="file" class="block w-full text-sm text-slate-600
-               file:mr-4 file:py-2 file:px-4
-               file:rounded-lg file:border-0
-               file:bg-indigo-50 file:text-indigo-700
-               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'SALARY_SLIP')" />
+                            <input type="file" (change)="uploadDocument($event, 'SALARY_SLIP')" />
                         </div>
 
-                        <!-- Address Proof -->
+                        <!-- Bank Statement -->
                         <div class="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm">
                             <div class="flex items-center justify-between mb-3">
                                 <span class="font-medium text-slate-800">Bank Statement</span>
@@ -318,59 +305,140 @@
                                 </span>
                             </div>
 
-                            <input type="file" class="block w-full text-sm text-slate-600
-               file:mr-4 file:py-2 file:px-4
-               file:rounded-lg file:border-0
-               file:bg-indigo-50 file:text-indigo-700
-               hover:file:bg-indigo-100" (change)="uploadDocument($event, 'BANK_STATEMENT')" />
+                            <input type="file" (change)="uploadDocument($event, 'BANK_STATEMENT')" />
                         </div>
 
                     </div>
 
-                    <!-- ACTIONS -->
                     <div class="flex justify-between mt-10">
-                        <button mat-stroked-button color="primary" matStepperPrevious>
-                            Back
-                        </button>
+                        <button mat-button matStepperPrevious>Back</button>
 
                         <button mat-raised-button color="primary" matStepperNext [disabled]="!allDocumentsUploaded()">
-                            Next
+                            Continue
                         </button>
                     </div>
-
                 </mat-step>
 
 
-                <!-- ================= STEP 5 ================= -->
+                <!-- ================= STEP 6 ================= -->
                 <mat-step>
-                    <h3 class="text-xl font-semibold text-slate-800 mb-6">Review & Submit</h3>
 
-                    <div class="space-y-6">
-                        <mat-card class="rounded-2xl">
-                            <mat-card-title>Loan Summary</mat-card-title>
-                            <mat-card-content class="grid md:grid-cols-3 gap-4">
-                                <div><strong>Type:</strong> {{ basicForm.value.loanType }}</div>
-                                <div><strong>Amount:</strong> ₹{{ basicForm.value.requestedAmount }}</div>
-                                <div><strong>Tenure:</strong> {{ basicForm.value.tenureMonths }} months</div>
+                    <!-- HEADER -->
+                    <div class="mb-10">
+                        <h3 class="text-3xl font-semibold text-slate-800">
+                            Review & Submit
+                        </h3>
+                        <p class="mt-2 text-slate-500">
+                            Please review all details carefully before submitting your application
+                        </p>
+                    </div>
+
+                    <!-- REVIEW GRID -->
+                    <div class="grid lg:grid-cols-2 gap-10">
+
+                        <!-- LOAN SUMMARY -->
+                        <mat-card class="rounded-3xl border border-slate-200 shadow-md">
+                            <mat-card-content>
+
+                                <div class="flex items-center justify-between mb-6">
+                                    <h4 class="text-xl font-semibold text-slate-800">
+                                        Loan Summary
+                                    </h4>
+                                    <span class="text-sm text-slate-500">Step 1</span>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-6 text-center">
+
+                                    <div class="bg-slate-50 rounded-2xl p-6">
+                                        <p class="text-sm text-slate-500">Loan Type</p>
+                                        <p class="mt-1 text-lg font-semibold">
+                                            {{ basicForm.value.loanType }}
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-slate-50 rounded-2xl p-6">
+                                        <p class="text-sm text-slate-500">Amount</p>
+                                        <p class="mt-1 text-lg font-semibold">
+                                            ₹{{ basicForm.value.requestedAmount }}
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-slate-50 rounded-2xl p-6">
+                                        <p class="text-sm text-slate-500">Tenure</p>
+                                        <p class="mt-1 text-lg font-semibold">
+                                            {{ basicForm.value.tenureMonths }} months
+                                        </p>
+                                    </div>
+
+                                </div>
+
                             </mat-card-content>
                         </mat-card>
 
-                        <mat-card class="rounded-2xl">
-                            <mat-card-title>Applicant Details</mat-card-title>
-                            <mat-card-content class="grid md:grid-cols-2 gap-4">
-                                <div><strong>Name:</strong> {{ personalForm.value.fullName }}</div>
-                                <div><strong>Email:</strong> {{ personalForm.value.email }}</div>
-                                <div><strong>Mobile:</strong> {{ personalForm.value.mobileNumber }}</div>
-                                <div><strong>City:</strong> {{ personalForm.value.city }}</div>
+                        <!-- APPLICANT DETAILS -->
+                        <mat-card class="rounded-3xl border border-slate-200 shadow-md">
+                            <mat-card-content>
+
+                                <div class="flex items-center justify-between mb-6">
+                                    <h4 class="text-xl font-semibold text-slate-800">
+                                        Applicant Details
+                                    </h4>
+                                    <span class="text-sm text-slate-500">Step 2</span>
+                                </div>
+
+                                <div class="space-y-4 text-base">
+
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Full Name</span>
+                                        <span class="font-medium">
+                                            {{ personalForm.value.fullName }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Email</span>
+                                        <span class="font-medium">
+                                            {{ personalForm.value.email }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Mobile</span>
+                                        <span class="font-medium">
+                                            {{ personalForm.value.mobileNumber }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">City</span>
+                                        <span class="font-medium">
+                                            {{ personalForm.value.city }}
+                                        </span>
+                                    </div>
+
+                                </div>
+
                             </mat-card-content>
                         </mat-card>
+
                     </div>
 
-                    <div class="flex justify-between mt-10">
-                        <button mat-button matStepperPrevious>Edit</button>
-                        <button mat-raised-button color="accent" (click)="submit()">Submit Application</button>
+                    <!-- FOOTER ACTIONS -->
+                    <div class="mt-14 flex items-center justify-between border-t pt-8">
+
+                        <button mat-button matStepperPrevious class="text-slate-600">
+                            ← Edit Details
+                        </button>
+
+                        <button mat-raised-button color="accent" class="px-10 py-3 rounded-xl text-lg shadow-lg"
+                            (click)="submit()">
+                            Submit Application
+                        </button>
+
                     </div>
+
                 </mat-step>
+
             </mat-horizontal-stepper>
         </mat-card>
     </div>

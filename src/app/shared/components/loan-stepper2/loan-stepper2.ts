@@ -16,7 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DocumentType } from '../../types/document-type';
 
 @Component({
-  selector: 'app-loan-stepper',
+  selector: 'app-loan-stepper2',
   standalone: true,
   imports: [
     CommonModule,

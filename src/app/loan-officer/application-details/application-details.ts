@@ -4,144 +4,174 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { BehaviorSubject, catchError, of, tap } from 'rxjs';
 
-import { DecisionModal } from '../../shared/modals/decision-modal/decision-modal';
 import { mapStatusToStage } from '../../core/utils/application-status-mapper';
-
 import { ApplicationInitStatus } from '../../core/models/application-init-status.model';
 import { UIApplicationStage } from '../../core/models/ui-application-stage.model';
-import { BehaviorSubject, catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 
-/* ================= INTERFACES ================= */
+import { NgFor, NgIf, NgClass } from '@angular/common';
+
+/* ================= MODELS ================= */
 
 interface LoanApplication {
-  applicationId: string;
+  applicationId: number;
   loanType: string;
   requestedAmount: number;
   tenureMonths: number;
+  applicationStatus: ApplicationInitStatus;
+  user: any;
+  documents: BackendDocument[];
+}
 
-  personal: {
-    fullName: string;
-    email: string;
-    mobileNumber: string;
-    dateOfBirth: string;
-    gender: string;
-    address: string;
-    city: string;
-    state: string;
-    pincode: string;
-    employmentType: string;
-    monthlyIncome: number;
-    companyName?: string;
-    panNumber?: string;
-    aadhaarNumber?: string;
-    bankAccount?: string;
-    ifscCode?: string;
-  };
+interface BackendDocument {
+  documentId: number;
+  documentType: string;
+  documentUrl: string;
+  documentStatus: 'UPLOADED' | 'VERIFIED' | 'REJECTED' | 'RETURNED_FOR_CORRECTION';
+  remarks?: string;
+}
 
-  documents: {
-    name: string;
-    file: string;
-    type: string;
-  }[];
-  status: ApplicationInitStatus;
+interface UIDocument {
+  documentId?: number;
+  documentType: string;
+  status: 'UPLOADED' | 'VERIFIED' | 'REJECTED' | 'RETURNED_FOR_CORRECTION' | 'NOT_UPLOADED';
+  remarks?: string;
 }
 
 @Component({
   standalone: true,
   selector: 'app-application-details',
-  imports: [CommonModule, FormsModule, MatCardModule, DecisionModal],
+  imports: [CommonModule, FormsModule, MatCardModule, NgIf, NgFor, NgClass],
   templateUrl: './application-details.html',
+  styleUrls: ['../../../styles.css'],
 })
 export class ApplicationDetails implements OnInit {
-  /* ================= ROUTE ================= */
   applicationId!: string;
 
-  /* ================= UI STATE ================= */
   loading$ = new BehaviorSubject<boolean>(true);
   errorMessage = '';
 
-  /* ================= MODAL ================= */
-  showModal = false;
-  action: 'APPROVE' | 'REJECT' | null = null;
+  loanApplication?: LoanApplication;
+  documents: UIDocument[] = [];
 
-  /* ================= STATUS ================= */
   currentStatus!: ApplicationInitStatus;
   currentStage!: UIApplicationStage;
 
-  /* ================= UI STAGES ================= */
-  uiStages: { key: UIApplicationStage; label: string }[] = [
-    { key: 'CREATED', label: 'Created' },
-    { key: 'SUBMITTED', label: 'Submitted' },
-    { key: 'DOCUMENT_VERIFICATION', label: 'Document Verification' },
-    { key: 'LOAN_APPROVAL', label: 'Loan Approval' },
-    { key: 'DISBURSED', label: 'Disbursed' },
-    { key: 'CLOSED', label: 'Closed' },
-  ];
-
-  /* ================= DATA ================= */
-  loanApplication?: LoanApplication;
+  // reject / return modal
+  showReasonBox = false;
+  reasonText = '';
+  selectedDoc?: UIDocument;
+  actionType: 'REJECT' | 'RETURN' | null = null;
 
   constructor(private route: ActivatedRoute, private http: HttpClient) {}
 
-  /* ================= LIFECYCLE ================= */
   ngOnInit(): void {
     this.applicationId = this.route.snapshot.paramMap.get('id')!;
-    this.loadLoanApplication();
+    this.loadApplication();
   }
 
-  loadLoanApplication(): void {
+  /* ================= LOAD ================= */
+
+  loadApplication(): void {
     this.loading$.next(true);
 
     this.http
-      .get<any>(`http://localhost:8080/api/loan-applications/${this.applicationId}`)
+      .get<LoanApplication>(`http://localhost:8080/api/loan-applications/${this.applicationId}`)
       .pipe(
-        tap((application) => {
-          console.log('Fetched application:', application);
-
-          this.loanApplication = application;
-          this.currentStatus = application.applicationStatus;
+        tap((res) => {
+          this.loanApplication = res;
+          this.currentStatus = res.applicationStatus;
           this.currentStage = mapStatusToStage(this.currentStatus);
+          this.buildDocuments(res.documents || []);
         }),
-
-        switchMap((application) =>
-          this.http.get<any>(`http://localhost:8080/api/user/viewProfile/${application.user.id}`)
-        ),
-
-        tap((profile) => {
-          console.log('Fetched user profile:', profile);
-          this.loanApplication!.personal = profile;
-        }),
-
-        catchError((error) => {
-          console.error('Error loading data', error);
-          this.errorMessage = 'Failed to load application details';
+        catchError((err) => {
+          console.error(err);
+          this.errorMessage = 'Failed to load application';
           return of(null);
         })
       )
-      .subscribe({
-        complete: () => {
-          this.loading$.next(false);
-        },
+      .subscribe(() => this.loading$.next(false));
+  }
+
+  /* ================= DOCUMENT NORMALIZER ================= */
+
+  private buildDocuments(backendDocs: BackendDocument[]) {
+    const REQUIRED = ['AADHAAR', 'PAN', 'SALARY_SLIP', 'BANK_STATEMENT'];
+
+    this.documents = REQUIRED.map((type) => {
+      const match = backendDocs.find((d) => d.documentType === type);
+
+      return {
+        documentId: match?.documentId,
+        documentType: type,
+        status: match?.documentStatus || 'NOT_UPLOADED',
+        remarks: match?.remarks,
+      };
+    });
+  }
+
+  /* ================= DOWNLOAD ================= */
+
+  viewDocument(doc: UIDocument) {
+    if (!doc.documentId || doc.status === 'REJECTED') return;
+
+    const url = `http://localhost:8080/api/documents/download/${doc.documentId}`;
+
+    this.http.get(url, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const fileURL = URL.createObjectURL(blob);
+        window.open(fileURL, '_blank');
+        setTimeout(() => URL.revokeObjectURL(fileURL), 10000);
+      },
+      error: () => alert('Unable to download document'),
+    });
+  }
+
+  /* ================= VERIFY ================= */
+
+  verifyDocument(doc: UIDocument) {
+    if (!doc.documentId) return;
+
+    this.http
+      .post('http://localhost:8080/api/documents/approve', {
+        documentId: doc.documentId,
+        remarks: 'Verified',
+      })
+      .subscribe(() => (doc.status = 'VERIFIED'));
+  }
+
+  /* ================= REJECT / RETURN ================= */
+
+  openReasonBox(doc: UIDocument, action: 'REJECT' | 'RETURN') {
+    this.selectedDoc = doc;
+    this.actionType = action;
+    this.reasonText = '';
+    this.showReasonBox = true;
+  }
+
+  submitReason() {
+    if (!this.selectedDoc || !this.actionType) return;
+
+    const url =
+      this.actionType === 'REJECT'
+        ? 'http://localhost:8080/api/documents/reject'
+        : 'http://localhost:8080/api/documents/return';
+
+    this.http
+      .post(url, {
+        documentId: this.selectedDoc.documentId,
+        remarks: this.reasonText,
+      })
+      .subscribe(() => {
+        this.selectedDoc!.status =
+          this.actionType === 'REJECT' ? 'REJECTED' : 'RETURNED_FOR_CORRECTION';
+
+        this.selectedDoc!.remarks = this.reasonText;
+        this.showReasonBox = false;
       });
   }
-  /* ================= MODAL ACTIONS ================= */
-  openModal(action: 'APPROVE' | 'REJECT') {
-    this.action = action;
-    this.showModal = true;
-  }
 
-  closeModal() {
-    this.showModal = false;
-    this.action = null;
-  }
-
-  confirmDecision() {
-    console.log(`Application ${this.applicationId} ${this.action}`);
-    this.closeModal();
-  }
-
-  /* ================= TIMELINE ================= */
   isStageCompleted(stage: UIApplicationStage): boolean {
     const order: UIApplicationStage[] = [
       'CREATED',
@@ -152,14 +182,5 @@ export class ApplicationDetails implements OnInit {
       'CLOSED',
     ];
     return order.indexOf(stage) <= order.indexOf(this.currentStage);
-  }
-
-  /* ================= BUTTON LOGIC ================= */
-  get canApprove(): boolean {
-    return this.currentStatus === 'DOCUMENT_VERIFICATION_PENDING';
-  }
-
-  get canReject(): boolean {
-    return this.currentStatus === 'DOCUMENT_VERIFICATION_PENDING';
   }
 }
