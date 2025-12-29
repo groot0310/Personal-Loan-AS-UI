@@ -12,18 +12,18 @@ import { AuthService } from '../authservice/auth-service';
 
 @Component({
   standalone: true,
-  styleUrls: ['./login.component.css'],
+  styleUrls: ['./login.css'],
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule, RouterLink, FormsModule],
   templateUrl: './login.html',
 })
 export class Login {
-   loginForm: FormGroup;
+  loginForm: FormGroup;
   showPassword = false;
   errorMessage = '';
   loading = false;
 
-  constructor(private fb: FormBuilder, private router: Router,  private authService: AuthService,) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -42,7 +42,7 @@ export class Login {
       next: (data) => {
         console.log('user successful:', data);
         console.log('user successful:', data.userProfile.role);
-   
+
         this.loading = false;
         if (data.userProfile.role === 'USER') {
           this.router.navigate(['/user/dashboard']); // protected route
@@ -51,18 +51,17 @@ export class Login {
         } else if (data.userProfile.role === 'LOAN_OFFICER') {
           this.router.navigate(['/loan-officer/dashboard']);
         }
-
       },
       error: (err) => {
         this.loading = false;
-           if (err.name === 'TimeoutError') {
-        this.errorMessage = 'Server not responding. Try again.';
-      } else if (err.status === 401) {
-        this.errorMessage = 'Invalid email or password';
-      } else {
-        this.errorMessage = 'Something went wrong';
-      }
-      }
+        if (err.name === 'TimeoutError') {
+          this.errorMessage = 'Server not responding. Try again.';
+        } else if (err.status === 401) {
+          this.errorMessage = 'Invalid email or password';
+        } else {
+          this.errorMessage = 'Something went wrong';
+        }
+      },
     });
   }
 }

@@ -1,30 +1,5 @@
 <section class="p-8 bg-slate-100 min-h-screen">
 
-    <!-- PAGE HEADER -->
-    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
-            <h1 class="text-2xl font-semibold text-slate-800">
-                Loan Applications
-            </h1>
-            <p class="text-sm text-slate-500 mt-1">
-                Review, verify documents, and take decisions on assigned applications
-            </p>
-        </div>
-
-        <!-- QUICK FILTERS (UI ONLY FOR NOW) -->
-        <div class="flex gap-2 mt-4 md:mt-0">
-            <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
-                Docs Pending
-            </span>
-            <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700">
-                Under Review
-            </span>
-            <span class="px-3 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
-                Approved
-            </span>
-        </div>
-    </div>
-
     <!-- TABLE CONTAINER -->
     <div class="bg-white border border-slate-200 rounded-xl overflow-x-auto shadow-sm">
 
@@ -34,68 +9,57 @@
                     <th class="px-6 py-3">Application ID</th>
                     <th class="px-6 py-3">Applicant</th>
                     <th class="px-6 py-3">Loan Amount</th>
-                    <th class="px-6 py-3">Current Stage</th>
+                    <th class="px-6 py-3">Status</th>
                     <th class="px-6 py-3 text-right">Action</th>
                 </tr>
             </thead>
 
             <tbody>
-
-                <ng-container *ngIf="applications$ | async as applications">
+                <ng-container *ngIf="paginatedApplications$ | async as applications">
 
                     <tr *ngFor="let app of applications" class="border-b border-slate-100 hover:bg-slate-50 transition">
 
-                        <!-- ID -->
-                        <td class="px-6 py-4 text-slate-700 font-medium">
+                        <td class="px-6 py-4 font-medium">
                             {{ app.applicationId }}
                         </td>
 
-                        <!-- Applicant -->
-                        <td class="px-6 py-4 text-slate-800">
-                            {{ app.applicantName }}
+                        <td class="px-6 py-4">
+                            {{ app.applicantName || app.user?.fullName }}
                         </td>
 
-                        <!-- Amount -->
-                        <td class="px-6 py-4 text-slate-700">
+                        <td class="px-6 py-4">
                             ₹{{ app.requestedAmount | number }}
                         </td>
 
-                        <!-- STATUS -->
                         <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
-                                [ngClass]="{
-                    'bg-yellow-100 text-yellow-800': app.applicationStatus === 'DOCUMENT_VERIFICATION_PENDING',
-                    'bg-blue-100 text-blue-700': app.applicationStatus === 'UNDER_REVIEW',
-                    'bg-emerald-100 text-emerald-700': app.applicationStatus === 'APPROVED',
-                    'bg-rose-100 text-rose-700': app.applicationStatus === 'REJECTED'
+                            <span class="px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
+                  'bg-yellow-100 text-yellow-800': app.applicationStatus === 'PENDING_ADMIN',
+                  'bg-blue-100 text-blue-700': app.applicationStatus === 'UNDER_REVIEW',
+                  'bg-emerald-100 text-emerald-700': app.applicationStatus === 'APPROVED',
+                  'bg-rose-100 text-rose-700': app.applicationStatus === 'REJECTED'
                 }">
                                 {{ app.applicationStatus }}
                             </span>
                         </td>
 
-                        <!-- ACTION -->
                         <td class="px-6 py-4 text-right">
-                            <a [routerLink]="['/loan-officer/application', app.applicationId]"
-                                class="inline-flex items-center gap-1 text-indigo-600 font-medium hover:text-indigo-700 transition">
-                                Review <span class="text-xs">→</span>
+                            <a [routerLink]="getReviewLink(app.applicationId)"
+                                class="text-indigo-600 font-medium hover:text-indigo-700">
+                                {{ isAdminView ? 'View' : 'Review' }} →
                             </a>
                         </td>
 
                     </tr>
 
-                    <!-- EMPTY STATE -->
                     <tr *ngIf="applications.length === 0">
-                        <td colspan="6" class="px-6 py-10 text-center text-slate-400">
-                            No applications assigned at the moment
+                        <td colspan="5" class="text-center py-10 text-slate-400">
+                            No applications found
                         </td>
                     </tr>
 
                 </ng-container>
-
-
             </tbody>
         </table>
 
     </div>
-
 </section>
