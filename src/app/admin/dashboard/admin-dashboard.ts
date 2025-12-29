@@ -1,14 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
+interface LoanApplication {
+  applicationId: number;
+  applicantName: string;
+  loanType: string;
+  requestedAmount: number;
+  tenureMonths: number;
+  calculatedEmi: number;
+  applicationStatus: string;
+  appliedAt: string;
+  finalEligibility: boolean;
+  userId: number;
+}
 
 @Component({
   standalone: true,
   selector: 'app-admin-dashboard',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HttpClientModule, FormsModule],
   templateUrl: './admin-dashboard.html',
 })
-export class AdminDashboard {
+
+
+
+export class AdminDashboard implements OnInit{
+
+
+  applications: any[] = [];
+
+  // dropdown values
+  statuses = [
+    'DOCUMENT_APPROVED',
+    'DOCUMENT_PENDING',
+    'REJECTED',
+    'APPROVED'
+  ];
+
+  selectedStatus = 'DOCUMENT_APPROVED';
+
+  constructor(private http: HttpClient) {}
+
   stats = [
     {
       label: 'Total Users',
@@ -49,6 +83,23 @@ export class AdminDashboard {
       officer: 'Officer B',
     },
   ];
+
+
+  ngOnInit(): void {
+    this.loadApplications();
+  }
+
+  loadApplications() {
+    this.http
+      .get<any>(`http://localhost:8080/api/loan-applications?status=${this.selectedStatus}`)
+      .subscribe(res => {
+        this.applications = res.content; // <-- IMPORTANT
+      });
+  }
+
+  onStatusChange() {
+    this.loadApplications();
+  }
 
   activities = [
     {

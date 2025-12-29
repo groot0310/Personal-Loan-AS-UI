@@ -313,7 +313,9 @@
                     <div class="flex justify-between mt-10">
                         <button mat-button matStepperPrevious>Back</button>
 
-                        <button mat-raised-button color="primary" matStepperNext [disabled]="!allDocumentsUploaded()">
+                        <button mat-raised-button
+        matStepperNext
+        [disabled]="!allDocsUploaded">
                             Continue
                         </button>
                     </div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -17,6 +17,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { DecisionModal } from '../../shared/modals/decision-modal/decision-modal';
+import { MatButtonModule } from '@angular/material/button';
 
 /* ================= MODELS ================= */
 
@@ -31,10 +32,10 @@ interface LoanApplication {
 }
 
 interface BackendDocument {
-  documentId: number;
-  documentType: string;
-  documentUrl: string;
-  documentStatus: 'UPLOADED' | 'VERIFIED' | 'REJECTED' | 'RETURNED_FOR_CORRECTION';
+  documentId?: number;
+  documentType?: string;
+  documentUrl?: string;
+  documentStatus?: 'UPLOADED' | 'VERIFIED' | 'REJECTED' | 'RETURNED_FOR_CORRECTION';
   remarks?: string;
 }
 
@@ -50,7 +51,7 @@ interface UIDocument {
 @Component({
   standalone: true,
   selector: 'app-application-details',
-  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule,MatButtonModule],
   templateUrl: './application-details.html',
   styleUrls: ['../../../styles.css'],
 })
@@ -82,7 +83,7 @@ export class ApplicationDetails implements OnInit {
   selectedDoc?: UIDocument;
   actionType: 'REJECT' | 'RETURN' | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private dialog: MatDialog) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient, private dialog: MatDialog, private router: Router,) { }
 
   ngOnInit(): void {
     this.applicationId = this.route.snapshot.paramMap.get('id')!;
@@ -240,5 +241,9 @@ export class ApplicationDetails implements OnInit {
     return this.currentStatus === 'DOCUMENT_VERIFICATION_PENDING';
   }
 
+submitReview() {
+    // Implement the logic to submit the review
+    this.router.navigate(['loan-officer/applications']);
 
+    }
 }
