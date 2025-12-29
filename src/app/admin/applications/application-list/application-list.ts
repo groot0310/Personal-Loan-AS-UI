@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Applications } from '../../../loan-officer/applications/applications';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'app-admin-application-list',
-  imports: [CommonModule, RouterLink, FormsModule,Applications],
+  imports: [CommonModule,  FormsModule,Applications],
   templateUrl: './application-list.html',
   imports: [CommonModule, FormsModule, Applications],
 })

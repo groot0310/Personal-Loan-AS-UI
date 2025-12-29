@@ -73,6 +73,16 @@ mat-step button {
   margin-right: 12px;
 }
 
+ng-deep .custom-snackbar {
+  background: #2ede16;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  letter-spacing: 0.5px;
+}
+
 /* Responsive tweak */
 @media (max-width: 640px) {
   .doc-upload {
