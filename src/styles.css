@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* CRED-inspired dark theme */
-:root {
+/* inspired dark theme */
+/* :root {
     --cred-bg: #0B0B0E;
     --cred-surface: #121216;
     --cred-card: #17171C;
@@ -13,7 +13,7 @@
     --cred-accent: #7C7CFF;
     --cred-success: #4ADE80;
     --cred-warning: #FACC15;
-}
+} */
 
 /* Global defaults */
 body {

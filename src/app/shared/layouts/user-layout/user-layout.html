@@ -1,61 +1,73 @@
-<div class="min-h-screen bg-slate-100">
+<div class="h-[600px] flex">
 
-    <!-- ================= TOP NAV CARD ================= -->
-    <div class="px-8 pt-8">
-        <div class="max-w-[1800px] mx-auto bg-white rounded-3xl shadow-xl border border-slate-200">
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="w-[260px] m-6 rounded-3xl
+               bg-white
+               border-slate-950
+               shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)]
+               flex flex-col">
 
-            <!-- BRAND -->
-            <div class="px-10 py-6 border-b border-slate-200 flex items-center justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-indigo-600 tracking-tight">
-                        CrediFlow
-                    </h1>
-                    <p class="text-sm text-slate-500">
-                        Personal Loan Portal
+        <!-- USER / BRAND -->
+        <div class="px-6 pt-6 pb-5 border-b border-slate-200/70">
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-full
+                           bg-gradient-to-br from-indigo-500 to-indigo-700
+                           flex items-center justify-center
+                           text-white font-semibold
+                           shadow-sm">
+                    A
+                </div>
+
+                <div class="leading-tight">
+                    <p class="text-sm font-semibold text-slate-900">
+                        Aadil
+                    </p>
+                    <p class="text-[11px] text-indigo-500 tracking-wide font-medium mt-[2px]">
+                        LEVEL • PRIME
                     </p>
                 </div>
+            </div>
+        </div>
 
-                <div class="px-10 py-4  flex justify-end">
-                    <a routerLink="/" class="px-6 py-2 rounded-xl text-sm font-medium text-red-600
-                          hover:bg-red-50 transition">
-                        Logout
-                    </a>
-                </div>
+        <!-- NAV -->
+        <nav class="flex-1 px-4 py-4 flex flex-col space-y-1.5">
 
+            <a routerLink="/user/dashboard" routerLinkActive="nav-active" class="cred-nav">
+                Dashboard
+            </a>
+
+            <a routerLink="/user/loan-stepper2" routerLinkActive="nav-active" class="cred-nav">
+                Apply Loan
+            </a>
+
+            <a routerLink="/user/my-loans" routerLinkActive="nav-active" class="cred-nav">
+                My Loans
+            </a>
+
+            <a routerLink="/user/emi-schedule" routerLinkActive="nav-active" class="cred-nav">
+                EMI Schedule
+            </a>
+
+            <a routerLink="/user/profile" routerLinkActive="nav-active" class="cred-nav">
+                Profile
+            </a>
+
+            <!-- LOGOUT -->
+            <div class="pt-3 mt-2 border-t border-slate-200/70">
+                <a routerLink="/" class="flex items-center justify-center h-11 rounded-xl
+                           text-sm font-medium
+                           text-red-500
+                           hover:bg-red-50
+                           transition">
+                    Logout
+                </a>
             </div>
 
-            <!-- NAV LINKS -->
-            <nav class="px-10 py-6">
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+        </nav>
+    </aside>
 
-                    <a routerLink="/user/dashboard" routerLinkActive="nav-active" class="nav-card">
-                        Dashboard
-                    </a>
-
-                    <a routerLink="/user/loan-stepper2" routerLinkActive="nav-active" class="nav-card">
-                        Apply Loan
-                    </a>
-
-                    <a routerLink="/user/my-loans" routerLinkActive="nav-active" class="nav-card">
-                        My Loans
-                    </a>
-
-                    <a routerLink="/user/emi-schedule" routerLinkActive="nav-active" class="nav-card">
-                        EMI Schedule
-                    </a>
-
-                    <a routerLink="/user/profile" routerLinkActive="nav-active" class="nav-card">
-                        Profile
-                    </a>
-
-                </div>
-            </nav>
-
-        </div>
-    </div>
-
-    <!-- ================= PAGE CONTENT ================= -->
-    <main class="max-w-[1400px] mx-auto px-8 py-10">
+    <!-- ============ MAIN CONTENT ============ -->
+    <main class="flex-1 px-8 py-8 rounded-3xl">
         <router-outlet></router-outlet>
     </main>
 

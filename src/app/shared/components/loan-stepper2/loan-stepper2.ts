@@ -1,11 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-  FormGroup
-} from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -35,10 +30,10 @@ import { DocumentType } from '../../types/document-type';
     MatNativeDateModule,
     MatCardModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   templateUrl: './loan-stepper2.html',
-  styleUrls: ['./loan-stepper2.css']
+  styleUrls: ['./loan-stepper2.css'],
 })
 export class LoanStepperComponent {
   basicForm!: FormGroup;
@@ -52,7 +47,7 @@ export class LoanStepperComponent {
     AADHAAR: false,
     PAN: false,
     SALARY_SLIP: false,
-    BANK_STATEMENT: false
+    BANK_STATEMENT: false,
   };
 
   uploadedFiles: Partial<Record<DocumentType, any>> = {};
@@ -74,7 +69,7 @@ export class LoanStepperComponent {
     this.basicForm = this.fb.group({
       loanType: ['PERSONAL', Validators.required],
       requestedAmount: [10000, Validators.required],
-      tenureMonths: [12, Validators.required]
+      tenureMonths: [12, Validators.required],
     });
 
     this.personalForm = this.fb.group({
@@ -86,7 +81,7 @@ export class LoanStepperComponent {
       address: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      pincode: ['', Validators.required]
+      pincode: ['', Validators.required],
     });
 
     this.employmentForm = this.fb.group({
@@ -96,7 +91,7 @@ export class LoanStepperComponent {
       panNumber: ['', Validators.required],
       aadhaarNumber: ['', Validators.required],
       bankAccount: ['', Validators.required],
-      ifscCode: ['', Validators.required]
+      ifscCode: ['', Validators.required],
     });
   }
 
@@ -104,7 +99,7 @@ export class LoanStepperComponent {
     const payload = {
       ...this.basicForm.value,
       ...this.personalForm.value,
-      ...this.employmentForm.value
+      ...this.employmentForm.value,
     };
 
     this.eligibilityService.checkEligibility(payload).subscribe({
@@ -119,19 +114,16 @@ export class LoanStepperComponent {
       },
       error: () => {
         alert('Eligibility check failed');
-      }
+      },
     });
   }
 
-  
+  onFileUpload(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
 
-onFileUpload(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (!input.files) return;
-
-  this.documents = Array.from(input.files);
-}
-
+    this.documents = Array.from(input.files);
+  }
 
   uploadDocument(event: Event, docType: DocumentType): void {
     const input = event.target as HTMLInputElement;
@@ -163,7 +155,7 @@ onFileUpload(event: Event): void {
       error: () => {
         this.uploadedDocs[docType] = false;
         alert(`Failed to upload ${docType}`);
-      }
+      },
     });
   }
 
@@ -172,20 +164,16 @@ onFileUpload(event: Event): void {
       ...this.basicForm.value,
       ...this.personalForm.value,
       ...this.employmentForm.value,
-      documents: this.uploadedFiles
+      documents: this.uploadedFiles,
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);
 
-    this.snackBar.open(
-      'Loan Application Submitted Successfully',
-      'Close',
-      {
-        duration: 5000,
-        verticalPosition: 'top',
-        panelClass: ['custom-snackbar']
-      }
-    );
+    this.snackBar.open('Loan Application Submitted Successfully', 'Close', {
+      duration: 5000,
+      verticalPosition: 'top',
+      panelClass: ['custom-snackbar'],
+    });
 
     this.router.navigate(['user/dashboard']);
   }

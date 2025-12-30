@@ -7,11 +7,12 @@ import { RouterModule } from '@angular/router';
   selector: 'app-loan-officer-layout',
   imports: [CommonModule, RouterModule],
   templateUrl: './loan-officer-layout.html',
+  styleUrls: ['./loan-officer-layout.css'],
 })
 export class LoanOfficerLayout {
-darkMode: any;
-role: any;
-toggleTheme() {
-throw new Error('Method not implemented.');
-}
+  darkMode: any;
+  role: any;
+  toggleTheme() {
+    throw new Error('Method not implemented.');
+  }
 }
