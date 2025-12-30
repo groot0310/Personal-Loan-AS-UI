@@ -76,6 +76,7 @@
                             <th class="p-3 text-right">Penalty</th>
                             <th class="p-3 text-right">Total</th>
                             <th class="p-3 text-center">Status</th>
+                            <th class="p-3 text-center">Action</th>
                         </tr>
                     </thead>
 
@@ -95,6 +96,20 @@
                                     {{ emi.emiStatus }}
                                 </span>
                             </td>
+                            
+
+        <td class="p-3 text-center">
+  <button
+    *ngIf="emi.emiStatus !== 'PAID'"
+    (click)="payEmi(emi)"
+    class="px-4 py-1 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition">
+    Pay
+  </button>
+
+  <span *ngIf="emi.emiStatus === 'PAID'" class="text-green-600 font-medium">
+    Paid
+  </span>
+</td>
                         </tr>
                     </tbody>
                 </table>

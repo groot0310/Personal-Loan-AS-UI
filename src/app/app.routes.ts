@@ -65,6 +65,11 @@ export const routes: Routes = [
     children: [
       // Dashboard
       { path: 'dashboard', component: UserDashboard },
+      {
+        path: 'loan-details/:loanAccountId',
+        component: LoanDetails,
+      },
+
 
       { path: 'loan-stepper2', component: LoanStepperComponent },
 
@@ -91,11 +96,7 @@ export const routes: Routes = [
       { path: 'my-loans', component: MyLoans },
       { path: 'my-loans/:id', component: UserLoanDetails },
       { path: 'emi-schedule', component: EmiSchedule },
-      {
-        path: 'loan-details/:loanAccountId',
-        component: LoanDetails,
-      },
-
+      
       { path: 'profile', component: UserProfile },
       {
         path: 'profile/edit',
