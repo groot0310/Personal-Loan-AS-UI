@@ -47,6 +47,7 @@ import { NotEligible } from './user/eligible/not-eligible/not-eligible';
 import { LoanOfficers } from './admin/loan-officers/loan-officers';
 import { EditLoanOfficer } from './admin/edit-loan-officer/edit-loan-officer';
 import { Applicants } from './admin/applications/applicants/applicants';
+import { LoanDetails } from './user/loan-details/loan-details';
 
 export const routes: Routes = [
   // HOME
@@ -90,6 +91,11 @@ export const routes: Routes = [
       { path: 'my-loans', component: MyLoans },
       { path: 'my-loans/:id', component: UserLoanDetails },
       { path: 'emi-schedule', component: EmiSchedule },
+      {
+        path: 'loan-details/:loanAccountId',
+        component: LoanDetails,
+      },
+
       { path: 'profile', component: UserProfile },
       {
         path: 'profile/edit',

@@ -48,7 +48,7 @@ export class Applications implements OnInit {
 
   /* ================= PAGINATION ================= */
 
-  pageSize = 5;
+  pageSize = 12;
   totalItems = 0;
 
   private pageIndex$ = new BehaviorSubject<number>(0);

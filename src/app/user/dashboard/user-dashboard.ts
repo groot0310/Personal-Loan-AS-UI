@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { ApplicationInitStatus } from '../../core/models/application-init-status.model';
 import { mapStatusToStage } from '../../core/utils/application-status-mapper';
 import { UIApplicationStage } from '../../core/models/ui-application-stage.model';
@@ -9,7 +9,7 @@ import { ApplicationTimeline } from '../../shared/components/application-timelin
 @Component({
   standalone: true,
   selector: 'app-user-dashboard',
-  imports: [CommonModule, RouterModule, ApplicationTimeline],
+  imports: [CommonModule, RouterModule, ApplicationTimeline, RouterLink],
   templateUrl: './user-dashboard.html',
   styleUrl: './dashboard.css',
 })
