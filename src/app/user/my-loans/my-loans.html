@@ -6,7 +6,8 @@
         <p class="text-gray-500 mt-1">Track and manage all your loan applications</p>
     </div>
 
-    <!-- Table Card -->
+    <mat-tab-group>
+  <mat-tab label="My Active loan"> <!-- Table Card -->
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
         <table class="w-full text-sm">
@@ -58,5 +59,65 @@
         </table>
 
     </div>
+ </mat-tab>
+  <mat-tab label="My Applications"> <div class="p-6">
+
+  <h2 class="text-xl font-semibold mb-4">My Loan Applications</h2>
+
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="text-gray-500">
+    Loading loan applications...
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!isLoading && loanApplications.length"
+       class="overflow-x-auto bg-white shadow rounded-lg">
+
+    <table class="min-w-full text-sm text-left">
+      <thead class="bg-gray-100 text-gray-600 uppercase">
+        <tr>
+          <th class="px-6 py-3">Application ID</th>
+          <th class="px-6 py-3">Loan Type</th>
+          <th class="px-6 py-3">Amount</th>
+          <th class="px-6 py-3">Tenure</th>
+          <th class="px-6 py-3">EMI</th>
+          <th class="px-6 py-3">Status</th>
+          <th class="px-6 py-3">Applied At</th>
+          <th class="px-6 py-3">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let loan of loanApplications" class="border-b">
+          <td class="px-6 py-4">{{ loan.applicationId }}</td>
+          <td class="px-6 py-4">{{ loan.loanType }}</td>
+          <td class="px-6 py-4">₹{{ loan.requestedAmount | number }}</td>
+          <td class="px-6 py-4">{{ loan.tenureMonths }}</td>
+          <td class="px-6 py-4">₹{{ loan.calculatedEmi | number:'1.2-2' }}</td>
+          <td class="px-6 py-4">
+            {{ loan.applicationStatus }}
+          </td>
+          <td class="px-6 py-4">
+            {{ loan.appliedAt | date:'dd MMM yyyy, hh:mm a' }}
+          </td>
+          <td>
+            
+            <button matButton="elevated" *ngIf="loan.applicationStatus==='LOAN_APPROVED'" (click)="openSanctionLetter(loan.applicationId)">SancationLetter</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!isLoading && !loanApplications.length"
+       class="text-gray-500">
+    No records found.
+  </div>
+
+</div>
+ </mat-tab>
+</mat-tab-group>
+    
 
 </section>

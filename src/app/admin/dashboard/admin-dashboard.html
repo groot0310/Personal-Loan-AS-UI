@@ -103,11 +103,14 @@
             </td>
 
             <td class="px-8 py-4">
-              <a [routerLink]="['/admin/applications', app.applicationId]"
-                class="text-indigo-600 hover:underline text-sm font-medium">
-                Review →
-              </a>
-            </td>
+  <button
+    [disabled]="app.applicationStatus === 'SANCTION_LETTER_ACCEPTED'"
+    [routerLink]="['/admin/applications', app.applicationId]"
+    class="text-indigo-600 hover:underline text-sm font-medium disabled:text-gray-400">
+    Review →
+  </button>
+</td>
+
 
           </tr>
         </tbody>
