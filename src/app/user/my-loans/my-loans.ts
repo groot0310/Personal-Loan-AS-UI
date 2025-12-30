@@ -25,6 +25,22 @@ interface LoanApiResponse {
   last: boolean;
 }
 
+interface LoanAccount {
+  id: number;
+  applicationId: number;
+  userId: number;
+  loanAmount: number;
+  interestRate: number;
+  tenureMonths: number;
+  emiAmount: number;
+  outstandingBalance: number;
+  loanAccountStatus: string;
+  closureType: string;
+  disbursedDate: string;
+  closureDate: string;
+}
+
+
 
 
 @Component({
@@ -45,8 +61,12 @@ export class MyLoans {
     },
   ];
 
-  loanApplications: any[] = [];
+  loanAccount!: LoanAccount;
   isLoading = true;
+  loanAccounts: any[] = [];
+   emis: any[] = [];
+
+  loanApplications: any[] = [];
 
   constructor(
     private http: HttpClient,
@@ -54,8 +74,29 @@ export class MyLoans {
   private dialog: MatDialog
   ) {}
 
+
+  getLoanAccounts() {
+  this.http.get<any[]>(
+    `http://localhost:8080/api/loan-accounts/my`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }
+  ).subscribe({
+    next: (res) => {
+      this.loanAccounts = res;   // ARRAY
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      this.isLoading = false;
+    }
+  });
+}
   ngOnInit(): void {
     this.getLoans();
+      this.getLoanAccounts();
   }
 getLoans() {
   this.http

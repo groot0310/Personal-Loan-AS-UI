@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -49,7 +49,7 @@ export class LoanDetails implements OnInit {
   private EMI_API = 'http://localhost:8080/api/emi';
   private LOAN_API = 'http://localhost:8080/api/loan-accounts';
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const param = this.route.snapshot.paramMap.get('loanAccountId');
@@ -73,6 +73,7 @@ export class LoanDetails implements OnInit {
     this.http.get<LoanAccount>(`${this.LOAN_API}/${this.loanAccountId}`).subscribe({
       next: (data) => {
         this.loanAccount = data;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Failed to load loan account details';
@@ -87,6 +88,7 @@ export class LoanDetails implements OnInit {
       next: (data) => {
         this.emis = data;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Failed to load EMI details';
@@ -94,4 +96,37 @@ export class LoanDetails implements OnInit {
       },
     });
   }
+
+   payEmi(emi: any): void {
+
+    const payload = {
+      loanAccountId: null, // from loan summary
+      emiId: emi.id,
+      paidAmount: emi.totalPayableAmount,
+      paymentMode: 'UPI',        // HARD CODED
+      paymentType: 'EMI'         // HARD CODED
+    };
+
+    this.http.post(
+      'http://localhost:8080/api/repayments/pay',
+      payload
+    ).subscribe({
+      next: (res) => {
+        console.log('Payment success', res);
+
+        // Update UI immediately
+        emi.emiStatus = 'PAID';
+
+        // Optional: refresh loan account / EMI list
+        // this.loadLoanAccount();
+        // this.loadEmis();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Payment failed. Please try again.');
+      }
+    });
+  }
+
 }
