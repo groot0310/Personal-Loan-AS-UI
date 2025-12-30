@@ -7,8 +7,9 @@
     </div>
 
     <mat-tab-group>
-  <mat-tab label="My Active loan"> <!-- Table Card -->
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+  <mat-tab label="My Active loan">
+     <!-- Table Card -->
+    <!-- <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
         <table class="w-full text-sm">
             <thead class="bg-gray-100 text-gray-700">
@@ -58,7 +59,98 @@
             </tbody>
         </table>
 
-    </div>
+    </div> -->
+
+    <div *ngIf="!isLoading; else loading" class="overflow-x-auto">
+
+  <table class="min-w-full border border-slate-200 rounded-xl overflow-hidden">
+
+    <thead class="bg-slate-100 text-xs uppercase text-slate-600">
+      <tr>
+        <th class="px-4 py-3 text-left">Account ID</th>
+        <th class="px-4 py-3 text-left">Loan Amount</th>
+        <th class="px-4 py-3 text-left">Interest</th>
+        <th class="px-4 py-3 text-left">Tenure</th>
+        <th class="px-4 py-3 text-left">EMI</th>
+        <th class="px-4 py-3 text-left">Outstanding</th>
+        <th class="px-4 py-3 text-left">Status</th>
+        <th class="px-4 py-3 text-left">Disbursed</th>
+        <th class="px-4 py-3 text-left">Closure</th>
+        <th class="px-4 py-3 text-left">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let acc of loanAccounts"
+          class="border-t hover:bg-slate-50 transition">
+
+        <td class="px-4 py-3 font-medium">
+          {{ acc.id }}
+        </td>
+
+        <td class="px-4 py-3">
+          ₹{{ acc.loanAmount | number:'1.0-2' }}
+        </td>
+
+        <td class="px-4 py-3">
+          {{ acc.interestRate }}%
+        </td>
+
+        <td class="px-4 py-3">
+          {{ acc.tenureMonths }} months
+        </td>
+
+        <td class="px-4 py-3">
+          ₹{{ acc.emiAmount | number:'1.0-2' }}
+        </td>
+
+        <td class="px-4 py-3">
+          ₹{{ acc.outstandingBalance | number:'1.0-2' }}
+        </td>
+
+        <td class="px-4 py-3">
+          <span
+            class="px-2 py-1 text-xs font-semibold rounded"
+            [ngClass]="{
+              'bg-green-100 text-green-700': acc.loanAccountStatus === 'ACTIVE',
+              'bg-gray-100 text-gray-700': acc.loanAccountStatus === 'CLOSED'
+            }">
+            {{ acc.loanAccountStatus }}
+          </span>
+        </td>
+
+        <td class="px-4 py-3">
+          {{ acc.disbursedDate || '-' }}
+        </td>
+
+        <td class="px-4 py-3">
+          {{ acc.closureDate || '-' }}
+        </td>
+
+        <td class="px-4 py-3">
+  <button
+    mat-raised-button
+    color="primary"
+    [routerLink]="['/user/loan-details', acc.id]"
+
+  >
+    View Details
+  </button>
+</td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
+
+<ng-template #loading>
+  <div class="p-6 text-center text-slate-500">
+    Loading loan accounts...
+  </div>
+</ng-template>
+
  </mat-tab>
   <mat-tab label="My Applications"> <div class="p-6">
 
