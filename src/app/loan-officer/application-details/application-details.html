@@ -1,221 +1,135 @@
-<!-- ACTION BAR -->
-<div class="bg-white border border-slate-200 rounded-xl p-5 md:col-span-2 flex justify-end gap-3">
+<div class="min-h-screen bg-slate-100 py-14 px-6">
+  <ng-container *ngIf="!(loading$ | async); else loading">
 
-  <button *ngIf="canApprove" class="bg-green-600 text-white px-4 py-2 rounded" (click)="openModal('APPROVE')">
-    Approve Loan
-  </button>
+    <div class="max-w-7xl mx-auto space-y-14">
 
-  <button *ngIf="canReject" class="bg-red-600 text-white px-4 py-2 rounded" (click)="openModal('REJECT')">
-    Reject Application
-  </button>
+      <!-- PERSONAL -->
+      <div class="bg-white rounded-3xl shadow-xl p-10">
+        <h2 class="text-3xl font-semibold mb-8">Applicant Details</h2>
 
-</div>
+        <div class="grid lg:grid-cols-2 gap-12">
+          <div>
+            <p><b>Name:</b> {{ loanApplication?.user?.fullName }}</p>
+            <p><b>Email:</b> {{ loanApplication?.user?.email }}</p>
+            <p><b>Mobile:</b> {{ loanApplication?.user?.mobileNumber }}</p>
+            <p><b>Address:</b> {{ loanApplication?.user?.address }}</p>
+          </div>
 
-<!-- STATUS TIMELINE -->
-<div class="bg-white border border-slate-200 rounded-xl p-6 mb-8">
-  <h3 class="text-sm font-semibold text-slate-700 mb-6 uppercase tracking-wide">
-    Application Status
-  </h3>
-
-  <div class="flex items-center justify-between">
-
-    <div *ngFor="let step of uiStages; let last = last" class="flex items-center flex-1">
-
-      <!-- Status Dot -->
-      <div class="w-3.5 h-3.5 rounded-full" [ngClass]="{
-    'bg-emerald-600': isStageCompleted(step.key),
-    'bg-indigo-600 ring-4 ring-indigo-100':
-      step.key === currentStage,
-    'bg-slate-300':
-      !isStageCompleted(step.key) && step.key !== currentStage
-  }"></div>
-
-
-      <!-- Label -->
-      <span class="ml-3 text-sm" [ngClass]="
-                    isStageCompleted(step.key)
-                        ? 'text-slate-800 font-medium'
-                        : 'text-slate-500'
-                ">
-        {{ step.label }}
-      </span>
-
-      <!-- Connector -->
-      <div *ngIf="!last" class="flex-1 h-px mx-4" [ngClass]="
-                    isStageCompleted(step.key)
-                        ? 'bg-emerald-600'
-                        : 'bg-slate-300'
-                ">
+          <div>
+            <p><b>Loan Type:</b> {{ loanApplication?.loanType }}</p>
+            <p><b>Amount:</b> ₹{{ loanApplication?.requestedAmount }}</p>
+            <p><b>Tenure:</b> {{ loanApplication?.tenureMonths }} months</p>
+          </div>
+        </div>
       </div>
 
+      <!-- DOCUMENTS -->
+      <div class="bg-white rounded-3xl shadow-xl p-10">
+        <h2 class="text-3xl font-semibold mb-8">Documents</h2>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <div *ngFor="let doc of documents" class="border rounded-2xl p-6 space-y-4">
+
+            <h4 class="font-semibold">{{ doc.documentType.replace('_',' ') }}</h4>
+
+            <span class="inline-block px-3 py-1 text-xs rounded-full" [ngClass]="{
+                'bg-blue-100 text-blue-700': doc.status === 'UPLOADED',
+                'bg-green-100 text-green-700': doc.status === 'VERIFIED',
+                'bg-red-100 text-red-700': doc.status === 'REJECTED',
+                'bg-yellow-100 text-yellow-700': doc.status === 'RETURNED_FOR_CORRECTION',
+                'bg-gray-200 text-gray-600': doc.status === 'NOT_UPLOADED'
+              }">
+              {{ doc.status }}
+            </span>
+
+            <!-- ACTIONS -->
+            <div class="flex-col gap-2 pt-2">
+
+              <button class="text-sm text-indigo-600"
+                [disabled]="doc.status === 'REJECTED' || doc.status === 'NOT_UPLOADED'" (click)="viewDocument(doc)">
+                Download
+              </button>
+
+              <button *ngIf="doc.status === 'UPLOADED'" class="text-sm text-green-600" (click)="verifyDocument(doc)">
+                Verify
+              </button>
+
+              <button *ngIf="doc.status === 'UPLOADED'" class="text-sm text-red-600"
+                (click)="openReasonBox(doc, 'REJECT')">
+                Reject
+              </button>
+
+              <button *ngIf="doc.status === 'UPLOADED'" class="text-sm text-yellow-600"
+                (click)="openReasonBox(doc, 'RETURN')">
+                Return
+              </button>
+
+            </div>
+
+            <p *ngIf="doc.remarks" class="text-xs text-slate-500">
+              Reason: {{ doc.remarks }}
+            </p>
+
+          </div>
+
+
+           <button mat-raised-button color="primary"(click)="submitReview()">
+            submit 
+          </button>
+
+        </div>
+      </div>
     </div>
 
-  </div>
-</div>
+    <!-- REJECT / RETURN MODAL -->
+    <ng-template #reasonDialog>
+      <div class="p-6 rounded-xl w-[400px] space-y-4">
+        <h3 class="text-lg font-semibold">
+          {{ actionType === 'REJECT' ? 'Reject Document' : 'Return Document' }}
+        </h3>
 
-<!-- LOAN DETAILS -->
-<div class="bg-white border border-slate-200 rounded-xl p-6 md:col-span-2">
+        <textarea class="w-full border rounded-lg p-2" [(ngModel)]="reasonText" rows="3" placeholder="Enter reason">
+    </textarea>
 
-  <h3 class="text-sm font-semibold text-slate-700 mb-6 uppercase tracking-wide">
-    Loan Details
-  </h3>
+        <div class="flex justify-end gap-3">
+          <button mat-button (click)="dialogRef.close()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="submitReason()">
+            Submit
+          </button>
+        </div>
+      </div>
+    </ng-template>
 
-  <div class="grid md:grid-cols-3 gap-6">
+  </ng-container>
 
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Loan Type</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.loanType }}</p>
+  <ng-template #loading>
+    <div class="h-[60vh] flex justify-center items-center text-xl text-slate-500">
+      Loading application…
     </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Requested Amount</label>
-      <p class="text-sm text-slate-800 mt-1">₹{{ applicantData?.requestedAmount | number:'1.0-0' }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Tenure (Months)</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.tenureMonths }}</p>
-    </div>
-
-  </div>
-
-</div>
-
-<!-- PERSONAL DETAILS -->
-<div class="bg-white border border-slate-200 rounded-xl p-6 md:col-span-2">
-
-  <h3 class="text-sm font-semibold text-slate-700 mb-6 uppercase tracking-wide">
-    Personal Information
-  </h3>
-
-  <div class="grid md:grid-cols-2 gap-6">
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Full Name</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.fullName }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Email</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.email }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Mobile Number</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.phone }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Date of Birth</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.dob }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Gender</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.gender }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">City</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.city }}</p>
-    </div>
-
-    <div class="md:col-span-2">
-      <label class="text-xs font-semibold text-slate-600 uppercase">Address</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.address }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">State</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.state }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Pincode</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.personalDetails?.pincode }}</p>
-    </div>
-
-  </div>
+  </ng-template>
 
 </div>
 
-<!-- EMPLOYMENT & FINANCIAL DETAILS -->
-<div class="bg-white border border-slate-200 rounded-xl p-6 md:col-span-2">
+<ng-template #verifyConfirmDialog let-data>
+  <div class="p-8">
+    <h2 class="text-2xl font-semibold mb-4">
+      Confirm Document Verification
+    </h2>
 
-  <h3 class="text-sm font-semibold text-slate-700 mb-6 uppercase tracking-wide">
-    Employment & Financial Details
-  </h3>
+    <p class="text-slate-600 text-lg">
+      Are you sure you want to verify
+      <span class="font-semibold">{{ data.name }}</span>?
+    </p>
 
-  <div class="grid md:grid-cols-2 gap-6">
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Employment Type</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.employmentDetails?.employmentType }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Monthly Income</label>
-      <p class="text-sm text-slate-800 mt-1">₹{{ applicantData?.employmentDetails?.monthlyIncome | number:'1.0-0'
-        }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Company Name</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.employmentDetails?.companyName }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">PAN Number</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.employmentDetails?.panNumber }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Aadhaar Number</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.employmentDetails?.aadhaarNumber }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">Bank Account Number</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.employmentDetails?.bankAccount }}</p>
-    </div>
-
-    <div>
-      <label class="text-xs font-semibold text-slate-600 uppercase">IFSC Code</label>
-      <p class="text-sm text-slate-800 mt-1">{{ applicantData?.employmentDetails?.ifscCode }}</p>
-    </div>
-
-  </div>
-
-</div>
-
-<!-- DOCUMENT PREVIEW -->
-<div class="bg-white border border-slate-200 rounded-xl p-6 md:col-span-2">
-
-  <h3 class="text-sm font-semibold text-slate-700 mb-6 uppercase tracking-wide">
-    Uploaded Documents
-  </h3>
-
-  <div class="grid md:grid-cols-3 gap-4">
-
-    <div *ngFor="let doc of documents"
-      class="border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition cursor-pointer">
-
-      <p class="text-sm font-medium text-slate-800">
-        {{ doc.name }}
-      </p>
-
-      <p class="text-xs text-slate-500 mt-1">
-        Click to preview
-      </p>
-
-      <button class="mt-4 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition">
-        View Document
+    <div class="flex justify-end gap-4 mt-8">
+      <button mat-button (click)="dialogRef.close(false)">
+        Cancel
       </button>
 
+      <button mat-raised-button color="primary" (click)="dialogRef.close(true)">
+        Confirm
+      </button>
     </div>
-
   </div>
-</div>
-
-<app-decision-modal *ngIf="showModal" [action]="action!" (close)="closeModal()" (confirm)="confirmDecision()">
-</app-decision-modal>
+</ng-template>

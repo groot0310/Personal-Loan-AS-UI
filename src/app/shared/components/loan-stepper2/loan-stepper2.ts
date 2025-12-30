@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  FormGroup
+} from '@angular/forms';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatInputModule } from '@angular/material/input';
@@ -8,15 +14,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
 import { Router } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DocumentType } from '../../types/document-type';
 
 @Component({
-  selector: 'app-loan-stepper',
+  selector: 'app-loan-stepper2',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,47 +35,48 @@ import { DocumentType } from '../../types/document-type';
     MatNativeDateModule,
     MatCardModule,
     MatIconModule,
-    MatSnackBarModule,
+    MatSnackBarModule
   ],
   templateUrl: './loan-stepper2.html',
-  styleUrls: ['./loan-stepper2.css'],
+  styleUrls: ['./loan-stepper2.css']
 })
 export class LoanStepperComponent {
   basicForm!: FormGroup;
   personalForm!: FormGroup;
   employmentForm!: FormGroup;
 
+  applicationId = 0;
+  documents: File[] = [];
+
   uploadedDocs: Record<DocumentType, boolean> = {
     AADHAAR: false,
     PAN: false,
     SALARY_SLIP: false,
-    BANK_STATEMENT: false,
+    BANK_STATEMENT: false
   };
-  applicationId: number = 0;
 
   uploadedFiles: Partial<Record<DocumentType, any>> = {};
 
-  documents: File[] = [];
-  issubmitted = false;
+  /** ✅ SAFE BOOLEAN FOR TEMPLATE */
+  allDocsUploaded = false;
 
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) {
     this.initializeForms();
   }
 
-  private initializeForms() {
-    // STEP 1 – BASIC
+  private initializeForms(): void {
     this.basicForm = this.fb.group({
       loanType: ['PERSONAL', Validators.required],
       requestedAmount: [10000, Validators.required],
-      tenureMonths: [12, Validators.required],
+      tenureMonths: [12, Validators.required]
     });
 
-    // STEP 2 – PERSONAL
     this.personalForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -79,10 +86,9 @@ export class LoanStepperComponent {
       address: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      pincode: ['', Validators.required],
+      pincode: ['', Validators.required]
     });
 
-    // STEP 3 – EMPLOYMENT
     this.employmentForm = this.fb.group({
       employmentType: ['', Validators.required],
       monthlyIncome: ['', Validators.required],
@@ -90,46 +96,48 @@ export class LoanStepperComponent {
       panNumber: ['', Validators.required],
       aadhaarNumber: ['', Validators.required],
       bankAccount: ['', Validators.required],
-      ifscCode: ['', Validators.required],
+      ifscCode: ['', Validators.required]
     });
   }
 
-  checkEligibility(stepper: any) {
+  checkEligibility(stepper: any): void {
     const payload = {
       ...this.basicForm.value,
       ...this.personalForm.value,
-      ...this.employmentForm.value,
+      ...this.employmentForm.value
     };
 
     this.eligibilityService.checkEligibility(payload).subscribe({
       next: (res) => {
-        console.log('Eligibility Response:', res);
         this.applicationId = res.applicationId;
-        if (res.finalEligibility === true) {
-          // if (res.loanType === "PERSONAL") {
-          // ✅ Move to Upload Documents
+
+        if (res.loanType === 'PERSONAL') {
           stepper.next();
         } else {
-          // ❌ Not eligible
-          console.log('User is not eligible for the loan.');
           this.router.navigate(['user/not-eligible']);
         }
       },
       error: () => {
         alert('Eligibility check failed');
-      },
+      }
     });
   }
 
-  onFileUpload(event: any) {
-    this.documents = Array.from(event.target.files);
-  }
+  
+
+onFileUpload(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files) return;
+
+  this.documents = Array.from(input.files);
+}
+
 
   uploadDocument(event: Event, docType: DocumentType): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
 
-    const file: File = input.files[0];
+    const file = input.files[0];
 
     const formData = new FormData();
     formData.append('file', file);
@@ -138,46 +146,47 @@ export class LoanStepperComponent {
 
     this.eligibilityService.uploadDocument(formData).subscribe({
       next: (res) => {
-        console.log(`${docType} uploaded successfully`, res);
-
         this.uploadedDocs[docType] = true;
         this.uploadedFiles[docType] = res;
 
-        // reset input so same file can be re-uploaded if needed
+        /** ✅ Update once, safely */
+        this.allDocsUploaded =
+          this.uploadedDocs.AADHAAR &&
+          this.uploadedDocs.PAN &&
+          this.uploadedDocs.SALARY_SLIP &&
+          this.uploadedDocs.BANK_STATEMENT;
+
+        this.cdr.detectChanges(); // ✅ Fix NG0100
+
         input.value = '';
       },
       error: () => {
         this.uploadedDocs[docType] = false;
         alert(`Failed to upload ${docType}`);
-      },
+      }
     });
   }
 
-  allDocumentsUploaded(): boolean {
-    return (
-      this.uploadedDocs['AADHAAR'] &&
-      this.uploadedDocs['PAN'] &&
-      this.uploadedDocs['SALARY_SLIP'] &&
-      this.uploadedDocs['BANK_STATEMENT']
-    );
-  }
-
-  submit() {
+  submit(): void {
     const payload = {
       ...this.basicForm.value,
       ...this.personalForm.value,
       ...this.employmentForm.value,
-      documents: this.uploadedFiles,
+      documents: this.uploadedFiles
     };
 
     console.log('FINAL PAYLOAD 🚀', payload);
-    const snackBarRef = this.snackBar.open('Loan Application Submitted Successfully', 'Close', {
-      duration: 5000, // 5 seconds
-      verticalPosition: 'top',
-    });
 
-    snackBarRef.afterDismissed().subscribe(() => {
-      this.router.navigate(['user/dashboard']);
-    });
+    this.snackBar.open(
+      'Loan Application Submitted Successfully',
+      'Close',
+      {
+        duration: 5000,
+        verticalPosition: 'top',
+        panelClass: ['custom-snackbar']
+      }
+    );
+
+    this.router.navigate(['user/dashboard']);
   }
 }
