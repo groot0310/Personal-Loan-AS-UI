@@ -106,7 +106,7 @@ export class LoanStepperComponent {
       next: (res) => {
         this.applicationId = res.applicationId;
 
-        if (res.loanType === 'PERSONAL') {
+        if (res.finalEligibility) {
           stepper.next();
         } else {
           this.router.navigate(['user/not-eligible']);
