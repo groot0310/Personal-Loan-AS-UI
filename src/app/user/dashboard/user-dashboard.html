@@ -1,127 +1,148 @@
-<section class="min-h-screen bg-slate-100 p-8 space-y-10">
+<section class="min-h-screen bg-slate-100 px-8 py-10 space-y-12">
 
-    <!-- HEADER -->
-    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <!-- ================= HEADER ================= -->
+    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
-            <h1 class="text-3xl font-semibold text-slate-800">
-                Welcome back
+            <h1 class="text-3xl font-semibold text-slate-900 tracking-tight">
+                Welcome back 👋
             </h1>
             <p class="text-slate-500 mt-1">
                 Track and manage your personal loan journey
             </p>
         </div>
 
-        <div class="px-10 py-4 border-t  flex justify-end">
-                    <a routerLink="/" class="px-6 py-2 rounded-xl text-sm font-medium text-red-600
-                          hover:bg-red-50 transition">
-                        Logout
-                    </a>
-                </div>
-
-        <!-- <button routerLink="/user/home" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition">
+        <a routerLink="/" class="inline-flex items-center justify-center
+                   px-6 py-2.5 rounded-xl
+                   text-sm font-medium
+                   text-red-500
+                   border border-red-200
+                   hover:bg-red-50 hover:text-red-600
+                   transition">
             Logout
-        </button> -->
+        </a>
+
+        <button [routerLink]="['/user/loan-details/loan-details']" class="px-7 py-3 rounded-xl
+                           bg-slate-900 text-white
+                           font-medium
+                           hover:bg-black transition
+                           shadow-lg">
+            Loan Details
+        </button>
+
     </header>
 
-    <!-- QUICK ACTIONS -->
+    <!-- ================= QUICK ACTIONS ================= -->
     <div class="grid md:grid-cols-4 gap-6">
 
-    <a routerLink="/user/loan-stepper2"
-        class="group bg-white border border-slate-200 rounded-2xl p-6
-               transition-all duration-300 ease-out
-               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+        <!-- CARD -->
+        <a routerLink="/user/loan-stepper2" class="group relative overflow-hidden
+                   bg-white border border-slate-200
+                   rounded-2xl p-6
+                   transition-all duration-300
+                   hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300">
 
-        <p class="text-xs uppercase tracking-wide text-slate-500">
-            New Application
-        </p>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
+                        bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
 
-        <h3
-            class="mt-2 text-lg font-medium text-slate-800
-                   transition-colors group-hover:text-indigo-600">
-            Apply for Loan
-        </h3>
+            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+                New Application
+            </p>
 
-        <p class="mt-1 text-sm text-slate-500">
-            Start a fresh loan request
-        </p>
-    </a>
+            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
+                       group-hover:text-indigo-600 transition">
+                Apply for Loan
+            </h3>
 
+            <p class="relative mt-1 text-sm text-slate-500">
+                Start a fresh loan request
+            </p>
+        </a>
 
-    <a routerLink="/user/my-loans"
-        class="group bg-white border border-slate-200 rounded-2xl p-6
-               transition-all duration-300 ease-out
-               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+        <a routerLink="/user/my-loans" class="group relative overflow-hidden
+                   bg-white border border-slate-200
+                   rounded-2xl p-6
+                   transition-all duration-300
+                   hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300">
 
-        <p class="text-xs uppercase tracking-wide text-slate-500">
-            Overview
-        </p>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
+                        bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
 
-        <h3
-            class="mt-2 text-lg font-medium text-slate-800
-                   transition-colors group-hover:text-indigo-600">
-            My Loans
-        </h3>
+            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+                Overview
+            </p>
 
-        <p class="mt-1 text-sm text-slate-500">
-            View active & past loans
-        </p>
-    </a>
+            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
+                       group-hover:text-indigo-600 transition">
+                My Loans
+            </h3>
 
+            <p class="relative mt-1 text-sm text-slate-500">
+                View active & past loans
+            </p>
+        </a>
 
-    <a routerLink="/user/emi-schedule"
-        class="group bg-white border border-slate-200 rounded-2xl p-6
-               transition-all duration-300 ease-out
-               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+        <a routerLink="/user/emi-schedule" class="group relative overflow-hidden
+                   bg-white border border-slate-200
+                   rounded-2xl p-6
+                   transition-all duration-300
+                   hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300">
 
-        <p class="text-xs uppercase tracking-wide text-slate-500">
-            Payments
-        </p>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
+                        bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
 
-        <h3
-            class="mt-2 text-lg font-medium text-slate-800
-                   transition-colors group-hover:text-indigo-600">
-            EMI Schedule
-        </h3>
+            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+                Payments
+            </p>
 
-        <p class="mt-1 text-sm text-slate-500">
-            Monthly breakdown
-        </p>
-    </a>
+            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
+                       group-hover:text-indigo-600 transition">
+                EMI Schedule
+            </h3>
 
+            <p class="relative mt-1 text-sm text-slate-500">
+                Monthly breakdown
+            </p>
+        </a>
 
-    <a routerLink="/user/profile"
-        class="group bg-white border border-slate-200 rounded-2xl p-6
-               transition-all duration-300 ease-out
-               hover:-translate-y-1 hover:shadow-xl hover:border-indigo-200">
+        <a routerLink="/user/profile" class="group relative overflow-hidden
+                   bg-white border border-slate-200
+                   rounded-2xl p-6
+                   transition-all duration-300
+                   hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300">
 
-        <p class="text-xs uppercase tracking-wide text-slate-500">
-            Account
-        </p>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
+                        bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
 
-        <h3
-            class="mt-2 text-lg font-medium text-slate-800
-                   transition-colors group-hover:text-indigo-600">
-            Profile
-        </h3>
+            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+                Account
+            </p>
 
-        <p class="mt-1 text-sm text-slate-500">
-            Personal & KYC info
-        </p>
-    </a>
+            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
+                       group-hover:text-indigo-600 transition">
+                Profile
+            </h3>
 
-</div>
+            <p class="relative mt-1 text-sm text-slate-500">
+                Personal & KYC info
+            </p>
+        </a>
+    </div>
 
+    <!-- ================= CURRENT STATUS ================= -->
+    <div class="relative overflow-hidden
+                bg-white border border-slate-200
+                rounded-3xl p-8
+                shadow-sm">
 
-    <!-- CURRENT STATUS -->
-    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+        <div class="absolute inset-x-0 top-0 h-1
+                    bg-gradient-to-r from-indigo-500 via-indigo-600 to-slate-900"></div>
 
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
             <div>
                 <p class="text-xs uppercase tracking-widest text-slate-500 mb-2">
                     Current Loan Status
                 </p>
-                <h2 class="text-2xl font-semibold text-slate-800">
+                <h2 class="text-2xl font-semibold text-slate-900">
                     {{ currentStatusLabel }}
                 </h2>
                 <p class="mt-2 text-slate-500 max-w-xl">
@@ -130,48 +151,48 @@
             </div>
 
             <div *ngIf="primaryActionLabel">
-                <button [routerLink]="primaryActionRoute" class="px-6 py-3 rounded-xl bg-slate-900 text-slate-100
-                           font-medium hover:bg-black transition">
+                <button [routerLink]="primaryActionRoute" class="px-7 py-3 rounded-xl
+                           bg-slate-900 text-white
+                           font-medium
+                           hover:bg-black transition
+                           shadow-lg">
                     {{ primaryActionLabel }}
                 </button>
             </div>
-
         </div>
-
     </div>
 
-    <!-- APPLICATION TIMELINE -->
+    <!-- ================= TIMELINE ================= -->
     <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
 
         <h3 class="text-xs font-semibold uppercase tracking-widest text-slate-600 mb-6">
             Application Progress
         </h3>
 
-        <app-application-timeline [currentStage]="currentStage">
-        </app-application-timeline>
+        <app-application-timeline [currentStage]="currentStage"></app-application-timeline>
 
     </div>
 
-    <!-- LOAN SUMMARY -->
+    <!-- ================= LOAN SUMMARY ================= -->
     <div class="grid md:grid-cols-3 gap-6">
 
-        <div class="bg-white border border-slate-200 rounded-2xl p-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition">
             <p class="text-sm text-slate-500">Loan Amount</p>
-            <p class="mt-2 text-2xl font-semibold text-slate-800">
+            <p class="mt-2 text-2xl font-semibold text-slate-900">
                 ₹5,00,000
             </p>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-2xl p-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition">
             <p class="text-sm text-slate-500">Tenure</p>
-            <p class="mt-2 text-2xl font-semibold text-slate-800">
+            <p class="mt-2 text-2xl font-semibold text-slate-900">
                 36 Months
             </p>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-2xl p-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition">
             <p class="text-sm text-slate-500">Estimated EMI</p>
-            <p class="mt-2 text-2xl font-semibold text-slate-800">
+            <p class="mt-2 text-2xl font-semibold text-slate-900">
                 ₹16,200
             </p>
         </div>

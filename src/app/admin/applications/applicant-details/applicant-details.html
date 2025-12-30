@@ -4,7 +4,10 @@
     <div class="bg-white rounded-3xl shadow-xl border p-8">
         <h1 class="text-3xl font-bold">Application Details</h1>
         <p class="text-sm text-slate-500 mt-1">
-            Application ID — <span class="font-medium">{{ application.applicationId }}</span>
+            Application ID —
+            <span class="font-medium">
+                {{ application?.applicationId || '—' }}
+            </span>
         </p>
     </div>
 
@@ -13,22 +16,30 @@
 
         <div class="bg-white rounded-2xl border p-6">
             <p class="text-xs uppercase text-slate-500">Applicant</p>
-            <p class="text-lg font-semibold">{{ application.user.fullName }}</p>
+            <p class="text-lg font-semibold">
+                {{ application?.user?.fullName || '—' }}
+            </p>
         </div>
 
         <div class="bg-white rounded-2xl border p-6">
             <p class="text-xs uppercase text-slate-500">Loan Amount</p>
-            <p class="text-lg font-semibold">₹{{ application.requestedAmount }}</p>
+            <p class="text-lg font-semibold">
+                ₹{{ application?.requestedAmount || '—' }}
+            </p>
         </div>
 
         <div class="bg-white rounded-2xl border p-6">
             <p class="text-xs uppercase text-slate-500">Tenure</p>
-            <p class="text-lg font-semibold">{{ application.tenureMonths || '—' }}</p>
+            <p class="text-lg font-semibold">
+                {{ application?.tenureMonths || '—' }}
+            </p>
         </div>
 
         <div class="bg-white rounded-2xl border p-6">
             <p class="text-xs uppercase text-slate-500">Calculated EMI</p>
-            <p class="text-lg font-semibold">{{ application.calculatedEmi || '—' }}</p>
+            <p class="text-lg font-semibold">
+                {{ application?.calculatedEmi || '—' }}
+            </p>
         </div>
     </div>
 
@@ -38,54 +49,28 @@
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div *ngFor="let doc of documents" class="border rounded-2xl p-6 space-y-4">
+                <h4 class="font-semibold">
+                    {{ doc.documentType.replace('_',' ') }}
+                </h4>
 
-                <h4 class="font-semibold">{{ doc.documentType.replace('_',' ') }}</h4>
-
-                <div class="flex flex-col gap-2">
-                    <button class="text-indigo-600"
-                        [disabled]="doc.status === 'NOT_UPLOADED' || doc.status === 'REJECTED'"
-                        (click)="viewDocument(doc)">
-                        Download
-                    </button>
-
-                    <button *ngIf="doc.status === 'UPLOADED'" class="text-green-600" (click)="verifyDocument(doc)">
-                        Verify
-                    </button>
-
-                    <button *ngIf="doc.status === 'UPLOADED'" class="text-red-600"
-                        (click)="openReasonBox(doc, 'REJECT')">
-                        Reject
-                    </button>
-
-                    <button *ngIf="doc.status === 'UPLOADED'" class="text-yellow-600"
-                        (click)="openReasonBox(doc, 'RETURN')">
-                        Return
-                    </button>
-                </div>
-
-                <p *ngIf="doc.remarks" class="text-xs text-slate-500">
-                    Reason: {{ doc.remarks }}
-                </p>
+                <button class="text-indigo-600" [disabled]="doc.status === 'NOT_UPLOADED'" (click)="viewDocument(doc)">
+                    View
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- OFFICER REMARK -->
-    <!-- <div class="bg-white rounded-3xl border shadow p-8">
-        <h3 class="text-lg font-semibold mb-3">Loan Officer Remark</h3>
-        <div class="bg-slate-50 rounded-xl p-5">
-            {{ application.officerRemark || 'No remarks available.' }}
-        </div>
-    </div> -->
-
-    <!-- FINAL ACTIONS -->
+    <!-- ACTIONS -->
     <div class="bg-white rounded-3xl border shadow p-6 flex justify-end gap-4">
+        <button class="px-6 py-3 rounded-xl bg-green-600 text-white" (click)="click()">
+            Show
+        </button>
         <button class="px-6 py-3 rounded-xl bg-green-600 text-white" (click)="approveApplication()">
-            Approve & Send for Disbursement
+            Approve
         </button>
 
         <button class="px-6 py-3 rounded-xl bg-red-600 text-white" (click)="rejectApplication()">
-            Reject Application
+            Reject
         </button>
     </div>
 

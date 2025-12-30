@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { catchError, of, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
-/* ================= INTERFACES ================= */
 
 interface LoanApplication {
   applicationId: number;
+  loanType: string;
   requestedAmount: number;
-  tenureMonths?: number;
-  calculatedEmi?: number;
-  officerRemark?: string;
+  tenureMonths: number;
+  calculatedEmi: number;
   user: {
     fullName: string;
   };
@@ -19,16 +16,16 @@ interface LoanApplication {
 }
 
 interface BackendDocument {
-  documentId?: number;
-  documentType?: string;
-  documentStatus?: 'UPLOADED' | 'VERIFIED' | 'REJECTED' | 'RETURNED_FOR_CORRECTION';
+  documentId: number;
+  documentType: string;
+  documentStatus: string;
   remarks?: string;
 }
 
 interface UIDocument {
   documentId?: number;
   documentType: string;
-  status: 'UPLOADED' | 'VERIFIED' | 'REJECTED' | 'RETURNED_FOR_CORRECTION' | 'NOT_UPLOADED';
+  status: string;
   remarks?: string;
 }
 
@@ -44,7 +41,7 @@ export class ApplicantDetails implements OnInit {
   loading = true;
   error: string | null = null;
 
-  application!: LoanApplication;
+  application: LoanApplication | null = null; // ✅ KEEP nullable
   documents: UIDocument[] = [];
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
@@ -58,38 +55,26 @@ export class ApplicantDetails implements OnInit {
       return;
     }
 
-    this.loadApplication(id);
+    this.http.get<LoanApplication>(`${this.API}/${id}`).subscribe({
+      next: (res) => {
+        console.log('API RESPONSE:', res); // ✅ keep
+        this.application = res; // ✅ this IS happening
+        this.buildDocuments(res.documents || []);
+        this.loading = false; // ✅ important
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'Failed to load application';
+        this.loading = false;
+      },
+    });
   }
 
-  /* ================= LOAD APPLICATION ================= */
+  private buildDocuments(docs: BackendDocument[]) {
+    const REQUIRED = ['AADHAAR', 'PAN', 'SALARY_SLIP', 'BANK_STATEMENT'];
 
-  loadApplication(id: string): void {
-    this.loading = true;
-
-    this.http
-      .get<LoanApplication>(`${this.API}/${id}`)
-      .pipe(
-        tap((res) => {
-          this.application = res;
-          this.buildDocuments(res.documents || []);
-        }),
-        catchError((err) => {
-          console.error(err);
-          this.error = 'Failed to load application details';
-          return of(null);
-        })
-      )
-      .subscribe(() => (this.loading = false));
-  }
-
-  /* ================= DOCUMENT NORMALIZER ================= */
-
-  private buildDocuments(backendDocs: BackendDocument[]): void {
-    const REQUIRED_DOCUMENTS = ['AADHAAR', 'PAN', 'SALARY_SLIP', 'BANK_STATEMENT'];
-
-    this.documents = REQUIRED_DOCUMENTS.map((type) => {
-      const match = backendDocs.find((d) => d.documentType === type);
-
+    this.documents = REQUIRED.map((type) => {
+      const match = docs.find((d) => d.documentType === type);
       return {
         documentId: match?.documentId,
         documentType: type,
@@ -99,83 +84,38 @@ export class ApplicantDetails implements OnInit {
     });
   }
 
-  /* ================= DOCUMENT ACTIONS ================= */
-
-  viewDocument(doc: UIDocument): void {
-    if (!doc.documentId || doc.status === 'REJECTED') return;
-
-    const url = `http://localhost:8080/api/documents/download/${doc.documentId}`;
-
-    this.http.get(url, { responseType: 'blob' }).subscribe({
-      next: (blob) => {
-        const fileURL = URL.createObjectURL(blob);
-        window.open(fileURL, '_blank');
-        setTimeout(() => URL.revokeObjectURL(fileURL), 10000);
-      },
-      error: () => alert('Unable to download document'),
-    });
-  }
-
-  verifyDocument(doc: UIDocument): void {
+  viewDocument(doc: UIDocument) {
     if (!doc.documentId) return;
-    doc.status = 'VERIFIED'; // backend sync can be added later
+
+    this.http
+      .get(`http://localhost:8080/api/documents/download/${doc.documentId}`, {
+        responseType: 'blob',
+      })
+      .subscribe((blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      });
   }
 
-  openReasonBox(doc: UIDocument, action: 'REJECT' | 'RETURN'): void {
-    const reason = prompt(`Reason for ${action}`);
-    if (!reason) return;
-
-    doc.remarks = reason;
-    doc.status = action === 'REJECT' ? 'REJECTED' : 'RETURNED_FOR_CORRECTION';
+  approveApplication() {
+    this.http
+      .put(`${this.API}/approve`, {
+        applicationId: this.application?.applicationId,
+      })
+      .subscribe(() => this.router.navigate(['/admin/applications']));
   }
-
-  /* ================= APPROVE APPLICATION ================= */
-
-  approveApplication(): void {
-    const payload = {
-      applicationId: this.application.applicationId,
-      rejectionReason: null,
-      remarks: 'Your loan is successfully approved',
-    };
-
-    this.http.put<{ message: string }>(`${this.API}/approve`, payload).subscribe({
-      next: (res) => {
-        // this.router.navigate(['/admin/applications']);
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Failed to approve loan application');
-      },
-    });
-  }
-
-  private allDocumentsVerified(): boolean {
-    return this.documents.every((d) => d.status === 'VERIFIED');
-  }
-
-  /* ================= APPROVE APPLICATION ================= */
 
   rejectApplication() {
-    if (!this.allDocumentsVerified()) {
-      alert('All documents must be VERIFIED before rejection');
-      return;
-    }
+    const reason = prompt('Enter rejection reason');
+    if (!reason) return;
 
-    const payload = {
-      applicationId: this.application.applicationId,
-      rejectionReason: 'Application rejected by admin',
-      remarks: 'Your loan application has been rejected',
-    };
-
-    this.http.put<{ message: string }>(`${this.API}/reject`, payload).subscribe({
-      next: (res) => {
-        alert(res.message);
-        this.router.navigate(['/admin/applicants']);
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Failed to reject loan application');
-      },
-    });
+    this.http
+      .put(`${this.API}/reject`, {
+        applicationId: this.application?.applicationId,
+        rejectionReason: reason,
+      })
+      .subscribe(() => this.router.navigate(['/admin/applications']));
   }
+
+  click() {}
 }
