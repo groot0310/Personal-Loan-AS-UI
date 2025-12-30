@@ -7,9 +7,8 @@ import { CommonModule } from '@angular/common';
 @Component({
   standalone: true,
   selector: 'app-admin-application-list',
-  imports: [CommonModule,  FormsModule,Applications],
-  templateUrl: './application-list.html',
   imports: [CommonModule, FormsModule, Applications],
+  templateUrl: './application-list.html',
 })
 export class ApplicationList implements OnInit {
   applications: any[] = [];

@@ -23,23 +23,26 @@ interface LoanApplication {
   imports: [CommonModule, RouterLink, HttpClientModule, FormsModule],
   templateUrl: './admin-dashboard.html',
 })
-
-
-
-export class AdminDashboard implements OnInit{
-
-
+export class AdminDashboard implements OnInit {
   applications: any[] = [];
 
   // dropdown values
   statuses = [
+    'ELIGIBLE',
+    'NOT_ELIGIBLE',
+    'DOCUMENT_VERIFICATION_PENDING',
+    'DOCUMENT_RETURNED_FOR_CORRECTION',
+    'DOCUMENT_REJECTED',
     'DOCUMENT_APPROVED',
-    'DOCUMENT_PENDING',
-    'REJECTED',
-    'APPROVED'
+    'LOAN_APPROVED',
+    'LOAN_REJECTED',
+    'SANCTION_LETTER_SENT',
+    'SANCTION_LETTER_ACCEPTED',
+    'SANCTION_LETTER_REJECTED',
+    'LOAN_DISBURSED',
   ];
 
-  selectedStatus = 'DOCUMENT_APPROVED';
+  selectedStatus = 'DOCUMENT_VERIFICATION_PENDING';
 
   constructor(private http: HttpClient) {}
 
@@ -71,20 +74,6 @@ export class AdminDashboard implements OnInit{
     },
   ];
 
-  pendingApprovals = [
-    {
-      id: 'PL-2031',
-      amount: '₹5,00,000',
-      officer: 'Officer A',
-    },
-    {
-      id: 'PL-2032',
-      amount: '₹3,00,000',
-      officer: 'Officer B',
-    },
-  ];
-
-
   ngOnInit(): void {
     this.loadApplications();
   }
@@ -92,7 +81,7 @@ export class AdminDashboard implements OnInit{
   loadApplications() {
     this.http
       .get<any>(`http://localhost:8080/api/loan-applications?status=${this.selectedStatus}`)
-      .subscribe(res => {
+      .subscribe((res) => {
         this.applications = res.content; // <-- IMPORTANT
       });
   }

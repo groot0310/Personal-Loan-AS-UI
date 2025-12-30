@@ -25,58 +25,59 @@
 
       <!-- DOCUMENTS -->
       <div class="bg-white rounded-3xl shadow-xl p-10">
-        <h2 class="text-3xl font-semibold mb-8">Documents</h2>
+        <h2 class="text-3xl font-semibold mb-8 text-slate-900">Documents</h2>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-          <div *ngFor="let doc of documents" class="border rounded-2xl p-6 space-y-4">
+          <div *ngFor="let doc of documents"
+            class="border border-gray-200 rounded-2xl p-6 space-y-4 hover:shadow-lg transition">
+            <h4 class="font-semibold text-slate-800">{{ doc.documentType.replace('_',' ') }}</h4>
 
-            <h4 class="font-semibold">{{ doc.documentType.replace('_',' ') }}</h4>
-
-            <span class="inline-block px-3 py-1 text-xs rounded-full" [ngClass]="{
-                'bg-blue-100 text-blue-700': doc.status === 'UPLOADED',
-                'bg-green-100 text-green-700': doc.status === 'VERIFIED',
-                'bg-red-100 text-red-700': doc.status === 'REJECTED',
-                'bg-yellow-100 text-yellow-700': doc.status === 'RETURNED_FOR_CORRECTION',
-                'bg-gray-200 text-gray-600': doc.status === 'NOT_UPLOADED'
-              }">
+            <span class="inline-block px-3 py-1 text-xs font-medium rounded-full" [ngClass]="{
+          'bg-blue-100 text-blue-700': doc.status === 'UPLOADED',
+          'bg-green-100 text-green-700': doc.status === 'VERIFIED',
+          'bg-red-100 text-red-700': doc.status === 'REJECTED',
+          'bg-yellow-100 text-yellow-700': doc.status === 'RETURNED_FOR_CORRECTION',
+          'bg-gray-100 text-gray-600': doc.status === 'NOT_UPLOADED'
+        }">
               {{ doc.status }}
             </span>
 
             <!-- ACTIONS -->
-            <div class="flex-col gap-2 pt-2">
-
-              <button class="text-sm text-indigo-600"
+            <div class="flex flex-col gap-2 pt-2">
+              <button class="text-sm text-indigo-600 font-medium hover:underline transition"
                 [disabled]="doc.status === 'REJECTED' || doc.status === 'NOT_UPLOADED'" (click)="viewDocument(doc)">
                 Download
               </button>
 
-              <button *ngIf="doc.status === 'UPLOADED'" class="text-sm text-green-600" (click)="verifyDocument(doc)">
+              <button *ngIf="doc.status === 'UPLOADED'"
+                class="text-sm text-green-600 font-medium hover:underline transition" (click)="verifyDocument(doc)">
                 Verify
               </button>
 
-              <button *ngIf="doc.status === 'UPLOADED'" class="text-sm text-red-600"
+              <button *ngIf="doc.status === 'UPLOADED'"
+                class="text-sm text-red-600 font-medium hover:underline transition"
                 (click)="openReasonBox(doc, 'REJECT')">
                 Reject
               </button>
 
-              <button *ngIf="doc.status === 'UPLOADED'" class="text-sm text-yellow-600"
+              <button *ngIf="doc.status === 'UPLOADED'"
+                class="text-sm text-yellow-600 font-medium hover:underline transition"
                 (click)="openReasonBox(doc, 'RETURN')">
                 Return
               </button>
-
             </div>
 
             <p *ngIf="doc.remarks" class="text-xs text-slate-500">
               Reason: {{ doc.remarks }}
             </p>
-
           </div>
 
-
-           <button mat-raised-button color="primary"(click)="submitReview()">
-            submit 
-          </button>
+          <div class="col-span-full flex justify-end">
+            <button mat-raised-button color="primary" class="px-6 py-2 font-medium" (click)="submitReview()">
+              Submit
+            </button>
+          </div>
 
         </div>
       </div>
@@ -84,17 +85,19 @@
 
     <!-- REJECT / RETURN MODAL -->
     <ng-template #reasonDialog>
-      <div class="p-6 rounded-xl w-[400px] space-y-4">
-        <h3 class="text-lg font-semibold">
+      <div class="p-6 rounded-xl w-[400px] space-y-4 bg-white shadow-lg">
+        <h3 class="text-lg font-semibold text-slate-900">
           {{ actionType === 'REJECT' ? 'Reject Document' : 'Return Document' }}
         </h3>
 
-        <textarea class="w-full border rounded-lg p-2" [(ngModel)]="reasonText" rows="3" placeholder="Enter reason">
+        <textarea
+          class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-200 focus:outline-none"
+          [(ngModel)]="reasonText" rows="3" placeholder="Enter reason">
     </textarea>
 
         <div class="flex justify-end gap-3">
-          <button mat-button (click)="dialogRef.close()">Cancel</button>
-          <button mat-raised-button color="primary" (click)="submitReason()">
+          <button mat-button class="text-slate-700" (click)="dialogRef.close()">Cancel</button>
+          <button mat-raised-button color="primary" class="px-4 py-2 font-medium" (click)="submitReason()">
             Submit
           </button>
         </div>

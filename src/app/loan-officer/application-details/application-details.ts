@@ -13,8 +13,6 @@ import { BehaviorSubject, catchError, combineLatest, of, switchMap, tap } from '
 import { TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
-
-
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { DecisionModal } from '../../shared/modals/decision-modal/decision-modal';
 import { MatButtonModule } from '@angular/material/button';
@@ -46,24 +44,19 @@ interface UIDocument {
   remarks?: string;
 }
 
-
-
 @Component({
   standalone: true,
   selector: 'app-application-details',
-  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule,MatButtonModule],
+  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule, MatButtonModule],
   templateUrl: './application-details.html',
   styleUrls: ['../../../styles.css'],
 })
 export class ApplicationDetails implements OnInit {
-
   @ViewChild('verifyConfirmDialog') verifyConfirmDialog!: TemplateRef<any>;
   dialogRef!: MatDialogRef<any>;
 
   @ViewChild('reasonDialog') reasonDialog!: TemplateRef<any>;
   dialogReasonRef!: MatDialogRef<any>;
-
-
 
   /* ================= ROUTE ================= */
   applicationId!: string;
@@ -83,7 +76,12 @@ export class ApplicationDetails implements OnInit {
   selectedDoc?: UIDocument;
   actionType: 'REJECT' | 'RETURN' | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private dialog: MatDialog, private router: Router,) { }
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.applicationId = this.route.snapshot.paramMap.get('id')!;
@@ -174,7 +172,6 @@ export class ApplicationDetails implements OnInit {
     });
   }
 
-
   /* ================= REJECT / RETURN ================= */
   openReasonBox(doc: UIDocument, action: 'REJECT' | 'RETURN') {
     this.selectedDoc = doc;
@@ -195,30 +192,26 @@ export class ApplicationDetails implements OnInit {
         ? 'http://localhost:8080/api/documents/reject'
         : 'http://localhost:8080/api/documents/return';
 
-    this.http.put(url, {
-      documentId: this.selectedDoc.documentId,
-      remarks: this.reasonText,
-    }).subscribe(() => {
+    this.http
+      .put(url, {
+        documentId: this.selectedDoc.documentId,
+        remarks: this.reasonText,
+      })
+      .subscribe(() => {
+        this.selectedDoc!.status =
+          this.actionType === 'REJECT' ? 'REJECTED' : 'RETURNED_FOR_CORRECTION';
 
-      this.selectedDoc!.status =
-        this.actionType === 'REJECT'
-          ? 'REJECTED'
-          : 'RETURNED_FOR_CORRECTION';
+        this.selectedDoc!.remarks = this.reasonText;
 
-      this.selectedDoc!.remarks = this.reasonText;
+        // ✅ CLOSE DIALOG
+        this.dialogRef.close();
 
-      // ✅ CLOSE DIALOG
-      this.dialogRef.close();
-
-      // RESET STATE
-      this.reasonText = '';
-      this.selectedDoc = undefined;
-      this.actionType = null;
-    });
+        // RESET STATE
+        this.reasonText = '';
+        this.selectedDoc = undefined;
+        this.actionType = null;
+      });
   }
-
-
-
 
   isStageCompleted(stage: UIApplicationStage): boolean {
     const order: UIApplicationStage[] = [
@@ -241,9 +234,8 @@ export class ApplicationDetails implements OnInit {
     return this.currentStatus === 'DOCUMENT_VERIFICATION_PENDING';
   }
 
-submitReview() {
+  submitReview() {
     // Implement the logic to submit the review
     this.router.navigate(['loan-officer/applications']);
-
-    }
+  }
 }
