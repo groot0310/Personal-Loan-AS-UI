@@ -29,7 +29,7 @@ import { AuthGuard } from './core/guards/auth-guard';
 import { RoleGuard } from './core/guards/role-guard';
 import { AdminLayout } from './shared/layouts/admin-layout/admin-layout';
 import { ApplicationList as AdminApplicationList } from './admin/applications/application-list/application-list';
-import { ApplicationDetails as AdminApplicationDetails } from './admin/applications/application-details/application-details';
+import { ApplicantDetails as AdminApplicantDetails } from './admin/applications/applicant-details/applicant-details';
 import { AdminDisbursementList } from './admin/disbursement/disbursement-list/disbursement-list';
 import { SystemRules } from './admin/system-rules/system-rules/system-rules';
 import { AuditLogs } from './admin/audit-logs/audit-logs/audit-logs';
@@ -46,6 +46,8 @@ import { LoanStepperComponent } from './shared/components/loan-stepper2/loan-ste
 import { NotEligible } from './user/eligible/not-eligible/not-eligible';
 import { LoanOfficers } from './admin/loan-officers/loan-officers';
 import { EditLoanOfficer } from './admin/edit-loan-officer/edit-loan-officer';
+import { Applicants } from './admin/applications/applicants/applicants';
+import { LoanDetails } from './user/loan-details/loan-details';
 
 export const routes: Routes = [
   // HOME
@@ -63,6 +65,11 @@ export const routes: Routes = [
     children: [
       // Dashboard
       { path: 'dashboard', component: UserDashboard },
+      {
+        path: 'loan-details/:loanAccountId',
+        component: LoanDetails,
+      },
+
 
       { path: 'loan-stepper2', component: LoanStepperComponent },
 
@@ -89,6 +96,7 @@ export const routes: Routes = [
       { path: 'my-loans', component: MyLoans },
       { path: 'my-loans/:id', component: UserLoanDetails },
       { path: 'emi-schedule', component: EmiSchedule },
+      
       { path: 'profile', component: UserProfile },
       {
         path: 'profile/edit',
@@ -123,8 +131,9 @@ export const routes: Routes = [
     // canActivate: [AdminRoleGuard],
     children: [
       { path: 'dashboard', component: AdminDashboard },
+      { path: 'applications', component: Applicants },
       { path: 'applications', component: AdminApplicationList },
-      { path: 'applications/:id', component: AdminApplicationDetails },
+      { path: 'applications/:id', component: AdminApplicantDetails },
       { path: 'disbursements', component: AdminDisbursementList },
       { path: 'system-rules', component: SystemRules },
       { path: 'audit-logs', component: AuditLogs },

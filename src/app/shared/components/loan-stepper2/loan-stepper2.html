@@ -1,8 +1,8 @@
-<div class="min-h-screen bg-slate-100 py-10 px-4">
+<div class="h-screen  rounded-4xl">
     <div class="max-w-6xl mx-auto">
         <!-- ================= HERO HEADER CARD ================= -->
-        <div class="mb-10">
-            <div class="relative overflow-hidden rounded-3xl bg-white shadow-xl border border-slate-200">
+        <div class="mb-8">
+            <div class="relative overflow-hidden rounded-4xl bg-white shadow-xl border border-slate-200">
                 <!-- Gradient Accent -->
                 <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-indigo-600 to-slate-800">
                 </div>
@@ -26,7 +26,7 @@
         </div>
 
         <!-- ================= STEPPER CARD ================= -->
-        <mat-card class="rounded-3xl shadow-xl p-6 md:p-8 bg-white border border-slate-200">
+        <mat-card class="rounded-4xl shadow-xl p-6 md:p-8 bg-white border border-slate-200 pb-2">
             <mat-horizontal-stepper linear #stepper>
                 <!-- ================= STEP 1 ================= -->
                 <mat-step [stepControl]="basicForm">
@@ -313,9 +313,7 @@
                     <div class="flex justify-between mt-10">
                         <button mat-button matStepperPrevious>Back</button>
 
-                        <button mat-raised-button
-        matStepperNext
-        [disabled]="!allDocsUploaded">
+                        <button mat-raised-button matStepperNext [disabled]="!allDocsUploaded">
                             Continue
                         </button>
                     </div>

@@ -17,7 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   standalone: true,
-  selector: 'app-applications',
+  selector: 'app-loan-officer-applications',
   imports: [CommonModule, RouterModule, MatPaginatorModule, MatProgressSpinnerModule],
   templateUrl: './applications.html',
 })
@@ -48,7 +48,7 @@ export class Applications implements OnInit {
 
   /* ================= PAGINATION ================= */
 
-  pageSize = 5;
+  pageSize = 12;
   totalItems = 0;
 
   private pageIndex$ = new BehaviorSubject<number>(0);
