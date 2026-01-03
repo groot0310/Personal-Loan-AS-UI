@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AdminDashboard } from '../../dashboard/admin-dashboard';
@@ -16,7 +16,7 @@ export class Applicants implements OnInit {
   applications: any[] = [];
   loading = true;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadApplications();
@@ -29,6 +29,7 @@ export class Applicants implements OnInit {
       next: (data) => {
         this.applications = data.filter((app) => this.areAllDocumentsVerified(app.documents));
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
