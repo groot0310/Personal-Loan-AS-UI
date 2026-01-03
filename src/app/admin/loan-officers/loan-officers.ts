@@ -5,11 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { LoanOfficer } from '../../core/models/loan-officer.model';
 import { EditLoanOfficer } from '../edit-loan-officer/edit-loan-officer';
+import { HeaderComponent } from '../../shared/header/header';
 
 @Component({
   standalone: true,
   selector: 'app-loan-officers',
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatDialogModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatDialogModule,HeaderComponent],
   templateUrl: './loan-officers.html',
 })
 export class LoanOfficers {

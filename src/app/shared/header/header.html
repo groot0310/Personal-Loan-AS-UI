@@ -1,0 +1,33 @@
+<header class="w-full bg-indigo-100 shadow-md px-8 py-4 flex items-center justify-between">
+  <!-- Left -->
+  <div class="text-xl font-bold text-indigo-600">
+    Loan Management System
+  </div>
+
+  <!-- Right -->
+  <div class="flex items-center gap-6">
+    <div class="text-right">
+      <p class="text-sm text-gray-500">Welcome</p>
+      <p class="text-lg font-semibold text-gray-800">
+        {{ user?.fullName }}
+      </p>
+      <span class="text-xs px-2 py-1 bg-indigo-100 text-indigo-600 rounded">
+        {{ user?.role }}
+      </span>
+    </div>
+
+    <button
+      (click)="logout()"
+      class="inline-flex items-center justify-center
+                   px-6 py-2.5 rounded-xl
+                   text-sm font-medium
+                   text-red-500
+                   border border-red-200
+                   hover:bg-red-50 hover:text-red-600
+                   hover:cursor-pointer
+                   transition"
+    >
+      Logout
+    </button>
+  </div>
+</header>

@@ -1,12 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, tap, throwError, timeout } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError, timeout } from 'rxjs';
+
+export interface UserProfile {
+  id: number;
+  fullName: string;
+  email: string;
+  role: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private API = 'http://localhost:8080/api/auth';
 
-  constructor(private http: HttpClient) {}
+   private userSubject = new BehaviorSubject<UserProfile | null>(null);
+  user$ = this.userSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+     this.loadUserFromStorage();
+  }
 
   login(email: string, password: string) {
     return this.http
@@ -20,9 +32,23 @@ export class AuthService {
           localStorage.setItem('token', res.token);
           localStorage.setItem('email', email);
           localStorage.setItem('password', password);
+          localStorage.setItem('userProfile', JSON.stringify(res.userProfile));
+        this.userSubject.next(res.userProfile);
+
         }),
         catchError((err) => throwError(() => err))
       );
+  }
+
+    getUser(): UserProfile | null {
+    return this.userSubject.value;
+  }
+
+  private loadUserFromStorage() {
+    const user = localStorage.getItem('userProfile');
+    if (user) {
+      this.userSubject.next(JSON.parse(user));
+    }
   }
 
   register(data: any): Observable<any> {
@@ -33,6 +59,8 @@ export class AuthService {
     // localStorage.removeItem('token');
     localStorage.removeItem('email');
     localStorage.removeItem('password');
+    // localStorage.clear();
+     this.userSubject.next(null);
   }
 
   isLoggedIn(): boolean {

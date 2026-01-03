@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -80,7 +80,8 @@ export class ApplicationDetails implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -101,6 +102,7 @@ export class ApplicationDetails implements OnInit {
           this.currentStatus = res.applicationStatus;
           this.currentStage = mapStatusToStage(this.currentStatus);
           this.buildDocuments(res.documents || []);
+          this.cdr.detectChanges();
         }),
         catchError((err) => {
           console.error(err);
@@ -140,6 +142,7 @@ export class ApplicationDetails implements OnInit {
         const fileURL = URL.createObjectURL(blob);
         window.open(fileURL, '_blank');
         setTimeout(() => URL.revokeObjectURL(fileURL), 10000);
+        this.cdr.detectChanges();
       },
       error: () => alert('Unable to download document'),
     });
@@ -168,6 +171,7 @@ export class ApplicationDetails implements OnInit {
         })
         .subscribe(() => {
           doc.status = 'VERIFIED';
+          this.cdr.detectChanges();
         });
     });
   }
@@ -205,6 +209,7 @@ export class ApplicationDetails implements OnInit {
 
         // ✅ CLOSE DIALOG
         this.dialogRef.close();
+        this.cdr.detectChanges();
 
         // RESET STATE
         this.reasonText = '';

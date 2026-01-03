@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -44,7 +44,7 @@ export class ApplicantDetails implements OnInit {
   application: LoanApplication | null = null; // ✅ KEEP nullable
   documents: UIDocument[] = [];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router,private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -61,6 +61,7 @@ export class ApplicantDetails implements OnInit {
         this.application = res; // ✅ this IS happening
         this.buildDocuments(res.documents || []);
         this.loading = false; // ✅ important
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
@@ -94,6 +95,7 @@ export class ApplicantDetails implements OnInit {
       .subscribe((blob) => {
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');
+        this.cdr.detectChanges();
       });
   }
 
@@ -117,5 +119,4 @@ export class ApplicantDetails implements OnInit {
       .subscribe(() => this.router.navigate(['/admin/applications']));
   }
 
-  click() {}
 }
