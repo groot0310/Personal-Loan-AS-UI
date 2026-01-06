@@ -5,11 +5,12 @@ import { ApplicationInitStatus } from '../../core/models/application-init-status
 import { mapStatusToStage } from '../../core/utils/application-status-mapper';
 import { UIApplicationStage } from '../../core/models/ui-application-stage.model';
 import { ApplicationTimeline } from '../../shared/components/application-timeline/application-timeline';
+import { HeaderComponent } from '../../shared/header/header';
 
 @Component({
   standalone: true,
   selector: 'app-user-dashboard',
-  imports: [CommonModule, RouterModule, ApplicationTimeline, RouterLink],
+  imports: [CommonModule, RouterModule, ApplicationTimeline, RouterLink,HeaderComponent],
   templateUrl: './user-dashboard.html',
   styleUrl: './dashboard.css',
 })

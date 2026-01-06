@@ -35,7 +35,11 @@ export class Applications implements OnInit {
 
   constructor(private http: HttpClient) {
     // Loan Officer fetches data himself
-    this.applications$ = this.http.get<{ content: any[] }>(this.API).pipe(
+    this.applications$ = this.http.get<{ content: any[] }>(this.API,{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }).pipe(
       tap((res) => console.log('Fetched applications:', res)),
       map((res) => res.content),
       shareReplay({ bufferSize: 1, refCount: true }),
