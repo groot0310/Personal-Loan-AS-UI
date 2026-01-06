@@ -69,5 +69,14 @@
             </tbody>
         </table>
 
+<mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize$ | async"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onPageChange($event)"
+  showFirstLastButtons>
+</mat-paginator>
+
+
     </div>
 </section>
