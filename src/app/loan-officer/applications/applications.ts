@@ -3,14 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
-  catchError,
+  BehaviorSubject,
+  combineLatest,
   map,
   Observable,
   shareReplay,
-  tap,
-  throwError,
-  BehaviorSubject,
-  combineLatest,
+  catchError,
+  throwError
 } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -18,66 +17,68 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   standalone: true,
   selector: 'app-loan-officer-applications',
-  imports: [CommonModule, RouterModule, MatPaginatorModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './applications.html',
 })
 export class Applications implements OnInit {
+
   private readonly API = 'http://localhost:8080/api/loan-applications';
 
-  /* ================= INPUTS (🔥 REQUIRED FOR REUSE) ================= */
+  /* ================= INPUTS ================= */
+  @Input() applications: any[] | null = null;   // ADMIN
+  @Input() isAdminView = false;
 
-  @Input() applications: any[] | null = null; // used by ADMIN
-  @Input() isAdminView = false; // role-based UI switch
-
-  /* ================= LOAN OFFICER FLOW ================= */
-
-  readonly applications$?: Observable<any[]>;
-
-  constructor(private http: HttpClient) {
-    // Loan Officer fetches data himself
-    this.applications$ = this.http.get<{ content: any[] }>(this.API,{
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }).pipe(
-      tap((res) => console.log('Fetched applications:', res)),
-      map((res) => res.content),
-      shareReplay({ bufferSize: 1, refCount: true }),
-      catchError((err) => {
-        console.error('API error', err);
-        return throwError(() => err);
-      })
-    );
-  }
+  /* ================= API STREAM ================= */
+  readonly applications$!: Observable<any[]>;
 
   /* ================= PAGINATION ================= */
-
-  pageSize = 12;
+  pageSizeOptions = [5, 10, 12, 20];
   totalItems = 0;
 
   private pageIndex$ = new BehaviorSubject<number>(0);
+ pageSize$ = new BehaviorSubject<number>(10);
+
   paginatedApplications$!: Observable<any[]>;
 
-  ngOnInit(): void {
-    // 🔥 ADMIN → use passed data
-    if (this.isAdminView && this.applications) {
-      this.paginatedApplications$ = combineLatest([this.pageIndex$]).pipe(
-        map(() => {
-          this.totalItems = this.applications!.length;
-          const start = this.pageIndex$.value * this.pageSize;
-          const end = start + this.pageSize;
-          return this.applications!.slice(start, end);
+  constructor(private http: HttpClient) {
+    this.applications$ = this.http
+      .get<{ content: any[] }>(this.API, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .pipe(
+        map(res => res.content),
+        shareReplay(1),
+        catchError(err => {
+          console.error('API error', err);
+          return throwError(() => err);
         })
       );
-      return;
-    }
+  }
 
-    // 🔥 LOAN OFFICER → use API stream
-    this.paginatedApplications$ = combineLatest([this.applications$!, this.pageIndex$]).pipe(
-      map(([apps, pageIndex]) => {
+  ngOnInit(): void {
+
+    const source$ = this.isAdminView
+      ? new BehaviorSubject<any[]>(this.applications ?? [])
+      : this.applications$;
+
+    this.paginatedApplications$ = combineLatest([
+      source$,
+      this.pageIndex$,
+      this.pageSize$
+    ]).pipe(
+      map(([apps, pageIndex, pageSize]) => {
         this.totalItems = apps.length;
-        const start = pageIndex * this.pageSize;
-        const end = start + this.pageSize;
+
+        const start = pageIndex * pageSize;
+        const end = start + pageSize;
+
         return apps.slice(start, end);
       })
     );
@@ -85,12 +86,12 @@ export class Applications implements OnInit {
 
   onPageChange(event: PageEvent): void {
     this.pageIndex$.next(event.pageIndex);
+    this.pageSize$.next(event.pageSize);
   }
 
   getReviewLink(app: any): any[] {
-    if (this.isAdminView) {
-      return ['/admin/application', app.applicationId];
-    }
-    return ['/loan-officer/application', app.applicationId];
+    return this.isAdminView
+      ? ['/admin/application', app.applicationId]
+      : ['/loan-officer/application', app.applicationId];
   }
 }
