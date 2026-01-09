@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { HeaderComponent } from "../../shared/header/header";
+import { HeaderComponent } from '../../shared/header/header';
 
 @Component({
   standalone: true,
   selector: 'app-loan-officer-dashboard',
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
 })
 export class Dashboard {

@@ -1,6 +1,7 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -13,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { DocumentType } from '../../types/document-type';
 
 @Component({
@@ -31,17 +32,17 @@ import { DocumentType } from '../../types/document-type';
     MatCardModule,
     MatIconModule,
     MatSnackBarModule,
+    RouterOutlet,
   ],
   templateUrl: './loan-stepper2.html',
   styleUrls: ['./loan-stepper2.css'],
 })
-export class LoanStepperComponent {
+export class LoanStepper2 implements OnInit {
   basicForm!: FormGroup;
   personalForm!: FormGroup;
   employmentForm!: FormGroup;
 
   applicationId = 0;
-  documents: File[] = [];
 
   uploadedDocs: Record<DocumentType, boolean> = {
     AADHAAR: false,
@@ -51,19 +52,26 @@ export class LoanStepperComponent {
   };
 
   uploadedFiles: Partial<Record<DocumentType, any>> = {};
-
-  /** ✅ SAFE BOOLEAN FOR TEMPLATE */
   allDocsUploaded = false;
+
+  private API = 'http://localhost:8080/api/user';
 
   constructor(
     private fb: FormBuilder,
     private eligibilityService: EligibilityService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {
     this.initializeForms();
   }
+
+  ngOnInit(): void {
+    this.loadUserProfile();
+  }
+
+  /* ================= FORM INIT ================= */
 
   private initializeForms(): void {
     this.basicForm = this.fb.group({
@@ -73,15 +81,15 @@ export class LoanStepperComponent {
     });
 
     this.personalForm = this.fb.group({
-      fullName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      mobileNumber: ['', Validators.required],
-      dateOfBirth: ['', Validators.required],
-      gender: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      pincode: ['', Validators.required],
+      fullName: [''],
+      email: [''],
+      mobileNumber: [''],
+      dateOfBirth: [''],
+      gender: [''],
+      address: [''],
+      city: [''],
+      state: [''],
+      pincode: [''],
     });
 
     this.employmentForm = this.fb.group({
@@ -95,10 +103,52 @@ export class LoanStepperComponent {
     });
   }
 
+  /* ================= PROFILE AUTO-FILL ================= */
+
+  private loadUserProfile(): void {
+    const token = localStorage.getItem('auth_token');
+
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http.get<any>(`${this.API}/viewProfile`, { headers }).subscribe({
+      next: (profile) => {
+        this.personalForm.patchValue({
+          fullName: profile.fullName,
+          email: profile.email,
+          mobileNumber: profile.mobileNumber,
+          dateOfBirth: new Date(profile.dateOfBirth),
+          gender: profile.gender,
+          address: profile.address,
+          city: profile.city,
+          state: profile.state,
+          pincode: profile.pincode,
+        });
+
+        /** 🔒 LOCK PERSONAL DETAILS */
+        this.personalForm.disable();
+
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.snackBar.open('Failed to load profile data', 'Close', {
+          duration: 4000,
+        });
+      },
+    });
+  }
+
+  /* ================= ELIGIBILITY ================= */
+
   checkEligibility(stepper: any): void {
     const payload = {
       ...this.basicForm.value,
-      ...this.personalForm.value,
       ...this.employmentForm.value,
     };
 
@@ -113,26 +163,21 @@ export class LoanStepperComponent {
         }
       },
       error: () => {
-        alert('Eligibility check failed');
+        this.snackBar.open('Eligibility check failed', 'Close', {
+          duration: 4000,
+        });
       },
     });
   }
 
-  onFileUpload(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (!input.files) return;
-
-    this.documents = Array.from(input.files);
-  }
+  /* ================= DOCUMENT UPLOAD ================= */
 
   uploadDocument(event: Event, docType: DocumentType): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
 
-    const file = input.files[0];
-
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', input.files[0]);
     formData.append('documentType', docType);
     formData.append('loanApplicationId', this.applicationId.toString());
 
@@ -141,15 +186,13 @@ export class LoanStepperComponent {
         this.uploadedDocs[docType] = true;
         this.uploadedFiles[docType] = res;
 
-        /** ✅ Update once, safely */
         this.allDocsUploaded =
           this.uploadedDocs.AADHAAR &&
           this.uploadedDocs.PAN &&
           this.uploadedDocs.SALARY_SLIP &&
           this.uploadedDocs.BANK_STATEMENT;
 
-        this.cdr.detectChanges(); // ✅ Fix NG0100
-
+        this.cdr.detectChanges();
         input.value = '';
       },
       error: () => {
@@ -159,22 +202,49 @@ export class LoanStepperComponent {
     });
   }
 
+  /* ================= FINAL SUBMIT ================= */
+
   submit(): void {
-    const payload = {
-      ...this.basicForm.value,
-      ...this.personalForm.value,
-      ...this.employmentForm.value,
-      documents: this.uploadedFiles,
-    };
+    if (!this.applicationId) {
+      this.snackBar.open('Invalid application. Please restart the process.', 'Close', {
+        duration: 4000,
+      });
+      return;
+    }
 
-    console.log('FINAL PAYLOAD 🚀', payload);
+    const token = localStorage.getItem('auth_token');
 
-    this.snackBar.open('Loan Application Submitted Successfully', 'Close', {
-      duration: 5000,
-      verticalPosition: 'top',
-      panelClass: ['custom-snackbar'],
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
     });
 
-    this.router.navigate(['user/dashboard']);
+    this.http
+      .put(
+        `http://localhost:8080/api/loan-applications/submit/${this.applicationId}`,
+        {},
+        { headers }
+      )
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Loan Application Submitted Successfully 🎉', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+          });
+
+          this.router.navigate(['user/dashboard']);
+        },
+        error: (err) => {
+          console.error('Submit application error:', err);
+
+          this.snackBar.open(err?.error?.message || 'Failed to submit loan application', 'Close', {
+            duration: 5000,
+          });
+        },
+      });
   }
 }

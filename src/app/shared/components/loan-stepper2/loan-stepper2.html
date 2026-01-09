@@ -220,7 +220,7 @@
                 </mat-step>
 
                 <!-- ================= STEP 4 ================= -->
-                <h3 class="text-xl font-semibold text-slate-800 mb-6">
+                <!-- <h3 class="text-xl font-semibold text-slate-800 mb-6">
                     Upload Documents
                 </h3>
 
@@ -239,7 +239,7 @@
                     <button mat-raised-button color="primary" matStepperNext>
                         Continue
                     </button>
-                </div>
+                </div> -->
 
 
                 <!-- ================= STEP 5 ================= -->
@@ -266,7 +266,7 @@
                                 </span>
                             </div>
 
-                            <input type="file" (change)="uploadDocument($event, 'AADHAAR')" />
+                            <input accept="application/pdf" type="file" (change)="uploadDocument($event, 'AADHAAR')" />
                         </div>
 
                         <!-- PAN -->
@@ -279,7 +279,7 @@
                                 </span>
                             </div>
 
-                            <input type="file" (change)="uploadDocument($event, 'PAN')" />
+                            <input accept="application/pdf" type="file" (change)="uploadDocument($event, 'PAN')" />
                         </div>
 
                         <!-- Salary Slip -->
@@ -292,7 +292,8 @@
                                 </span>
                             </div>
 
-                            <input type="file" (change)="uploadDocument($event, 'SALARY_SLIP')" />
+                            <input accept="application/pdf" type="file"
+                                (change)="uploadDocument($event, 'SALARY_SLIP')" />
                         </div>
 
                         <!-- Bank Statement -->
@@ -305,13 +306,14 @@
                                 </span>
                             </div>
 
-                            <input type="file" (change)="uploadDocument($event, 'BANK_STATEMENT')" />
+                            <input accept="application/pdf" type="file"
+                                (change)="uploadDocument($event, 'BANK_STATEMENT')" />
                         </div>
 
                     </div>
 
                     <div class="flex justify-between mt-10">
-                        <button mat-button matStepperPrevious>Back</button>
+                        <!-- <button mat-button matStepperPrevious>Back</button> -->
 
                         <button mat-raised-button matStepperNext [disabled]="!allDocsUploaded">
                             Continue
@@ -426,14 +428,15 @@
                     <!-- FOOTER ACTIONS -->
                     <div class="mt-14 flex items-center justify-between border-t pt-8">
 
-                        <button mat-button matStepperPrevious class="text-slate-600">
+                        <!-- <button mat-button matStepperPrevious class="text-slate-600">
                             ← Edit Details
-                        </button>
+                        </button> -->
 
                         <button mat-raised-button color="accent" class="px-10 py-3 rounded-xl text-lg shadow-lg"
-                            (click)="submit()">
+                            [disabled]="!allDocsUploaded" (click)="submit()">
                             Submit Application
                         </button>
+
 
                     </div>
 
@@ -443,3 +446,5 @@
         </mat-card>
     </div>
 </div>
+
+<router-outlet></router-outlet>

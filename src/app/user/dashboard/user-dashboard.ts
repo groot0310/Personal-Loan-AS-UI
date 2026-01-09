@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
 import { ApplicationInitStatus } from '../../core/models/application-init-status.model';
 import { mapStatusToStage } from '../../core/utils/application-status-mapper';
 import { UIApplicationStage } from '../../core/models/ui-application-stage.model';
@@ -10,13 +13,35 @@ import { HeaderComponent } from '../../shared/header/header';
 @Component({
   standalone: true,
   selector: 'app-user-dashboard',
-  imports: [CommonModule, RouterModule, ApplicationTimeline, RouterLink,HeaderComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    RouterLink,
+    ApplicationTimeline,
+    HeaderComponent,
+    MatSnackBarModule,
+    HttpClientModule, // ✅ IMPORTANT
+  ],
   templateUrl: './user-dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class UserDashboard {
   currentStatus: ApplicationInitStatus = 'DOCUMENT_VERIFICATION_PENDING';
   currentStage: UIApplicationStage = mapStatusToStage(this.currentStatus);
+
+  checkingApply = false;
+
+  private readonly API = 'http://localhost:8080/api/loan-applications';
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  /* ================= STATUS UI ================= */
 
   get currentStatusLabel(): string {
     switch (this.currentStatus) {
@@ -62,5 +87,39 @@ export class UserDashboard {
       return ['/user/loan-details', 'PL-1023'];
     }
     return [];
+  }
+
+  /* ================= APPLY LOAN GATE ================= */
+  applyLoan(): void {
+    if (this.checkingApply) return;
+
+    this.checkingApply = true;
+    const token = localStorage.getItem('token');
+
+    this.http
+      .get<{ canApply: boolean; reason?: string }>(`${this.API}/can-apply`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .subscribe({
+        next: (res) => {
+          this.checkingApply = false;
+
+          this.router.navigateByUrl('/user/loan-stepper2');
+          if (res.canApply) {
+            console.log('✅ Navigating to loan-stepper2');
+            // this.router.navigateByUrl('/user/loan-stepper2');
+          } else {
+            this.snackBar.open(res.reason || 'You cannot apply for a loan right now', 'OK', {
+              duration: 6000,
+              verticalPosition: 'top',
+            });
+          }
+        },
+        error: (err) => {
+          this.checkingApply = false;
+          console.warn('⚠️ can-apply failed, redirecting anyway', err);
+          this.router.navigateByUrl('/user/loan-stepper2');
+        },
+      });
   }
 }

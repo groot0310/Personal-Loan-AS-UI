@@ -42,7 +42,7 @@ import { Documents } from './user/apply-loan/steps/documents/documents';
 import { ReviewSubmit } from './user/apply-loan/steps/review-submit/review-submit';
 import { ApplyLoanLayout } from './shared/layouts/apply-loan-layout/apply-loan-layout';
 import { AUTH_ROUTES } from './auth/auth.routes';
-import { LoanStepperComponent } from './shared/components/loan-stepper2/loan-stepper2';
+import { LoanStepper2 } from './shared/components/loan-stepper2/loan-stepper2';
 import { NotEligible } from './user/eligible/not-eligible/not-eligible';
 import { LoanOfficers } from './admin/loan-officers/loan-officers';
 import { EditLoanOfficer } from './admin/edit-loan-officer/edit-loan-officer';
@@ -70,8 +70,7 @@ export const routes: Routes = [
         component: LoanDetails,
       },
 
-
-      { path: 'loan-stepper2', component: LoanStepperComponent },
+      { path: 'loan-stepper2', component: LoanStepper2 },
 
       // Apply Loan (multi-step)
       {
@@ -96,7 +95,7 @@ export const routes: Routes = [
       { path: 'my-loans', component: MyLoans },
       { path: 'my-loans/:id', component: UserLoanDetails },
       { path: 'emi-schedule', component: EmiSchedule },
-      
+
       { path: 'profile', component: UserProfile },
       {
         path: 'profile/edit',

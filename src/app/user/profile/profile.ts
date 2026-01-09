@@ -1,18 +1,52 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-user-profile',
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, HttpClientModule],
   templateUrl: './profile.html',
 })
-export class UserProfile {
-  user = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: '9876543210',
-  };
+export class UserProfile implements OnInit {
+  loading = true;
+  error = '';
+
+  user: any = null;
+
+  private API = 'http://localhost:8080/api/user';
+
+  constructor(private http: HttpClient, private cd: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.http
+      .get(`${this.API}/viewProfile`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .subscribe({
+        next: (res) => {
+          console.log('Profile response:', res);
+          this.user = res;
+          this.loading = false;
+          this.cd.detectChanges();
+        },
+        error: (err) => {
+          console.error('Profile API error:', err);
+          this.error = 'Failed to load profile';
+          this.loading = false;
+        },
+      });
+  }
+
+  getInitials(name: string): string {
+    if (!name) return '';
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase();
+  }
 }
