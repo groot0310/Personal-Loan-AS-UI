@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
@@ -33,7 +33,13 @@ export class UserDashboard {
 
   private readonly API = 'http://localhost:8080/api/loan-applications';
 
-  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   /* ================= STATUS UI ================= */
 
@@ -88,36 +94,31 @@ export class UserDashboard {
     if (this.checkingApply) return;
 
     this.checkingApply = true;
-
     const token = localStorage.getItem('token');
 
     this.http
       .get<{ canApply: boolean; reason?: string }>(`${this.API}/can-apply`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .subscribe({
         next: (res) => {
           this.checkingApply = false;
 
+          this.router.navigateByUrl('/user/loan-stepper2');
           if (res.canApply) {
-            // Allowed → go to form
-            this.router.navigate(['/shared/loan-stepper2']);
+            console.log('✅ Navigating to loan-stepper2');
+            // this.router.navigateByUrl('/user/loan-stepper2');
           } else {
-            // ❌ Existing user but blocked
             this.snackBar.open(res.reason || 'You cannot apply for a loan right now', 'OK', {
               duration: 6000,
               verticalPosition: 'top',
             });
           }
         },
-
         error: (err) => {
           this.checkingApply = false;
-
-          console.warn('Can-Apply check failed (assuming new user):', err);
-          this.router.navigate(['/shared/loan-stepper2']);
+          console.warn('⚠️ can-apply failed, redirecting anyway', err);
+          this.router.navigateByUrl('/user/loan-stepper2');
         },
       });
   }

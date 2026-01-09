@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { DocumentType } from '../../types/document-type';
 
 @Component({
@@ -32,6 +32,7 @@ import { DocumentType } from '../../types/document-type';
     MatCardModule,
     MatIconModule,
     MatSnackBarModule,
+    RouterOutlet,
   ],
   templateUrl: './loan-stepper2.html',
   styleUrls: ['./loan-stepper2.css'],

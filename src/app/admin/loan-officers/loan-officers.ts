@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,7 +24,11 @@ export class LoanOfficers implements OnInit {
 
   private readonly API = 'http://localhost:8080/api/loanOfficer';
 
-  constructor(private dialog: MatDialog, private http: HttpClient) {}
+  constructor(
+    private dialog: MatDialog,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadLoanOfficers();
@@ -52,11 +56,13 @@ export class LoanOfficers implements OnInit {
       next: (res) => {
         this.dataSource = res || [];
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Loan Officer API error:', err);
         this.error = 'Failed to load loan officers';
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }
