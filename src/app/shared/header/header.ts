@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService, UserProfile } from '../../auth/authservice/auth-service';
+import { UserProfile } from '../../auth/authservice/auth-service';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,14 +13,20 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   user: UserProfile | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.authService.user$.subscribe((user) => {
+  constructor(private http: HttpClient, private router: Router, private cdr:ChangeDetectorRef) {
+    this.http.get<UserProfile>('http://localhost:8080/api/user/viewProfile',
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }).subscribe((user) => {
       this.user = user;
+      this.cdr.detectChanges();
     });
   }
 
   logout() {
-    this.authService.logout();
+    // this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

@@ -55,13 +55,22 @@ export class AuthService {
     return this.http.post(`${this.API}/register`, data);
   }
 
+  // logout() {
+  //   // localStorage.removeItem('token');
+  //   localStorage.removeItem('email');
+  //   localStorage.removeItem('password');
+  //   // localStorage.clear();
+  //    this.userSubject.next(null);
+  // }
   logout() {
-    // localStorage.removeItem('token');
-    localStorage.removeItem('email');
-    localStorage.removeItem('password');
-    // localStorage.clear();
-     this.userSubject.next(null);
-  }
+  // localStorage.removeItem('token');   // ✅ MUST
+  localStorage.removeItem('email');
+  localStorage.removeItem('password');
+  localStorage.removeItem('userProfile');
+
+  this.userSubject.next(null);
+}
+
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
