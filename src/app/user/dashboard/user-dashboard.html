@@ -3,119 +3,237 @@
 <section class="min-h-screen bg-slate-100 px-8 py-10 space-y-12">
 
     <!-- ================= HEADER ================= -->
-    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <div>
-            <h1 class="text-3xl font-semibold text-slate-900 tracking-tight">
-                Welcome To Personal Loan 👋
+    <header class="relative max-w-10xl mx-auto">
+        <div class="rounded-[2.5rem] p-10
+              bg-white/5 backdrop-blur-xl
+              border border-white/10
+              shadow-[0_30px_80px_rgba(0,0,0,0.4)]">
+
+            <h1 class="text-3xl md:text-4xl font-extrabold text-black tracking-tight">
+                Welcome to your dashboard 👋
             </h1>
-            <p class="text-slate-500 mt-1">
-                Track and manage your personal loan journey
+
+            <p class="text-slate-400 mt-2 text-lg">
+                Track and manage your personal loan journey with clarity and control.
             </p>
         </div>
     </header>
     <!-- ================= QUICK ACTIONS ================= -->
     <div class="grid md:grid-cols-4 gap-6">
 
-        <!-- APPLY LOAN (FIXED) -->
-        <button (click)="applyLoan()" [disabled]="checkingApply" class="group relative overflow-hidden text-left
-             bg-white border border-slate-200
-             rounded-2xl p-6
-             transition-all duration-300
-             hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300
-             disabled:opacity-60 disabled:cursor-not-allowed">
+        <!-- APPLY LOAN -->
+        <button (click)="applyLoan()" [disabled]="checkingApply" class="group relative text-left overflow-hidden
+           rounded-3xl p-7
+           bg-white
+           border border-slate-200
+           shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+           transition-all duration-300 ease-out
+           hover:-translate-y-1.5 hover:shadow-[0_20px_60px_rgba(99,102,241,0.25)]
+           hover:border-indigo-300
+           disabled:opacity-60 disabled:cursor-not-allowed">
 
+            <!-- top accent -->
+            <div class="absolute inset-x-0 top-0 h-1
+         bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+            </div>
+
+            <!-- hover glow -->
             <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
-                  bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
+         bg-gradient-to-br from-indigo-50/80 via-transparent to-transparent">
+            </div>
 
-            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+            <p class="relative text-[11px] uppercase tracking-[0.3em] text-slate-400">
                 New Application
             </p>
 
-            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
-                 group-hover:text-indigo-600 transition">
+            <h3 class="relative mt-3 text-lg font-semibold text-slate-900
+         group-hover:text-indigo-600 transition">
                 {{ checkingApply ? 'Checking Eligibility...' : 'Apply for Loan' }}
             </h3>
 
-            <p class="relative mt-1 text-sm text-slate-500">
+            <p class="relative mt-2 text-sm text-slate-500 leading-relaxed">
                 Start a fresh loan request
             </p>
         </button>
 
         <!-- MY LOANS -->
-        <a routerLink="/user/my-loans" class="group relative overflow-hidden
-              bg-white border border-slate-200
-              rounded-2xl p-6
-              transition-all duration-300
-              hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300">
+        <a routerLink="/user/my-loans" class="group relative text-left overflow-hidden
+           rounded-3xl p-7 bg-white
+           border border-slate-200
+           shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+           transition-all duration-300 ease-out
+           hover:-translate-y-1.5 hover:shadow-[0_20px_60px_rgba(99,102,241,0.25)]
+           hover:border-indigo-300">
+
+            <div class="absolute inset-x-0 top-0 h-1 bg-indigo-400"></div>
 
             <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
-                  bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
+         bg-gradient-to-br from-indigo-50/80 via-transparent to-transparent">
+            </div>
 
-            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+            <p class="relative text-[11px] uppercase tracking-[0.3em] text-slate-400">
                 Overview
             </p>
 
-            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
-                 group-hover:text-indigo-600 transition">
+            <h3 class="relative mt-3 text-lg font-semibold text-slate-900
+         group-hover:text-indigo-600 transition">
                 My Loans
             </h3>
 
-            <p class="relative mt-1 text-sm text-slate-500">
+            <p class="relative mt-2 text-sm text-slate-500">
                 View active & past loans
             </p>
         </a>
 
         <!-- EMI SCHEDULE -->
-        <a routerLink="/user/emi-schedule" class="group relative overflow-hidden
-              bg-white border border-slate-200
-              rounded-2xl p-6
-              transition-all duration-300
-              hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300">
+        <a routerLink="/user/emi-schedule" class="group relative text-left overflow-hidden
+           rounded-3xl p-7 bg-white
+           border border-slate-200
+           shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+           transition-all duration-300 ease-out
+           hover:-translate-y-1.5 hover:shadow-[0_20px_60px_rgba(99,102,241,0.25)]
+           hover:border-indigo-300">
+
+            <div class="absolute inset-x-0 top-0 h-1 bg-purple-400"></div>
 
             <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
-                  bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
+         bg-gradient-to-br from-purple-50/80 via-transparent to-transparent">
+            </div>
 
-            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+            <p class="relative text-[11px] uppercase tracking-[0.3em] text-slate-400">
                 Payments
             </p>
 
-            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
-                 group-hover:text-indigo-600 transition">
+            <h3 class="relative mt-3 text-lg font-semibold text-slate-900
+         group-hover:text-indigo-600 transition">
                 EMI Schedule
             </h3>
 
-            <p class="relative mt-1 text-sm text-slate-500">
+            <p class="relative mt-2 text-sm text-slate-500">
                 Monthly breakdown
             </p>
         </a>
 
         <!-- PROFILE -->
-        <a routerLink="/user/profile" class="group relative overflow-hidden
-              bg-white border border-slate-200
-              rounded-2xl p-6
-              transition-all duration-300
-              hover:-translate-y-1 hover:shadow-2xl hover:border-indigo-300">
+        <a routerLink="/user/profile" class="group relative text-left overflow-hidden
+           rounded-3xl p-7 bg-white
+           border border-slate-200
+           shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+           transition-all duration-300 ease-out
+           hover:-translate-y-1.5 hover:shadow-[0_20px_60px_rgba(99,102,241,0.25)]
+           hover:border-indigo-300">
+
+            <div class="absolute inset-x-0 top-0 h-1 bg-pink-400"></div>
 
             <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
-                  bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
+         bg-gradient-to-br from-pink-50/80 via-transparent to-transparent">
+            </div>
 
-            <p class="relative text-xs uppercase tracking-wide text-slate-500">
+            <p class="relative text-[11px] uppercase tracking-[0.3em] text-slate-400">
                 Account
             </p>
 
-            <h3 class="relative mt-2 text-lg font-semibold text-slate-900
-                 group-hover:text-indigo-600 transition">
+            <h3 class="relative mt-3 text-lg font-semibold text-slate-900
+         group-hover:text-indigo-600 transition">
                 Profile
             </h3>
 
-            <p class="relative mt-1 text-sm text-slate-500">
+            <p class="relative mt-2 text-sm text-slate-500">
                 Personal & KYC info
             </p>
         </a>
+
     </div>
 
+    <div class="relative rounded-[2.75rem] p-14
+     bg-gradient-to-br from-white via-slate-50 to-slate-100
+     border border-slate-200/70
+     shadow-[0_50px_140px_rgba(0,0,0,0.10)]
+     overflow-hidden">
+
+        <!-- Soft background glow -->
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full
+                bg-indigo-200/30 blur-3xl"></div>
+
+        <div class="relative grid md:grid-cols-3 gap-14 items-center">
+
+            <!-- LEFT -->
+            <div>
+                <p class="text-xs uppercase tracking-[0.25em] text-slate-500 mb-4">
+                    Active Loan
+                </p>
+
+                <h2 class="text-5xl font-bold text-slate-900 tracking-tight">
+                    ₹4,50,000
+                </h2>
+
+                <p class="mt-4 text-slate-600 text-sm">
+                    Personal Loan • 24 months • 11.5% interest
+                </p>
+
+                <button class="mt-9 px-8 py-3.5 rounded-xl
+                bg-indigo-600 text-white text-sm font-semibold
+                shadow-lg shadow-indigo-600/30
+                hover:bg-indigo-700 hover:shadow-indigo-700/40
+                transition-all duration-300">
+                    View Details
+                </button>
+            </div>
+
+            <!-- CENTER -->
+            <div class="flex justify-center">
+                <div class="relative w-56 h-56 rounded-full
+                        bg-white border border-indigo-100
+                        shadow-xl flex items-center justify-center">
+
+                    <!-- Ring -->
+                    <div class="absolute inset-4 rounded-full
+                            border-[10px] border-indigo-100"></div>
+
+                    <!-- Inner content -->
+                    <div class="text-center z-10">
+                        <p class="text-xs uppercase tracking-wider text-slate-500">
+                            EMIs Paid
+                        </p>
+                        <p class="mt-1 text-4xl font-bold text-indigo-600">
+                            6 / 24
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="bg-white/70 backdrop-blur-md
+                    border border-slate-200/60
+                    rounded-2xl p-6 space-y-5 shadow-sm">
+
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-500">Monthly EMI</span>
+                    <span class="font-semibold text-slate-900">₹22,340</span>
+                </div>
+
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-500">Next Due</span>
+                    <span class="font-semibold text-slate-900">18 Aug 2026</span>
+                </div>
+
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-500">Status</span>
+                    <span class="inline-flex items-center gap-1.5
+                             text-green-700 font-semibold
+                             bg-green-100 px-3 py-1 rounded-full">
+                        ● On Track
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
     <!-- ================= CURRENT STATUS ================= -->
-    <div class="relative overflow-hidden
+    <!-- <div class="relative overflow-hidden
               bg-white border border-slate-200
               rounded-3xl p-8
               shadow-sm">
@@ -146,16 +264,16 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- ================= TIMELINE ================= -->
-    <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+    <!-- <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
         <h3 class="text-xs font-semibold uppercase tracking-widest text-slate-600 mb-6">
             Application Progress
         </h3>
 
         <app-application-timeline [currentStage]="currentStage">
         </app-application-timeline>
-    </div>
+    </div> -->
 
 </section>

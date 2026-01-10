@@ -1,147 +1,170 @@
-<section class="max-w-[1400px] mx-auto px-6 py-10 space-y-12">
+<section class="max-w-[1400px] mx-auto px-6 py-12 space-y-14 bg-slate-50 min-h-screen">
 
   <!-- ================= KPI CARDS ================= -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-    <div *ngFor="let stat of stats" [routerLink]="stat.link || null" class="group bg-white rounded-3xl p-7 border border-slate-200
-                shadow-lg hover:shadow-xl
-                cursor-pointer transition-all duration-300">
+    <div *ngFor="let stat of stats" class="group relative overflow-hidden
+      bg-white rounded-3xl p-7
+      border border-slate-200
+      shadow-sm
+      transition-all duration-300
+      hover:-translate-y-1
+      hover:shadow-2xl
+      hover:border-indigo-300">
 
-      <!-- LABEL -->
-      <p class="text-sm font-medium text-slate-500">
+      <!-- hover wash -->
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition
+        bg-gradient-to-br from-indigo-50 via-transparent to-transparent"></div>
+
+      <p class="relative text-xs uppercase tracking-[0.25em] text-slate-500">
         {{ stat.label }}
       </p>
 
-      <!-- VALUE -->
-      <p class="text-4xl font-bold mt-3" [ngClass]="stat.color">
+      <p class="relative text-4xl font-bold text-slate-900 mt-4">
         {{ stat.value }}
       </p>
 
-      <!-- SUB TEXT -->
-      <p class="text-xs text-slate-400 mt-2">
+      <p class="relative text-sm text-slate-500 mt-1">
         {{ stat.sub }}
       </p>
-
-      <!-- HOVER ACCENT -->
-      <div class="mt-4 h-1 w-10 bg-indigo-600 rounded-full
-                  opacity-0 group-hover:opacity-100 transition">
-      </div>
     </div>
 
   </div>
 
-  <div class="mb-4 flex items-center gap-4">
-    <label class="text-sm font-medium text-slate-600">Filter Status</label>
 
-    <select class="border border-slate-300 rounded px-3 py-2 text-sm" [(ngModel)]="selectedStatus"
-      (change)="onStatusChange()">
+  <!-- ================= HEADER + FILTER CARD ================= -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm
+         px-8 py-6
+         flex flex-col md:flex-row
+         md:items-center md:justify-between
+         gap-6">
 
-      <option *ngFor="let status of statuses" [value]="status">
-        {{ status }}
-      </option>
-    </select>
+    <!-- LEFT : Title -->
+    <div>
+      <h2 class="text-2xl md:text-3xl font-semibold text-slate-900 tracking-tight">
+        Pending Loan Applications
+      </h2>
+      <p class="text-sm text-slate-500 mt-1">
+        Review and manage incoming applications
+      </p>
+    </div>
+
+    <!-- RIGHT : Filter -->
+    <div class="flex items-center gap-4
+           bg-slate-50 border border-slate-200
+           rounded-2xl px-5 py-3">
+
+      <span class="text-xs font-medium uppercase tracking-wider text-slate-500">
+        Status
+      </span>
+
+      <select class="bg-white border border-slate-300
+             rounded-xl px-4 py-2 text-sm
+             focus:outline-none
+             focus:ring-2 focus:ring-indigo-500
+             min-w-[160px]" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
+
+        <option *ngFor="let status of statuses" [value]="status">
+          {{ status }}
+        </option>
+
+      </select>
+    </div>
+
   </div>
 
 
-  <!-- ================= PENDING APPROVALS ================= -->
-  <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
 
-    <!-- HEADER -->
-    <div class="px-8 py-6 border-b border-slate-200 bg-slate-50
-                flex items-center justify-between">
+  <!-- ================= APPLICATION TABLE ================= -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
 
-      <h2 class="text-lg font-semibold text-slate-800">
-        Pending Admin Approvals
-      </h2>
+    <!-- Header -->
+    <div class="px-8 py-6 border-b border-slate-200 flex items-center justify-between">
+      <h3 class="text-lg font-semibold text-slate-800">
+        Admin Approval Queue
+      </h3>
 
       <a routerLink="/admin/applications" class="text-sm font-medium text-indigo-600 hover:underline">
-        View loan officer dashboard
+        Open full dashboard →
       </a>
     </div>
 
-
-
-    <!-- TABLE -->
+    <!-- Table -->
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
 
-        <thead class="text-left text-xs uppercase tracking-wide text-slate-500 bg-white">
-          <tr class="border-b border-slate-200">
-            <th class="px-8 py-4">Application ID</th>
-            <th class="px-8 py-4">Applicant</th>
-            <th class="px-8 py-4">Loan Type</th>
-            <th class="px-8 py-4">Amount</th>
-            <th class="px-8 py-4">Status</th>
-            <th class="px-8 py-4">Action</th>
+        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+          <tr>
+            <th class="px-8 py-4 text-left">Application ID</th>
+            <th class="px-8 py-4 text-left">Applicant</th>
+            <th class="px-8 py-4 text-left">Loan Type</th>
+            <th class="px-8 py-4 text-left">Amount</th>
+            <th class="px-8 py-4 text-left">Status</th>
+            <th class="px-8 py-4 text-left"></th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let app of applications" class="border-b border-slate-100 hover:bg-slate-50 transition">
 
-            <td class="px-8 py-4 font-medium text-slate-800">
+            <td class="px-8 py-5 font-medium text-slate-900">
               {{ app.applicationId }}
             </td>
 
-            <td class="px-8 py-4 text-slate-700">
+            <td class="px-8 py-5 text-slate-700">
               {{ app.applicantName }}
             </td>
 
-            <td class="px-8 py-4 text-slate-600">
+            <td class="px-8 py-5 text-slate-600">
               {{ app.loanType }}
             </td>
 
-            <td class="px-8 py-4 text-slate-700">
+            <td class="px-8 py-5 text-slate-700">
               ₹{{ app.requestedAmount | number }}
             </td>
 
-            <td class="px-8 py-4">
-              <span class="px-2 py-1 rounded text-xs font-medium
-            bg-green-100 text-green-700">
+            <td class="px-8 py-5">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold
+                bg-amber-100 text-amber-700">
                 {{ app.applicationStatus }}
               </span>
             </td>
 
-            <td class="px-8 py-4">
-              <button [disabled]="app.applicationStatus === 'SANCTION_LETTER_ACCEPTED'"
-                [routerLink]="['/admin/applications', app.applicationId]"
-                class="text-indigo-600 hover:underline text-sm font-medium disabled:text-gray-400">
+            <td class="px-8 py-5">
+              <a [routerLink]="['/admin/applications', app.applicationId]"
+                class="text-indigo-600 font-semibold text-sm hover:underline">
                 Review →
-              </button>
+              </a>
             </td>
-
 
           </tr>
         </tbody>
 
       </table>
     </div>
-
   </div>
 
-  <!-- ================= RECENT ACTIVITY ================= -->
-  <div class="bg-white rounded-3xl shadow-xl border border-slate-200">
 
-    <!-- HEADER -->
-    <div class="px-8 py-6 border-b border-slate-200 bg-slate-50">
-      <h2 class="text-lg font-semibold text-slate-800">
+  <!-- ================= RECENT ACTIVITY (MOVED BELOW) ================= -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm">
+
+    <div class="px-8 py-6 border-b border-slate-200">
+      <h3 class="text-lg font-semibold text-slate-800">
         Recent Activity
-      </h2>
+      </h3>
     </div>
 
-    <!-- LIST -->
     <ul class="divide-y divide-slate-100">
 
-      <li *ngFor="let act of activities" class="px-8 py-4 flex items-center justify-between
-                 hover:bg-slate-50 transition">
+      <li *ngFor="let act of activities" class="px-8 py-5 hover:bg-slate-50 transition">
 
-        <span class="text-sm text-slate-700">
+        <p class="text-sm text-slate-700">
           {{ act.text }}
-        </span>
+        </p>
 
-        <span class="text-xs text-slate-400 whitespace-nowrap">
+        <p class="text-xs text-slate-400 mt-1">
           {{ act.time }}
-        </span>
+        </p>
 
       </li>
 
