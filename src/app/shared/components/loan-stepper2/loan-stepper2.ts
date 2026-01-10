@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DocumentType } from '../../types/document-type';
 
 @Component({
@@ -32,8 +32,9 @@ import { DocumentType } from '../../types/document-type';
     MatCardModule,
     MatIconModule,
     MatSnackBarModule,
-    RouterOutlet,
-  ],
+    RouterModule,
+    FormsModule
+],
   templateUrl: './loan-stepper2.html',
   styleUrls: ['./loan-stepper2.css'],
 })
@@ -108,11 +109,6 @@ export class LoanStepper2 implements OnInit {
   private loadUserProfile(): void {
     const token = localStorage.getItem('auth_token');
 
-    if (!token) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -149,6 +145,7 @@ export class LoanStepper2 implements OnInit {
   checkEligibility(stepper: any): void {
     const payload = {
       ...this.basicForm.value,
+      ...this.personalForm.value,
       ...this.employmentForm.value,
     };
 
@@ -205,6 +202,13 @@ export class LoanStepper2 implements OnInit {
   /* ================= FINAL SUBMIT ================= */
 
   submit(): void {
+
+    const payload = {
+      ...this.basicForm.value,
+      ...this.personalForm.value,
+      ...this.employmentForm.value,
+      ...this.uploadedFiles,
+    };
     if (!this.applicationId) {
       this.snackBar.open('Invalid application. Please restart the process.', 'Close', {
         duration: 4000,
@@ -214,11 +218,6 @@ export class LoanStepper2 implements OnInit {
 
     const token = localStorage.getItem('auth_token');
 
-    if (!token) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -226,7 +225,6 @@ export class LoanStepper2 implements OnInit {
     this.http
       .put(
         `http://localhost:8080/api/loan-applications/submit/${this.applicationId}`,
-        {},
         { headers }
       )
       .subscribe({

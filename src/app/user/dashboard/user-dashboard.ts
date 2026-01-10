@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { ApplicationInitStatus } from '../../core/models/application-init-status.model';
 import { mapStatusToStage } from '../../core/utils/application-status-mapper';
@@ -19,8 +19,7 @@ import { HeaderComponent } from '../../shared/header/header';
     RouterLink,
     ApplicationTimeline,
     HeaderComponent,
-    MatSnackBarModule,
-    HttpClientModule, // ✅ IMPORTANT
+    MatSnackBarModule // ✅ IMPORTANT
   ],
   templateUrl: './user-dashboard.html',
   styleUrl: './dashboard.css',
@@ -37,8 +36,9 @@ export class UserDashboard {
     private http: HttpClient,
     private router: Router,
     private snackBar: MatSnackBar,
+    private zone: NgZone,
+    private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
   ) {}
 
   /* ================= STATUS UI ================= */
@@ -91,9 +91,9 @@ export class UserDashboard {
 
   /* ================= APPLY LOAN GATE ================= */
   applyLoan(): void {
-    if (this.checkingApply) return;
+    // if (this.checkingApply) return;
 
-    this.checkingApply = true;
+    // this.checkingApply = true;
     const token = localStorage.getItem('token');
 
     this.http
@@ -102,24 +102,34 @@ export class UserDashboard {
       })
       .subscribe({
         next: (res) => {
-          this.checkingApply = false;
+          // this.checkingApply = false;
 
-          this.router.navigateByUrl('/user/loan-stepper2');
           if (res.canApply) {
-            console.log('✅ Navigating to loan-stepper2');
-            // this.router.navigateByUrl('/user/loan-stepper2');
+            console.log('✅ Navigating to loan-stepper2',res.canApply);
+            // // this.router.navigateByUrl('/user/loan-stepper2');
+            // this.checkingApply= false;
+            
+            // this.router.navigate(['/user/loan-stepper2']);
+            this.router.navigate(['/user/loan-stepper2']);
+            //  this.router.navigateByUrl('/user/loan-stepper2');
+            //  this.router.navigateByUrl('/user/dashboard');
+        
           } else {
             this.snackBar.open(res.reason || 'You cannot apply for a loan right now', 'OK', {
               duration: 6000,
               verticalPosition: 'top',
             });
+            this.router.navigateByUrl('/user/dashboard');
           }
         },
         error: (err) => {
-          this.checkingApply = false;
+          // this.checkingApply = false;
           console.warn('⚠️ can-apply failed, redirecting anyway', err);
-          this.router.navigateByUrl('/user/loan-stepper2');
+          this.router.navigateByUrl('/user/dashboard');
         },
       });
   }
+
+
+
 }

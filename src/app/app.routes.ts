@@ -25,15 +25,12 @@ import { UserProfile } from './user/profile/profile';
 import { UserLoanDetails } from './user/my-loans/user-loan-details/user-loan-details';
 import { PayEmi } from './user/pay-emi/pay-emi';
 import { UploadDocuments } from './user/upload-documents/upload-documents';
-import { AuthGuard } from './core/guards/auth-guard';
-import { RoleGuard } from './core/guards/role-guard';
 import { AdminLayout } from './shared/layouts/admin-layout/admin-layout';
 import { ApplicationList as AdminApplicationList } from './admin/applications/application-list/application-list';
 import { ApplicantDetails as AdminApplicantDetails } from './admin/applications/applicant-details/applicant-details';
 import { AdminDisbursementList } from './admin/disbursement/disbursement-list/disbursement-list';
 import { SystemRules } from './admin/system-rules/system-rules/system-rules';
 import { AuditLogs } from './admin/audit-logs/audit-logs/audit-logs';
-import { AdminRoleGuard } from './core/guards/admin-role-guard';
 import { ProfileEdit } from './user/profile-edit/profile-edit';
 import { BasicDetails } from './user/apply-loan/steps/basic-details/basic-details';
 import { PersonalDetails } from './user/apply-loan/steps/personal-details/personal-details';
@@ -48,6 +45,7 @@ import { LoanOfficers } from './admin/loan-officers/loan-officers';
 import { EditLoanOfficer } from './admin/edit-loan-officer/edit-loan-officer';
 import { Applicants } from './admin/applications/applicants/applicants';
 import { LoanDetails } from './user/loan-details/loan-details';
+import { AuthGuard } from '../app/auth/guard/auth-guard-guard';
 
 export const routes: Routes = [
   // HOME
@@ -60,8 +58,9 @@ export const routes: Routes = [
   {
     path: 'user',
     component: UserLayout,
-    // canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['USER'] },
+    //canActivateChild: [authGuard, roleGuard],
+    // data: { roles: ['USER'] },
+    canActivateChild: [AuthGuard],
     children: [
       // Dashboard
       { path: 'dashboard', component: UserDashboard },
@@ -70,7 +69,14 @@ export const routes: Routes = [
         component: LoanDetails,
       },
 
-      { path: 'loan-stepper2', component: LoanStepper2 },
+       { path: 'loan-stepper2', component: LoanStepper2 },
+
+
+      // {
+      //   path: 'loan-stepper2',
+      //   loadComponent: () =>
+      //     import('./shared/components/loan-stepper2/loan-stepper2').then(m => m.LoanStepper2)
+      // },
 
       // Apply Loan (multi-step)
       {
@@ -131,7 +137,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: AdminDashboard },
       { path: 'applications', component: Applicants },
-      { path: 'applications', component: AdminApplicationList },
+      { path: 'applications/list', component: AdminApplicationList },
       { path: 'applications/:id', component: AdminApplicantDetails },
       { path: 'disbursements', component: AdminDisbursementList },
       { path: 'system-rules', component: SystemRules },

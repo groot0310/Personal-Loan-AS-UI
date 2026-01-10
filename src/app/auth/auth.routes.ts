@@ -1,13 +1,13 @@
 // src/app/auth/auth.routes.ts
 import { Routes } from '@angular/router';
-import { authGuard } from './guard/auth-guard-guard';
+import { AuthGuard } from '../auth/guard/auth-guard-guard';
 
 export const AUTH_ROUTES: Routes = [
   {
     path: 'user/dashboard',
     loadComponent: () =>
       import('../user/dashboard/user-dashboard').then(m => m.UserDashboard),
-    canActivate: [authGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'login',
