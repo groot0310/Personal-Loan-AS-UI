@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, QueryList, ViewChildren } from '@angular/core';
+import { OnInit, OnDestroy } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
@@ -19,12 +20,13 @@ import { HeaderComponent } from '../../shared/header/header';
     RouterLink,
     ApplicationTimeline,
     HeaderComponent,
-    MatSnackBarModule // ✅ IMPORTANT
+    MatSnackBarModule, // ✅ IMPORTANT
+    NgOptimizedImage
   ],
   templateUrl: './user-dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class UserDashboard {
+export class UserDashboard implements OnInit, OnDestroy {
   currentStatus: ApplicationInitStatus = 'DOCUMENT_VERIFICATION_PENDING';
   currentStage: UIApplicationStage = mapStatusToStage(this.currentStatus);
 
@@ -32,13 +34,16 @@ export class UserDashboard {
 
   private readonly API = 'http://localhost:8080/api/loan-applications';
 
+   @ViewChildren('bannerImg') images!: QueryList<HTMLImageElement>;
+
   constructor(
     private http: HttpClient,
     private router: Router,
     private snackBar: MatSnackBar,
-    private zone: NgZone,
+    private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
+    
   ) {}
 
   /* ================= STATUS UI ================= */
@@ -102,17 +107,9 @@ export class UserDashboard {
       })
       .subscribe({
         next: (res) => {
-          // this.checkingApply = false;
-
           if (res.canApply) {
             console.log('✅ Navigating to loan-stepper2',res.canApply);
-            // // this.router.navigateByUrl('/user/loan-stepper2');
-            // this.checkingApply= false;
-            
-            // this.router.navigate(['/user/loan-stepper2']);
             this.router.navigate(['/user/loan-stepper2']);
-            //  this.router.navigateByUrl('/user/loan-stepper2');
-            //  this.router.navigateByUrl('/user/dashboard');
         
           } else {
             this.snackBar.open(res.reason || 'You cannot apply for a loan right now', 'OK', {
@@ -123,13 +120,83 @@ export class UserDashboard {
           }
         },
         error: (err) => {
-          // this.checkingApply = false;
           console.warn('⚠️ can-apply failed, redirecting anyway', err);
           this.router.navigateByUrl('/user/dashboard');
         },
       });
   }
 
+banners = [
+    'assets/images/peronalloanbaner.png',
+    'assets/images/webBondsBanner.png',
+    'assets/images/Banner.png',
+    'assets/images/webCCMPGenericBanner.png'
+  ];
 
+  // clones
+  infiniteBanners: string[] = [];
+
+  currentIndex = 1; // start from first REAL slide
+  realIndex = 0;
+
+  disableTransition = false;
+  intervalId!: number;
+
+  ngOnInit() {
+    // clone last + first
+    this.infiniteBanners = [
+      this.banners[this.banners.length - 1],
+      ...this.banners,
+      this.banners[0],
+    ];
+
+    this.startAutoSlide();
+  }
+
+  startAutoSlide() {
+    this.intervalId = window.setInterval(() => {
+      this.currentIndex++;
+      this.realIndex =
+        (this.realIndex + 1) % this.banners.length;
+    }, 1200); // 🔥 speed (1.2s)
+  }
+
+  onTransitionEnd() {
+    // Jump from clone → real slide
+    if (this.currentIndex === this.infiniteBanners.length - 1) {
+      this.disableTransition = true;
+      this.currentIndex = 1;
+
+      requestAnimationFrame(() => {
+        this.disableTransition = false;
+      });
+    }
+
+    if (this.currentIndex === 0) {
+      this.disableTransition = true;
+      this.currentIndex = this.banners.length;
+
+      requestAnimationFrame(() => {
+        this.disableTransition = false;
+      });
+    }
+  }
+   nextSlide() {
+  clearInterval(this.intervalId);
+  this.currentIndex++;
+  this.realIndex =
+    (this.realIndex + 1) % this.banners.length;
+  this.startAutoSlide();
+}
+
+
+  goToSlide(index: number) {
+    this.currentIndex = index + 1;
+    this.realIndex = index;
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.intervalId);
+  }
 
 }

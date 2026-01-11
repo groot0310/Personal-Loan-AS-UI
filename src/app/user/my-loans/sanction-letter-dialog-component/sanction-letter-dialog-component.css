@@ -64,3 +64,40 @@ button[disabled] {
   opacity: 0.7;
   cursor: not-allowed;
 }
+/* Congratulations header */
+.congrats-header {
+  text-align: center;
+  padding: 20px 16px 24px;
+  background: linear-gradient(135deg, #ecfeff, #f0fdf4);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.icon-wrapper {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 8px;
+  background: #dcfce7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-icon {
+  font-size: 32px;
+  color: #15803d;
+}
+
+.congrats-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #064e3b;
+  margin: 4px 0;
+}
+
+.congrats-subtitle {
+  font-size: 14px;
+  color: #065f46;
+  margin: 0;
+}
