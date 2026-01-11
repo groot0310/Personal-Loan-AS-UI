@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.html',
+  styleUrls: ['./header.css'],
 })
 export class HeaderComponent {
   user: UserProfile | null = null;
