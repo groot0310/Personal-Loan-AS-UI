@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AdminDashboardService } from '../services/admin-api';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
+
 
 interface LoanApplication {
   applicationId: number;
@@ -34,9 +38,8 @@ interface LoanApiResponse {
 })
 export class AdminDashboard implements OnInit {
 // hardcoded stats for demo
-  stats = [{ label: 'Total Users', value: 1240, sub: '+12 today', color: 'text-indigo-600', }, { label: 'Total Applications', value: 3120, sub: 'All time', color: 'text-blue-600', }, { label: 'Pending Approvals', value: 18, sub: 'Action required', color: 'text-red-600', link: '/admin/applications', }, { label: 'Amount Disbursed', value: '₹4.2 Cr', sub: 'This month', color: 'text-green-600', },];
   activities = [ { text: 'Loan PL-2031 approved by Loan Officer', time: '10 mins ago', }, { text: 'Documents verified for PL-2030', time: '1 hour ago', }, { text: 'Disbursement completed for PL-2028', time: 'Yesterday', }, ];
-  
+  stats: any[] = [];
   
   applications: LoanApplication[] = [];
   isLoading = false;
@@ -61,11 +64,13 @@ export class AdminDashboard implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dashboardService: AdminDashboardService,
   ) { }
 
   ngOnInit(): void {
     this.loadApplications();
+    this.loadDashboard();
   }
 
   loadApplications(): void {
@@ -95,6 +100,103 @@ export class AdminDashboard implements OnInit {
         }
       });
   }
+
+//   loadDashboard(): void {
+//   this.dashboardService.getDashboardStats().subscribe({
+//     next: (res) => {
+//       this.stats = [
+//         {
+//           label: 'Total Users',
+//           value: res.totalUsers,
+//           sub: 'All users',
+//           color: 'text-indigo-600'
+//         },
+//         {
+//           label: 'Total Applications',
+//           value: res.totalApplications,
+//           sub: 'All time',
+//           color: 'text-blue-600'
+//         },
+//         {
+//           label: 'Pending Approvals',
+//           value: res.pendingLoanApprovals,
+//           sub: 'Action required',
+//           color: 'text-red-600',
+//           link: '/admin/applications'
+//         },
+//         {
+//           label: 'Amount Disbursed',
+//           value: `₹${res.totalAmountDisbursed.toLocaleString('en-IN')}`,
+//           sub: 'Total',
+//           color: 'text-green-600'
+//         }
+//       ];
+
+//       // ✅ MUST be here
+//       this.cdr.detectChanges();
+//     },
+//     error: (err) => {
+//       console.error('Dashboard API failed', err);
+//     }
+//   });
+// }
+loadDashboard(): void {
+  this.dashboardService.getDashboardStats().subscribe({
+    next: (res) => {
+      this.stats = [
+        { label: 'Total Users', value: res.totalUsers, color: 'text-indigo-600' },
+        { label: 'Total Applications', value: res.totalApplications, color: 'text-blue-600' },
+        { label: 'Pending Approvals', value: res.pendingLoanApprovals, color: 'text-red-600' },
+        { label: 'Amount Disbursed', value: res.totalAmountDisbursed, color: 'text-green-600' }
+      ];
+
+      this.renderPieChart(res);
+      this.cdr.markForCheck();
+    }
+  });
+}
+
+renderPieChart(res: any): void {
+  const ctx = document.getElementById('dashboardPieChart') as HTMLCanvasElement;
+
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: [
+        'Total Users',
+        'Total Applications',
+        'Pending Approvals',
+        //  'Amount Disbursed'
+      ],
+      datasets: [
+        {
+          data: [
+            res.totalUsers,
+            res.totalApplications,
+            res.pendingLoanApprovals,
+            //  res.totalAmountDisbursed
+          ],
+          backgroundColor: [
+            '#6366F1', // indigo
+            '#ffff04', // blue
+            '#EF4444', // red
+            '#22C55E'  // green
+          ]
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+}
+
+
 
   onStatusChange(): void {
     this.loadApplications();

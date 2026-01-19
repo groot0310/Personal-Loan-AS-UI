@@ -25,31 +25,43 @@
       </div>
 
       <ng-container *ngIf="user?.role === 'ADMIN'; else userRoleUser">
-        <img src="assets/images/admin.jpg"
-             class="w-10 h-10 rounded-full 
+        <img  *ngIf="user?.gender === 'Male'" src="assets/images/man.jpg"
+               class="w-15 h-15 rounded-full 
          transition-transform transition-shadow transition-ring
          duration-300 ease-in-out
-         hover:ring-4 hover:ring-white
+         hover:scale-105 hover:shadow-lg" />
+         <img  *ngIf="user?.gender === 'Female' || 'null'" src="assets/images/female-avatar.jpg"
+               class="w-15 h-15 rounded-full 
+         transition-transform transition-shadow transition-ring
+         duration-300 ease-in-out
          hover:scale-105 hover:shadow-lg" />
       </ng-container>
 
       <ng-template #userRoleUser>
         <ng-container *ngIf="user?.role === 'USER'; else userRoleLoan">
-          <img src="assets/images/user.jpg"
-               class="w-10 h-10 rounded-full 
+          <img  *ngIf="user?.gender === 'Male'" src="assets/images/man-avatar.jpg"
+               class="w-15 h-15 rounded-full 
          transition-transform transition-shadow transition-ring
          duration-300 ease-in-out
-         hover:ring-4 hover:ring-white
+         hover:scale-105 hover:shadow-lg" />
+         <img  *ngIf="user?.gender === 'Female' || 'null'" src="assets/images/female-loan.jpg"
+               class="w-15 h-15 rounded-full 
+         transition-transform transition-shadow transition-ring
+         duration-300 ease-in-out
          hover:scale-105 hover:shadow-lg" />
         </ng-container>
       </ng-template>
 
       <ng-template #userRoleLoan>
-        <img src="assets/images/loan.jpg"
-             class="w-10 h-10 rounded-full 
+  <img  *ngIf="user?.gender === 'Male'" src="assets/images/loan-officer.jpg"
+               class="w-15 h-15 rounded-full 
          transition-transform transition-shadow transition-ring
          duration-300 ease-in-out
-         hover:ring-4 hover:ring-white
+         hover:scale-105 hover:shadow-lg" />
+         <img  *ngIf="user?.gender === 'Female' || 'null'" src="assets/images/female-loan.jpg"
+               class="w-15 h-15 rounded-full 
+         transition-transform transition-shadow transition-ring
+         duration-300 ease-in-out
          hover:scale-105 hover:shadow-lg" />
       </ng-template>
 

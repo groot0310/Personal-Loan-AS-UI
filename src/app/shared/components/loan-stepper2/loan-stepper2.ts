@@ -44,7 +44,7 @@ export class LoanStepper2 implements  AfterViewInit, OnInit {
   employmentForm!: FormGroup;
 
   applicationId = 0;
-  resumeMode = false;
+  // resumeMode = false;
 
 
   uploadedDocs: Record<DocumentType, boolean> = {
@@ -83,7 +83,7 @@ export class LoanStepper2 implements  AfterViewInit, OnInit {
     if (!isNaN(stepIndex)) {
       console.log('Resuming application at step:', stepIndex);
 
-      this.resumeMode = true;        // 🔓 disable linear temporarily
+      // this.resumeMode = true;        // 🔓 disable linear temporarily
 
       setTimeout(() => {
         this.stepper.selectedIndex = stepIndex;
@@ -135,7 +135,7 @@ export class LoanStepper2 implements  AfterViewInit, OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    this.http.get<any>(`${this.API}/viewProfile`, { headers }).subscribe({
+    this.http.get<any>(`${this.API}/viewProfile`).subscribe({
       next: (profile) => {
         this.personalForm.patchValue({
           fullName: profile.fullName,
@@ -150,7 +150,7 @@ export class LoanStepper2 implements  AfterViewInit, OnInit {
         });
 
         /** 🔒 LOCK PERSONAL DETAILS */
-        this.personalForm.disable();
+        // this.personalForm.disable();
 
         this.cdr.detectChanges();
       },

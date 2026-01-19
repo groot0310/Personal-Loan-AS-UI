@@ -9,7 +9,7 @@
 /* Content spacing */
 .dialog-content {
   padding-top: 16px;
-  min-width: 420px;
+  min-width: 80%;
 }
 
 /* Key-value rows */
