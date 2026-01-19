@@ -1,9 +1,14 @@
 <app-header></app-header>
 
-<div class="h-[600px] flex bg-slate-100">
+<!-- <div class="flex bg-slate-100 min-h-screen overflow-x-hidden"> -->
+       <div
+class="relative min-h-screen px-8 py-10 space-y-12 flex
+         bg-cover bg-center bg-no-repeat"
+  style="background-image: url('assets/images/backgroundImage.jpg');"
+>
 
     <!-- ============ SIDEBAR ============ -->
-    <aside class="w-[260px] m-6 rounded-3xl
+    <aside class="w-[260px] ml-6 h-fit self-start  mb-0 rounded-3xl
                bg-white
                shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)]
                flex flex-col">
@@ -31,7 +36,8 @@
         </div>
 
         <!-- NAV -->
-        <nav class="flex-1 px-4 py-4 flex flex-col space-y-1.5">
+        <nav class="px-4 py-2 flex flex-col space-y-1.5
+">
 
             <a routerLink="/admin/dashboard" routerLinkActive="nav-active" class="cred-nav">
                 Dashboard
@@ -72,7 +78,7 @@
     </aside>
 
     <!-- MAIN -->
-    <main class="flex-1 px-8 py-8 rounded-3xl">
+    <main class="flex-1 px-6 ">
         <router-outlet></router-outlet>
     </main>
 

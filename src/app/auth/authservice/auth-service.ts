@@ -7,6 +7,7 @@ export interface UserProfile {
   fullName: string;
   email: string;
   role: string;
+  gender:string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -55,13 +56,6 @@ export class AuthService {
     return this.http.post(`${this.API}/register`, data);
   }
 
-  // logout() {
-  //   // localStorage.removeItem('token');
-  //   localStorage.removeItem('email');
-  //   localStorage.removeItem('password');
-  //   // localStorage.clear();
-  //    this.userSubject.next(null);
-  // }
   logout() {
   // localStorage.removeItem('token');   // ✅ MUST
   localStorage.removeItem('email');

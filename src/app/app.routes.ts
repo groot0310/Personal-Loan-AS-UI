@@ -11,7 +11,7 @@ import { UserDashboard } from './user/dashboard/user-dashboard';
 
 // Loan Officer
 import { LoanOfficerLayout } from './shared/layouts/loan-officer-layout/loan-officer-layout';
-import { Dashboard as LoanOfficerDashboard } from './loan-officer/dashboard/dashboard';
+import {  LoanOfficerDashboardComponent } from './loan-officer/dashboard/dashboard';
 import { Applications } from './loan-officer/applications/applications';
 import { ApplicationDetails } from './loan-officer/application-details/application-details';
 import { History } from './loan-officer/history/history';
@@ -121,7 +121,7 @@ export const routes: Routes = [
     path: 'loan-officer',
     component: LoanOfficerLayout,
     children: [
-      { path: 'dashboard', component: LoanOfficerDashboard },
+      { path: 'dashboard', component: LoanOfficerDashboardComponent },
       { path: 'applications', component: Applications },
       { path: 'application/:id', component: ApplicationDetails },
       { path: 'history', component: History },

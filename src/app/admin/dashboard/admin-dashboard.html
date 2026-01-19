@@ -1,39 +1,19 @@
-<section class="max-w-[1400px] mx-auto px-6 py-10 space-y-12">
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-  <!-- ================= KPI CARDS ================= -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
-    <div *ngFor="let stat of stats" [routerLink]="stat.link || null" class="group bg-white rounded-3xl p-7 border border-slate-200
-                shadow-lg hover:shadow-xl
-                cursor-pointer transition-all duration-300">
-
-      <!-- LABEL -->
-      <p class="text-sm font-medium text-slate-500">
-        {{ stat.label }}
-      </p>
-
-      <!-- VALUE -->
-      <p class="text-4xl font-bold mt-3" [ngClass]="stat.color">
-        {{ stat.value }}
-      </p>
-
-      <!-- SUB TEXT -->
-      <p class="text-xs text-slate-400 mt-2">
-        {{ stat.sub }}
-      </p>
-
-      <!-- HOVER ACCENT -->
-      <div class="mt-4 h-1 w-10 bg-indigo-600 rounded-full
-                  opacity-0 group-hover:opacity-100 transition">
-      </div>
-    </div>
-
+<div class="bg-white rounded-3xl p-6 shadow-lg mt-10 flex justify-center">
+  <div class="w-[260px] h-[260px]">
+    <canvas id="dashboardPieChart"></canvas>
   </div>
+</div>
 
-  <div class="mb-4 flex items-center gap-4">
+
+  <div class="mb-4 flex items-center gap-4 ">
     <label class="text-sm font-medium text-slate-600">Filter Status</label>
 
-    <select class="border border-slate-300 rounded px-3 py-2 text-sm" [(ngModel)]="selectedStatus"
+    <select class="
+         border border-slate-300 rounded
+         px-3 py-2 text-sm truncate" [(ngModel)]="selectedStatus"
       (change)="onStatusChange()">
 
       <option *ngFor="let status of statuses" [value]="status">
@@ -54,7 +34,7 @@
         Pending Admin Approvals
       </h2>
 
-      <a routerLink="/admin/applications" class="text-sm font-medium text-indigo-600 hover:underline">
+      <a routerLink="/loan-officer/applications" class="text-sm font-medium text-indigo-600 hover:underline">
         View loan officer dashboard
       </a>
     </div>
