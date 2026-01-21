@@ -4,10 +4,12 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, HttpClientModule, MatButtonModule],
+  imports: [CommonModule, HttpClientModule,
+    MatIconModule , MatButtonModule],
   templateUrl: './sanction-letter-dialog-component.html',
   styleUrls: ['./sanction-letter-dialog-component.css'],
 })

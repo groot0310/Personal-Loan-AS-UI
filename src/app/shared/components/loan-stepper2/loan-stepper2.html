@@ -27,7 +27,8 @@
 
         <!-- ================= STEPPER CARD ================= -->
         <mat-card class="rounded-4xl shadow-xl p-6 md:p-8 bg-white border border-slate-200 pb-2">
-            <mat-horizontal-stepper linear #stepper>
+            <mat-horizontal-stepper  #stepper>
+
                 <!-- ================= STEP 1 ================= -->
                 <mat-step [stepControl]="basicForm">
                     <form [formGroup]="basicForm">
@@ -219,30 +220,9 @@
                     </form>
                 </mat-step>
 
+          
+
                 <!-- ================= STEP 4 ================= -->
-                <!-- <h3 class="text-xl font-semibold text-slate-800 mb-6">
-                    Upload Documents
-                </h3>
-
-                <div class="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-                    <p class="text-slate-600 font-medium">
-                        Drag & drop your documents here
-                    </p>
-                    <p class="text-sm text-slate-500 mt-1">
-                        PDF / JPG / PNG • Max 5MB
-                    </p>
-                    <input type="file" multiple class="mt-4" (change)="onFileUpload($event)">
-                </div>
-
-                <div class="flex justify-between mt-10">
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-raised-button color="primary" matStepperNext>
-                        Continue
-                    </button>
-                </div> -->
-
-
-                <!-- ================= STEP 5 ================= -->
                 <mat-step>
                     <ng-template matStepLabel>Documents</ng-template>
 
@@ -322,7 +302,7 @@
                 </mat-step>
 
 
-                <!-- ================= STEP 6 ================= -->
+                <!-- ================= STEP 5 ================= -->
                 <mat-step>
 
                     <!-- HEADER -->

@@ -1,43 +1,30 @@
-<<<<<<< Updated upstream
 <header class="w-full bg-white shadow-md px-8 py-4 flex items-center justify-between">
   <!-- Left -->
   <div class="text-xl font-bold text-indigo-600">
     Loan Management System
   </div>
-=======
-<header class="w-full bg-[#0f0f14] border-b border-white/10">
-  <div class="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
->>>>>>> Stashed changes
 
-    <!-- LEFT : Logo -->
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-indigo-500/90
-                  flex items-center justify-center
-                  text-white font-bold text-sm">
-        CF
-      </div>
-
-      <span class="text-lg font-semibold text-slate-100 tracking-tight">
-        CrediFlow
+  <!-- Right -->
+  <div class="flex items-center gap-6">
+    <div class="text-right">
+      <p class="text-sm text-gray-500">Welcome</p>
+      <p class="text-lg font-semibold text-gray-800">
+        {{ user?.fullName }}
+      </p>
+      <span class="text-xs px-2 py-1 bg-indigo-100 text-indigo-600 rounded">
+        {{ user?.role }}
       </span>
     </div>
 
-    <!-- RIGHT : User -->
-    <div class="flex items-center gap-6 text-slate-300">
-
-      <div class="text-right leading-tight">
-        <p class="text-sm font-medium text-slate-100">
-          {{ user?.fullName }}
-        </p>
-        <p class="text-xs text-slate-400">
-          {{ user?.role }}
-        </p>
-      </div>
-
-      <button (click)="logout()" class="text-sm text-slate-400 hover:text-red-400 transition">
-        Logout
-      </button>
-
-    </div>
+    <button (click)="logout()" class="inline-flex items-center justify-center
+                   px-6 py-2.5 rounded-xl
+                   text-sm font-medium
+                   text-red-500
+                   border border-red-200
+                   hover:bg-red-50 hover:text-red-600
+                   hover:cursor-pointer
+                   transition">
+      Logout
+    </button>
   </div>
 </header>

@@ -1,22 +1,42 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { EmiService } from './emi.service';
+import { Emi } from './emi.model';
 
-type EmiStatus = 'PAID' | 'DUE' | 'UPCOMING';
 
 @Component({
   selector: 'app-emi-schedule',
   imports: [CommonModule],
   templateUrl: './emi-schedule.html',
 })
-export class EmiSchedule {
-  emis: { month: string; amount: number; status: EmiStatus }[] = [
-    { month: 'Jan 2025', amount: 14500, status: 'PAID' },
-    { month: 'Feb 2025', amount: 14500, status: 'PAID' },
-    { month: 'Mar 2025', amount: 14500, status: 'DUE' },
-    { month: 'Apr 2025', amount: 14500, status: 'UPCOMING' },
+export class EmiSchedule implements OnInit {
+
+  displayedColumns: string[] = [
+    'emiNumber',
+    'dueDate',
+    'emiAmount',
+    'penaltyAmount',
+    'totalPayableAmount',
+    'emiStatus',
+    'action'
   ];
 
-  payEmi(emi: any) {
-    alert(`Proceed to payment for ${emi.month}`);
+  emis: Emi[] = [];
+  hasActiveLoan = false;
+
+  constructor(private emiService: EmiService,private cdr:  ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.emiService.getCurrentEmis().subscribe(res => {
+      this.hasActiveLoan = res.hasActiveLoan;
+      this.emis = res.emis || [];
+      this.cdr.detectChanges();
+    });
+  }
+
+  payEmi(emi: Emi) {
+    console.log('Pay EMI:', emi);
   }
 }
+

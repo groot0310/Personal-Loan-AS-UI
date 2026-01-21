@@ -1,10 +1,10 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { EligibilityService } from '../../../user/apply-loan/services/eligibility';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DocumentType } from '../../types/document-type';
 
 @Component({
@@ -38,12 +38,14 @@ import { DocumentType } from '../../types/document-type';
   templateUrl: './loan-stepper2.html',
   styleUrls: ['./loan-stepper2.css'],
 })
-export class LoanStepper2 implements OnInit {
+export class LoanStepper2 implements  AfterViewInit, OnInit {
   basicForm!: FormGroup;
   personalForm!: FormGroup;
   employmentForm!: FormGroup;
 
   applicationId = 0;
+  // resumeMode = false;
+
 
   uploadedDocs: Record<DocumentType, boolean> = {
     AADHAAR: false,
@@ -56,6 +58,7 @@ export class LoanStepper2 implements OnInit {
   allDocsUploaded = false;
 
   private API = 'http://localhost:8080/api/user';
+   @ViewChild('stepper') stepper!: MatStepper;
 
   constructor(
     private fb: FormBuilder,
@@ -63,7 +66,8 @@ export class LoanStepper2 implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
-    private http: HttpClient
+    private http: HttpClient,
+    private route: ActivatedRoute
   ) {
     this.initializeForms();
   }
@@ -71,6 +75,24 @@ export class LoanStepper2 implements OnInit {
   ngOnInit(): void {
     this.loadUserProfile();
   }
+
+  ngAfterViewInit(): void {
+  this.route.queryParams.subscribe(params => {
+    const stepIndex = Number(params['step']);
+
+    if (!isNaN(stepIndex)) {
+      console.log('Resuming application at step:', stepIndex);
+
+      // this.resumeMode = true;        // 🔓 disable linear temporarily
+
+      setTimeout(() => {
+        this.stepper.selectedIndex = stepIndex;
+        this.cdr.detectChanges();
+      });
+    }
+  });
+}
+
 
   /* ================= FORM INIT ================= */
 
@@ -113,7 +135,7 @@ export class LoanStepper2 implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    this.http.get<any>(`${this.API}/viewProfile`, { headers }).subscribe({
+    this.http.get<any>(`${this.API}/viewProfile`).subscribe({
       next: (profile) => {
         this.personalForm.patchValue({
           fullName: profile.fullName,
@@ -128,7 +150,7 @@ export class LoanStepper2 implements OnInit {
         });
 
         /** 🔒 LOCK PERSONAL DETAILS */
-        this.personalForm.disable();
+        // this.personalForm.disable();
 
         this.cdr.detectChanges();
       },
